@@ -43,21 +43,19 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
-    <!-- شريط الإعلان ورقم الاتصال المخصص -->
+    <!-- شريط الإعلان العلوي -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2 transition-colors">
         <span>🌿</span>
-        <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • للاستفسار والحجز المباشر:</span>
-        <a id="headerPhoneLink" href="tel:07800000000" class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/40 font-black tracking-wider flex items-center gap-1 hover:bg-amber-500/30">
-            <span>📞</span> <span id="headerPhoneText">07800000000</span>
-        </a>
+        <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة</span>
     </div>
 
     <!-- الترويسة الرئيسية -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
         <div class="flex items-center justify-between gap-2 w-full">
             
-            <div class="flex items-center gap-2 cursor-pointer min-w-0" onclick="resetView()">
-                <div class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0">
+            <!-- اللوكو واسم الصيدلية: النقر المزدوج على الشعار يفتح لوحة المشرف السرية -->
+            <div class="flex items-center gap-2 min-w-0 select-none">
+                <div ondblclick="triggerSecretAdmin()" onclick="handleLogoTouch()" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
                         <path d="M50 8 C70 10 80 30 78 45 C65 25 55 15 50 8 Z" fill="#84cc16"/>
@@ -70,7 +68,7 @@
                         <path d="M42 56 Q58 56 50 64 Q42 72 58 72" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
                     </svg>
                 </div>
-                <div class="flex flex-col min-w-0">
+                <div class="flex flex-col min-w-0 cursor-pointer" onclick="resetView()">
                     <h1 class="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-teal-300 to-cyan-400 truncate">
                         صيدلية رَحِيْقُ السَّلَامَة
                     </h1>
@@ -84,12 +82,16 @@
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
+                <!-- أزرار المشرف تظهر فقط عند تفعيل الرمز السري -->
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
-                    <button onclick="openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الهاتف والتوصيل">
+                    <button onclick="openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز والتوصيل">
                         <span>⚙️</span>
                     </button>
                     <button onclick="openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95">
                         <span>➕</span> <span>إضافة</span>
+                    </button>
+                    <button onclick="logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="خروج">
+                        <span>🔒</span>
                     </button>
                 </div>
             </div>
@@ -144,33 +146,65 @@
                 </div>
 
                 <div id="checkoutActionContainer">
-                    <button onclick="confirmOrderDirect()" class="w-full bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
-                        <span>✅</span> <span>تأكيد وحجز الطلبية الدوائية</span>
+                    <button onclick="openCustomerDetailsModal()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
+                        <span>📝</span> <span>تأكيد الحجز وإرسال الطلبية</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة إعدادات الهاتف والتوصيل للمشرف -->
+    <!-- نافذة إدخال بيانات الزبون الإجبارية قبل الإرسال -->
+    <div id="customerModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
+            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>📋</span> بيانات تأكيد الحجز</h3>
+                <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <form onsubmit="processOrderAndSend(event)" class="space-y-2.5">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-300 mb-0.5">الاسم الثلاثي للطالب / المريض:</label>
+                    <input type="text" id="custName" required placeholder="مثال: أحمد علي حسن" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-300 mb-0.5">رقم الهاتف للتواصل:</label>
+                    <input type="tel" id="custPhone" required placeholder="مثال: 07701234567" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-300 mb-0.5">العنوان أو الملاحظات (اختياري):</label>
+                    <input type="text" id="custAddress" placeholder="المنطقة / تفاصيل الاستلام" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="pt-2 border-t border-slate-800">
+                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
+                        <span>🚀</span> <span>إرسال الطلب المباشر</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إعدادات المتجر للمشرف -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>⚙️</span> إعدادات الصيدلية ورقم الهاتف</h3>
+                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>⚙️</span> إعدادات الطلبات والمستلم</h3>
                 <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">رقم هاتف الصيدلية المعتمد للاتصال والاستفسار:</label>
-                    <input type="text" id="settingPhone" placeholder="07800000000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
-                    <span class="text-[9px] text-slate-500 block mt-0.5">اكتب الرقم المخصص للطلبات والاستفسارات دون إزعاج الدكتورة.</span>
+                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">رقمك المستلم للطلبيات:</label>
+                    <input type="text" id="settingPhone" placeholder="07726053522" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
                     <div>
-                        <h4 class="text-xs font-bold text-white">حالة الشراء والتوصيل</h4>
-                        <p class="text-[9px] text-slate-400">تفعيل أو إيقاف استقبال وحجز الطلبيات</p>
+                        <h4 class="text-xs font-bold text-white">حالة استقبال الطلبات</h4>
+                        <p class="text-[9px] text-slate-400">تفعيل أو إيقاف استلام الطلبيات بالسلة</p>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="settingOrderingActive" class="sr-only peer">
@@ -180,7 +214,7 @@
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
                     <button type="button" onclick="closeSettingsModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
-                    <button type="button" onclick="saveSettings()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ الإعدادات</button>
+                    <button type="button" onclick="saveSettings()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ</button>
                 </div>
             </div>
         </div>
@@ -252,18 +286,17 @@
         </div>
     </div>
 
+    <!-- التذييل نظيف وخالي من أي زر للمشرف -->
     <footer class="bg-slate-950 border-t border-slate-900 text-center py-4 text-[10px] text-slate-500 mt-auto">
         <p class="font-bold text-slate-400">صيدلية رَحِيْقُ السَّلَامَة • صحتكُم أمانتُنا</p>
-        <button onclick="toggleAdminMode()" id="adminFooterBtn" class="mt-1 text-slate-500 hover:text-cyan-400 underline block mx-auto">
-            🔒 لوحة المشرف الصيدلاني
-        </button>
+        <p class="text-[9px] text-slate-600 mt-0.5">جميع الحقوق محفوظة © 2026</p>
     </footer>
 
     <script>
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
 
-        // رقم الهاتف وحالة الطلبات المخزنة
-        let pharmacyPhone = localStorage.getItem('sidalihet_phone_v1') || "07800000000";
+        // رقمك الخاص المعتمد لاستلام الطلبيات
+        let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
         const categories = [
@@ -366,23 +399,50 @@
             }
         }
 
+        // تسجيل دخول سري للمشرف عند النقر مرتين على الشعار
+        let lastTouchTime = 0;
+        function handleLogoTouch() {
+            const now = new Date().getTime();
+            if (now - lastTouchTime < 400) {
+                triggerSecretAdmin();
+            }
+            lastTouchTime = now;
+        }
+
+        function triggerSecretAdmin() {
+            if (isAdmin) {
+                alert('أنت مسجل حالياً كـ مشرف بالفعل!');
+                return;
+            }
+            let pin = prompt('🔐 الدخول الإداري السري للمشرف:');
+            if (pin === 'google@199920012005') {
+                isAdmin = true;
+                localStorage.setItem('sidalihet_admin', 'true');
+                updateAdminUI();
+                alert('تم تفعيل لوحة المشرف بنجاح!');
+            } else if (pin !== null) {
+                alert('رمز المرور غير صحيح!');
+            }
+        }
+
+        function logoutAdmin() {
+            if (confirm('هل تريد قفل لوحة المشرف وتسجيل الخروج؟')) {
+                isAdmin = false;
+                localStorage.setItem('sidalihet_admin', 'false');
+                updateAdminUI();
+            }
+        }
+
         function updateDeliveryStatusUI() {
             const bannerText = document.getElementById('deliveryBannerText');
             const banner = document.getElementById('deliveryStatusBanner');
-            const phoneText = document.getElementById('headerPhoneText');
-            const phoneLink = document.getElementById('headerPhoneLink');
-
-            phoneText.innerText = pharmacyPhone;
-            phoneLink.href = `tel:${pharmacyPhone}`;
 
             if (isOrderingActive) {
-                bannerText.innerText = "صحتكم أمانتنا • للاستفسار والحجز المباشر:";
+                bannerText.innerText = "صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة متاحة";
                 banner.className = "w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2";
-                phoneLink.classList.remove('hidden');
             } else {
-                bannerText.innerText = "⚠️ خدمة الحجز والطلبات متوقفة مؤقتاً بأمر الصيدلية • المعاينة فقط";
+                bannerText.innerText = "⚠️ خدمة حجز وتوصيل الطلبيات متوقفة مؤقتاً • المعاينة والاستشارة فقط";
                 banner.className = "w-full bg-rose-950/80 border-b border-rose-800 text-[10px] py-1.5 px-3 text-center text-rose-200 flex justify-center items-center gap-2";
-                phoneLink.classList.add('hidden');
             }
         }
 
@@ -561,8 +621,8 @@
                 `;
             } else {
                 actionContainer.innerHTML = `
-                    <button onclick="confirmOrderDirect()" class="w-full bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
-                        <span>✅</span> <span>تأكيد وحجز الطلبية الدوائية</span>
+                    <button onclick="openCustomerDetailsModal()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
+                        <span>📝</span> <span>تأكيد الحجز وإرسال الطلبية</span>
                     </button>
                 `;
             }
@@ -609,6 +669,23 @@
             modal.classList.add('hidden');
         }
 
+        function openCustomerDetailsModal() {
+            if (cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            closeCartModal();
+            const modal = document.getElementById('customerModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+        }
+
+        function closeCustomerModal() {
+            const modal = document.getElementById('customerModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
         function changeQty(index, delta) {
             const item = cart[index];
             const originalProd = productsData.find(p => p.id === item.id);
@@ -632,12 +709,42 @@
             openCartModal();
         }
 
-        // تأكيد وحجز الطلب داخلياً دون إزعاج
-        function confirmOrderDirect() {
-            if (cart.length === 0) {
-                alert('السلة فارغة!');
+        // تجهيز بيانات الطلب وإرسالها مباشرة لرقمك المعتمد
+        function processOrderAndSend(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim() || "غير محدد";
+
+            if (!name || !phone) {
+                alert('يرجى كتابة الاسم ورقم الهاتف!');
                 return;
             }
+
+            let message = `🏥 *طلب دوائي جديد - صيدلية رَحِيْقُ السَّلَامَة*\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━\n`;
+            message += `👤 *اسم المشتري:* ${name}\n`;
+            message += `📞 *رقم هاتف المشتري:* ${phone}\n`;
+            message += `📍 *العنوان / الملاحظات:* ${address}\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+            message += `📦 *تفاصيل الأدوية المحجوزة:*\n`;
+
+            let total = 0;
+            cart.forEach((item, idx) => {
+                let itemPriceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+                let subTotal = itemPriceNum * item.qty;
+                total += subTotal;
+
+                message += `*${idx + 1}. الدواء:* ${item.name} (${item.dose})\n`;
+                message += `▫️ *المادة الفعالة:* ${item.activeIngredient}\n`;
+                message += `▫️ *الكمية:* ${item.qty} علبة\n`;
+                message += `▫️ *السعر:* ${item.price}\n`;
+                message += `----------------------------\n`;
+            });
+
+            message += `\n💰 *المجموع الكلي:* ${total.toLocaleString()} د.ع\n`;
+            message += `⏰ *تاريخ ووقت الحجز:* ${new Date().toLocaleDateString('ar-IQ')} - ${new Date().toLocaleTimeString('ar-IQ')}`;
 
             // خصم الكميات من المخزن
             cart.forEach(cItem => {
@@ -650,52 +757,32 @@
             saveProductsToStorage();
             cart = [];
             saveCartToStorage();
-            closeCartModal();
+            closeCustomerModal();
             filterByCategory(currentFilter);
 
-            alert(`🎉 تم تأكيد وحجز طلبك بنجاح وتحديث المخزن!\n📞 للاستفسار أو المتابعة المباشرة، اتصل على: ${pharmacyPhone}`);
+            // تجهيز رقمك بصيغة العراق الدولية للإرسال المباشر
+            let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
+            const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
+            
+            alert('🎉 تم تثبيت بياناتك بنجاح! يتم الآن توجيه الطلب لتأكيد التجهيز.');
+            window.open(whatsappUrl, '_blank');
         }
 
         function updateAdminUI() {
             const headerBtn = document.getElementById('adminActionHeader');
-            const footerBtn = document.getElementById('adminFooterBtn');
 
             if (isAdmin) {
                 headerBtn.classList.remove('hidden');
                 headerBtn.classList.add('flex');
-                footerBtn.innerText = "🔓 تسجيل خروج المشرف";
-                footerBtn.className = "mt-1 text-rose-400 hover:underline block mx-auto font-bold";
             } else {
                 headerBtn.classList.add('hidden');
                 headerBtn.classList.remove('flex');
-                footerBtn.innerText = "🔒 لوحة المشرف الصيدلاني";
-                footerBtn.className = "mt-1 text-slate-500 hover:text-cyan-400 underline block mx-auto";
             }
             renderProducts();
         }
 
-        function toggleAdminMode() {
-            if (isAdmin) {
-                if (confirm('هل تريد الخروج من وضع المشرف؟')) {
-                    isAdmin = false;
-                    localStorage.setItem('sidalihet_admin', 'false');
-                    updateAdminUI();
-                }
-            } else {
-                let pin = prompt('أدخل رمز المرور السري للمشرف:');
-                if (pin === 'google@199920012005') {
-                    isAdmin = true;
-                    localStorage.setItem('sidalihet_admin', 'true');
-                    updateAdminUI();
-                    alert('تم الدخول كـ مشرف صيدلي بنجاح!');
-                } else if (pin !== null) {
-                    alert('رمز المرور غير صحيح!');
-                }
-            }
-        }
-
         function openSettingsModal() {
-            document.getElementById('settingPhone').value = pharmacyPhone;
+            document.getElementById('settingPhone').value = myReceiverPhone;
             document.getElementById('settingOrderingActive').checked = isOrderingActive;
             const modal = document.getElementById('settingsModal');
             modal.classList.remove('hidden');
@@ -714,15 +801,15 @@
                 alert('يرجى إدخال رقم هاتف صحيح!');
                 return;
             }
-            pharmacyPhone = phone;
+            myReceiverPhone = phone;
             isOrderingActive = document.getElementById('settingOrderingActive').checked;
 
-            localStorage.setItem('sidalihet_phone_v1', pharmacyPhone);
+            localStorage.setItem('sidalihet_my_phone', myReceiverPhone);
             localStorage.setItem('sidalihet_order_active', isOrderingActive);
 
             updateDeliveryStatusUI();
             closeSettingsModal();
-            alert('✅ تم حفظ رقم الهاتف وحالة التوصيل بنجاح!');
+            alert('✅ تم حفظ الإعدادات بنجاح!');
         }
 
         function openAddModal() {
