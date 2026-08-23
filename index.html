@@ -53,9 +53,9 @@
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
         <div class="flex items-center justify-between gap-2 w-full">
             
-            <!-- اللوكو واسم الصيدلية: النقر 5 مرات متتالية يفتح لوحة المشرف -->
+            <!-- اللوكو واسم الصيدلية: النقر 5 مرات متتالية وسريعة يفتح لوحة المشرف -->
             <div class="flex items-center gap-2 min-w-0 select-none">
-                <div onclick="handleLogoMultiClick()" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
+                <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
                         <path d="M50 8 C70 10 80 30 78 45 C65 25 55 15 50 8 Z" fill="#84cc16"/>
@@ -82,7 +82,7 @@
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
-                <!-- أزرار المشرف بعد تسجيل الدخول -->
+                <!-- أزرار المشرف تظهر فقط عند تسجيل الدخول -->
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
                     <button onclick="openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز والتوصيل">
                         <span>⚙️</span>
@@ -295,7 +295,7 @@
     <script>
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
 
-        // رقمك الخاص المعتمد
+        // رقم هاتفك المعتمد
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
@@ -399,22 +399,26 @@
             }
         }
 
-        // عداد النقر السري 5 مرات على الشعار
-        let logoClickCount = 0;
-        let logoClickTimer = null;
+        // عداد دقيق لـ 5 نقرات متتالية وسريعة على اللوكو
+        let tapCount = 0;
+        let tapTimer = null;
 
-        function handleLogoMultiClick() {
-            logoClickCount++;
-            clearTimeout(logoClickTimer);
+        const logoBtn = document.getElementById('secretLogoTrigger');
+        if (logoBtn) {
+            logoBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                tapCount++;
+                clearTimeout(tapTimer);
 
-            logoClickTimer = setTimeout(() => {
-                logoClickCount = 0;
-            }, 1200);
+                tapTimer = setTimeout(() => {
+                    tapCount = 0;
+                }, 1800);
 
-            if (logoClickCount === 5) {
-                logoClickCount = 0;
-                triggerSecretAdmin();
-            }
+                if (tapCount === 5) {
+                    tapCount = 0;
+                    triggerSecretAdmin();
+                }
+            });
         }
 
         function triggerSecretAdmin() {
@@ -717,7 +721,7 @@
             openCartModal();
         }
 
-        // إرسال الطلب باسمك الرسمي إبراهيم صفاء مباشرة
+        // إرسال الطلب باسم الصيدلي إبراهيم صفاء مباشرة إلى رقمك
         function processOrderAndSend(event) {
             event.preventDefault();
 
@@ -769,12 +773,11 @@
             closeCustomerModal();
             filterByCategory(currentFilter);
 
-            // توجيه الطلب إلى رقمك
+            // توجيه فوري ومباشر إلى محادثة واتساب
             let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
-            const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
             
-            alert('🎉 تم تثبيت الحجز بنجاح! يتم الآن تحويلك لتأكيد الطلب.');
-            window.open(whatsappUrl, '_blank');
+            window.location.href = whatsappUrl;
         }
 
         function updateAdminUI() {
