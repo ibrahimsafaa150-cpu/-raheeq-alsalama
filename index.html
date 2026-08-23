@@ -354,7 +354,7 @@
             { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
-        // مصفوفة الأدوية المعتمدة الكاملة المتزامنة مع الجميع
+        // قائمة الأدوية بصور طبية واقعية لعلب الأدوية والأشرطة
         const defaultProducts = [
             {
                 id: 1,
@@ -364,7 +364,7 @@
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 49,
-                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 2,
@@ -374,7 +374,7 @@
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 1,
-                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 3,
@@ -384,7 +384,7 @@
                 category: "المضادات الحيوية",
                 price: "7,000 د.ع",
                 stock: 2,
-                image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 4,
@@ -394,7 +394,7 @@
                 category: "المضادات الحيوية",
                 price: "8,000 د.ع",
                 stock: 29,
-                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 5,
@@ -404,7 +404,7 @@
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 20,
-                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 6,
@@ -414,7 +414,7 @@
                 category: "القلب وضغط الدم",
                 price: "9,000 د.ع",
                 stock: 12,
-                image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=600&q=80"
             },
             {
                 id: 7,
@@ -424,7 +424,7 @@
                 category: "الجهاز الهضمي والمعدة",
                 price: "6,000 د.ع",
                 stock: 40,
-                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=500&q=80"
+                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
             }
         ];
 
@@ -433,8 +433,11 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
+        // مفتاح تخزين جديد بالكامل لفرض ظهور الأدوية الجديدة والصور الطبية
+        const STORAGE_KEY = 'sidalihet_pharma_perfect_2026';
+
         try {
-            const savedProducts = localStorage.getItem('sidalihet_rx_synced_v5');
+            const savedProducts = localStorage.getItem(STORAGE_KEY);
             productsData = savedProducts ? JSON.parse(savedProducts) : defaultProducts;
         } catch(e) {
             productsData = defaultProducts;
@@ -448,7 +451,7 @@
         }
 
         function saveProductsToStorage() {
-            localStorage.setItem('sidalihet_rx_synced_v5', JSON.stringify(productsData));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(productsData));
         }
 
         function saveCartToStorage() {
@@ -1006,7 +1009,7 @@
                 dose: document.getElementById('prodDose').value.trim(),
                 price: formattedPrice,
                 stock: parseInt(document.getElementById('prodStock').value) || 0,
-                image: document.getElementById('prodImage').value.trim() || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=80'
+                image: document.getElementById('prodImage').value.trim() || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'
             };
 
             if (editId) {
