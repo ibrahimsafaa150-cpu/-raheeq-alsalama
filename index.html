@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صيدلية رَحِيْقُ السَّلَامَة | النظام الدوائي الذكي</title>
+    <title>صيدلية رَحِيْقُ السَّلَامَة | قسم الفيتامينات والمكملات</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -53,7 +53,7 @@
 
     <!-- شريط الإشعارات العلوي -->
     <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-[11px] sm:text-xs py-1.5 px-4 text-center font-semibold shadow-sm">
-        ✨ صيدلية رحيق السلامة • استشارة أصلية ومخزون معتمد • توصيل سريع لكافة المناطق
+        ✨ صيدلية رحيق السلامة • قسم الفيتامينات والمكملات الغذائية الأصلية
     </div>
 
     <!-- الهيدر الرئيسي -->
@@ -66,7 +66,7 @@
                 </div>
                 <div>
                     <h1 class="text-sm sm:text-base font-black tracking-wider bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">صيدلية رَحِيْقُ السَّلَامَة</h1>
-                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">المنصة الطبية الذكية لإدارة المخزون</p>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">قسم الفيتامينات والمكملات الطبية</p>
                 </div>
             </div>
 
@@ -86,7 +86,7 @@
         <!-- شريط البحث المتقدم -->
         <div class="bg-slate-100/70 dark:bg-slate-900/50 border-t border-slate-200/60 dark:border-slate-800/60 px-4 py-3">
             <div class="max-w-3xl mx-auto relative">
-                <input type="text" id="searchInput" placeholder="ابحث بالاسم التجاري، المادة الفعالة، أو القسم..." 
+                <input type="text" id="searchInput" placeholder="ابحث بالاسم التجاري أو المادة الفعالة في الفيتامينات..." 
                        class="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs sm:text-sm rounded-2xl px-4 py-3 pr-11 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 transition shadow-sm">
                 <span class="absolute right-4 top-3.5 text-slate-400 text-base">🔍</span>
             </div>
@@ -98,9 +98,9 @@
         <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-900/40 p-6 sm:p-10 shadow-2xl">
             <div class="absolute -left-10 -bottom-10 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 max-w-2xl">
-                <span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-3 py-1 rounded-full border border-emerald-500/30 inline-block mb-3">مخزون رقمي معتمد 2026</span>
-                <h2 class="text-xl sm:text-3xl font-black text-white mb-3">أفضل الأدوية والمستلزمات الطبية بين يديك</h2>
-                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-5">تصفح أقسام الصيدلية بدقة عالية، واعرف المواد الفعالة، الجرعات المتاحة، والكميات المتوفرة فورياً.</p>
+                <span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-3 py-1 rounded-full border border-emerald-500/30 inline-block mb-3">مخزون الفيتامينات والمكملات 2026</span>
+                <h2 class="text-xl sm:text-3xl font-black text-white mb-3">أفضل الفيتامينات والمكملات الغذائية لدعم المناعة والصحة</h2>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-5">تصفح تشكيلة الفيتامينات والمعادن المعتمدة، مع معرفة الجرعات الفعالة والكميات المتوفرة بدقة.</p>
                 <div class="flex flex-wrap gap-2 text-xs text-slate-300 font-semibold">
                     <span class="bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur border border-white/10">🛡️ منتجات أصلية 100%</span>
                     <span class="bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur border border-white/10">⚡ تحديث فوري للمخزون</span>
@@ -112,7 +112,7 @@
     <!-- أزرار الأقسام السريعة -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 w-full">
         <div class="flex items-center justify-between mb-3">
-            <h3 class="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300">💡 تصفح حسب الأقسام والتخصصات الطبية:</h3>
+            <h3 class="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300">💡 التخصص النشط:</h3>
         </div>
         <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-2 pt-1">
             <button onclick="filterByCategory('الكل')" class="cat-btn bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-md transition flex items-center gap-1.5 shrink-0">
@@ -120,21 +120,6 @@
             </button>
             <button onclick="filterByCategory('الفيتامينات والمكملات الغذائية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
                 <span>🍋</span> الفيتامينات والمكملات الغذائية
-            </button>
-            <button onclick="filterByCategory('أمراض الكلى والمسالك البولية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>💧</span> الكلى والمسالك البولية
-            </button>
-            <button onclick="filterByCategory('العناية بالبشرة والتجميل')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>✨</span> عناية بالبشرة
-            </button>
-            <button onclick="filterByCategory('أمراض القلب والأوعية الدموية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>❤️</span> وظائف القلب
-            </button>
-            <button onclick="filterByCategory('المضادات الحيوية والمضادات')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>💊</span> المضادات الحيوية
-            </button>
-            <button onclick="filterByCategory('الفيروسات والمناعة')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>🛡️</span> مضادات الفايروسات
             </button>
         </div>
     </section>
@@ -145,7 +130,7 @@
         <!-- رسالة عدم وجود نتائج -->
         <div id="noResults" class="hidden text-center py-20 text-slate-400 font-semibold glass-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <div class="text-4xl mb-2">🔍</div>
-            عذراً، لم يتم العثور على أي منتج مطابق لبحثك أو القسم المحدد.
+            عذراً، لم يتم العثور على أي فيتامين أو مكمل مطابق لبحثك.
         </div>
 
         <!-- حاوية الأقسام والأدوية -->
@@ -157,7 +142,7 @@
     <div id="drugModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden items-center justify-center p-4 transition-all">
         <div class="glass-card bg-white dark:bg-[#121216] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative">
             <div class="flex justify-between items-center mb-5 border-b border-slate-200 dark:border-slate-800 pb-3">
-                <h3 id="modalTitle" class="text-base font-black text-emerald-800 dark:text-emerald-400">إضافة منتج جديد للمخزون</h3>
+                <h3 id="modalTitle" class="text-base font-black text-emerald-800 dark:text-emerald-400">إضافة فيتامين أو مكمل جديد</h3>
                 <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-rose-500 font-bold text-lg p-1">✕</button>
             </div>
             
@@ -167,11 +152,6 @@
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">القسم (التصنيف):</label>
                     <select id="drugCategory" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                         <option value="الفيتامينات والمكملات الغذائية">🍋 الفيتامينات والمكملات الغذائية</option>
-                        <option value="أمراض الكلى والمسالك البولية">💧 أمراض الكلى والمسالك البولية</option>
-                        <option value="العناية بالبشرة والتجميل">✨ العناية بالبشرة والتجميل</option>
-                        <option value="أمراض القلب والأوعية الدموية">❤️ أمراض القلب والأوعية الدموية</option>
-                        <option value="المضادات الحيوية والمضادات">💊 المضادات الحيوية والمضادات</option>
-                        <option value="الفيروسات والمناعة">🛡️ الفيروسات والمناعة</option>
                     </select>
                 </div>
                 
@@ -214,7 +194,7 @@
     <footer class="bg-white dark:bg-[#09090b] border-t border-slate-200 dark:border-slate-800 text-center py-8 text-xs text-slate-500 dark:text-slate-400 mt-auto transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 space-y-3">
             <p class="font-bold text-slate-800 dark:text-slate-200">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
-            <p class="text-[11px]">جميع الحقوق محفوظة © 2026 • تصميم وتطوير متقدم للمخزون الدوائي</p>
+            <p class="text-[11px]">جميع الحقوق محفوظة © 2026 • قسم الفيتامينات والمكملات الطبية</p>
             
             <div class="pt-2">
                 <button onclick="toggleAdmin()" id="adminBtnText" class="text-[11px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 underline transition font-semibold">
@@ -224,7 +204,7 @@
         </div>
     </footer>
 
-    <!-- الجافاسكريبت المطور والثابت -->
+    <!-- الجافاسكريبت المطور -->
     <script>
         let isDarkMode = localStorage.getItem('raheeq_theme') !== 'light';
         let currentCategoryFilter = 'الكل';
@@ -248,7 +228,7 @@
 
         let isAdmin = localStorage.getItem('raheeq_is_admin') === 'true';
 
-        // المخزون الطبي الأولي الاحترافي
+        // المخزون الأولي المخصص للفيتامينات والمكملات الغذائية فقط
         let defaultDrugs = [
             {
                 category: "الفيتامينات والمكملات الغذائية",
@@ -267,58 +247,42 @@
                 quantity: 30
             },
             {
-                category: "أمراض الكلى والمسالك البولية",
-                tradeName: "Ural Effervescent Granules",
-                activeIngredient: "سترات الصوديوم الحبيبية",
-                dosage: "فوار معقم للمسالك",
-                price: "8,000 د.ع",
+                category: "الفيتامينات والمكملات الغذائية",
+                tradeName: "Multivitamin Complete",
+                activeIngredient: "مجموعة فيتامينات ومعادن متكاملة",
+                dosage: "أقراص مغلفة",
+                price: "15,000 د.ع",
+                quantity: 40
+            },
+            {
+                category: "الفيتامينات والمكملات الغذائية",
+                tradeName: "Zinc Gluconate 50mg",
+                activeIngredient: "زنك جلوكونات",
+                dosage: "أقراص مناعية",
+                price: "7,500 د.ع",
+                quantity: 35
+            },
+            {
+                category: "الفيتامينات والمكملات الغذائية",
+                tradeName: "Omega-3 Fish Oil",
+                activeIngredient: "أوميغا 3 أحماض دهنية",
+                dosage: "كبسولات زيت السمك",
+                price: "14,000 د.ع",
+                quantity: 25
+            },
+            {
+                category: "الفيتامينات والمكملات الغذائية",
+                tradeName: "Magnesium Citrate",
+                activeIngredient: "سترات المغنيسيوم",
+                dosage: "أقراص مريحة للعضلات",
+                price: "11,000 د.ع",
                 quantity: 20
-            },
-            {
-                category: "أمراض الكلى والمسالك البولية",
-                tradeName: "Cystone Himalaya",
-                activeIngredient: "مستخلصات عشبية لتفتيت الحصى",
-                dosage: "60 قرص طبي",
-                price: "11,500 د.ع",
-                quantity: 25
-            },
-            {
-                category: "أمراض الكلى والمسالك البولية",
-                tradeName: "Rowatinex",
-                activeIngredient: "مزيج تربين طبيعي لتنظيف الكلى",
-                dosage: "كبسولات طاردة للحصى",
-                price: "10,000 د.ع",
-                quantity: 18
-            },
-            {
-                category: "المضادات الحيوية والمضادات",
-                tradeName: "Ciproker",
-                activeIngredient: "سيبروفلوكساسين (Ciprofloxacin)",
-                dosage: "500 مغ / قرص",
-                price: "6,000 د.ع",
-                quantity: 25
-            },
-            {
-                category: "العناية بالبشرة والتجميل",
-                tradeName: "Panthenol Cream",
-                activeIngredient: "ديكسبانثينول (Dexpanthenol)",
-                dosage: "مرهم موضعي 30 غم",
-                price: "4,500 د.ع",
-                quantity: 18
-            },
-            {
-                category: "أمراض القلب والأوعية الدموية",
-                tradeName: "Concor",
-                activeIngredient: "بيزوبرولول (Bisoprolol)",
-                dosage: "5 مغ",
-                price: "7,000 د.ع",
-                quantity: 30
             }
         ];
 
         let drugsData = [];
         try {
-            const saved = localStorage.getItem('raheeq_drugs');
+            const saved = localStorage.getItem('raheeq_vitamins_drugs');
             drugsData = saved ? JSON.parse(saved) : defaultDrugs;
         } catch (e) {
             drugsData = defaultDrugs;
@@ -326,7 +290,7 @@
 
         function saveToStorage() {
             try {
-                localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
+                localStorage.setItem('raheeq_vitamins_drugs', JSON.stringify(drugsData));
             } catch (e) {
                 console.error("فشل الحفظ في التخزين المحلي", e);
             }
@@ -477,7 +441,7 @@
         });
 
         function openAddModal() {
-            document.getElementById('modalTitle').innerText = 'إضافة منتج جديد للمخزون';
+            document.getElementById('modalTitle').innerText = 'إضافة فيتامين أو مكمل جديد';
             document.getElementById('drugIndex').value = '';
             document.getElementById('drugCategory').value = 'الفيتامينات والمكملات الغذائية';
             document.getElementById('drugTrade').value = '';
@@ -493,7 +457,7 @@
 
         function openEditModal(index) {
             const drug = drugsData[index];
-            document.getElementById('modalTitle').innerText = 'تعديل بيانات المنتج الدوائي';
+            document.getElementById('modalTitle').innerText = 'تعديل بيانات المنتج';
             document.getElementById('drugIndex').value = index;
             document.getElementById('drugCategory').value = drug.category;
             document.getElementById('drugTrade').value = drug.tradeName;
