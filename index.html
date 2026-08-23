@@ -61,6 +61,7 @@
             cursor: grabbing;
         }
 
+        /* أنميشن الإشعار المخصص */
         #customToast {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translate(-50%, -100px);
@@ -81,16 +82,19 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
+    <!-- الإشعار المخصص الأنيق (Toast Notification) -->
     <div id="customToast" class="fixed top-4 left-1/2 z-50 px-4 py-2.5 rounded-2xl glass-panel border border-cyan-500/40 shadow-2xl flex items-center gap-2 text-xs font-bold text-white max-w-[90vw]">
         <span id="toastIcon" class="text-base">✅</span>
         <span id="toastMessage">تمت العملية بنجاح!</span>
     </div>
 
+    <!-- شريط الإعلان العلوي -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2 transition-colors">
         <span>🌿</span>
         <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة متاحة</span>
     </div>
 
+    <!-- الترويسة الرئيسية -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
         <div class="flex items-center justify-between gap-2 w-full">
             
@@ -168,6 +172,7 @@
         </div>
     </main>
 
+    <!-- نافذة سلة الطلبات -->
     <div id="cartModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -192,6 +197,7 @@
         </div>
     </div>
 
+    <!-- نافذة إدخال بيانات المشتري وتأكيد الطلب -->
     <div id="customerModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -224,6 +230,7 @@
         </div>
     </div>
 
+    <!-- نافذة تسجيل دخول المشرف المخصصة (بدون prompt) -->
     <div id="adminPinModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
@@ -237,6 +244,7 @@
         </div>
     </div>
 
+    <!-- نافذة إعدادات المتجر للمشرف -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -269,6 +277,7 @@
         </div>
     </div>
 
+    <!-- نافذة إضافة / تعديل صنف -->
     <div id="adminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -354,77 +363,56 @@
             { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
-        // قائمة الأدوية بصور طبية واقعية لعلب الأدوية والأشرطة
         const defaultProducts = [
             {
                 id: 1,
-                name: "Ciproker",
-                activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
+                name: "Augmentin",
+                activeIngredient: "Amoxicillin + Clavulanic acid",
+                dose: "1000 mg",
                 category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 49,
-                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+                price: "14,000 د.ع",
+                stock: 35,
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=80"
             },
             {
                 id: 2,
-                name: "Ciprosam",
+                name: "Ciprodar",
                 activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
+                dose: "500 mg",
                 category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 1,
-                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80"
+                price: "11,500 د.ع",
+                stock: 18,
+                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=500&q=80"
             },
             {
                 id: 3,
-                name: "Ciprorux",
-                activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "7,000 د.ع",
-                stock: 2,
-                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
+                name: "Panadol Extra",
+                activeIngredient: "Paracetamol + Caffeine",
+                dose: "500 mg / 65 mg",
+                category: "المسكنات وخافضات الحرارة",
+                price: "4,000 د.ع",
+                stock: 75,
+                image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=500&q=80"
             },
             {
                 id: 4,
-                name: "Bactiflox Neo",
-                activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "8,000 د.ع",
-                stock: 29,
-                image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 5,
-                name: "AUROXETIL",
-                activeIngredient: "Cefuroxime",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 20,
-                image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 6,
                 name: "Concor",
                 activeIngredient: "Bisoprolol Fumarate",
-                dose: "mg 5",
+                dose: "5 mg",
                 category: "القلب وضغط الدم",
                 price: "9,000 د.ع",
                 stock: 12,
-                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=500&q=80"
             },
             {
-                id: 7,
+                id: 5,
                 name: "Losec",
                 activeIngredient: "Omeprazole",
-                dose: "mg 20",
+                dose: "20 mg",
                 category: "الجهاز الهضمي والمعدة",
                 price: "6,000 د.ع",
                 stock: 40,
-                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=500&q=80"
             }
         ];
 
@@ -433,11 +421,8 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        // مفتاح تخزين جديد بالكامل لفرض ظهور الأدوية الجديدة والصور الطبية
-        const STORAGE_KEY = 'sidalihet_pharma_perfect_2026';
-
         try {
-            const savedProducts = localStorage.getItem(STORAGE_KEY);
+            const savedProducts = localStorage.getItem('sidalihet_upload_v2');
             productsData = savedProducts ? JSON.parse(savedProducts) : defaultProducts;
         } catch(e) {
             productsData = defaultProducts;
@@ -451,7 +436,7 @@
         }
 
         function saveProductsToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(productsData));
+            localStorage.setItem('sidalihet_upload_v2', JSON.stringify(productsData));
         }
 
         function saveCartToStorage() {
@@ -459,6 +444,7 @@
             updateCartBadge();
         }
 
+        // دالة الإشعار المخصص الأنيق بدلاً من alert
         let toastTimeout = null;
         function showToast(message, icon = "✅") {
             const toast = document.getElementById('customToast');
@@ -1009,7 +995,7 @@
                 dose: document.getElementById('prodDose').value.trim(),
                 price: formattedPrice,
                 stock: parseInt(document.getElementById('prodStock').value) || 0,
-                image: document.getElementById('prodImage').value.trim() || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'
+                image: document.getElementById('prodImage').value.trim() || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=80'
             };
 
             if (editId) {
