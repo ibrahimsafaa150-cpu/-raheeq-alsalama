@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>صيدلية رَحِيْقُ السَّلَامَة | النظام الدوائي المتقدم</title>
+    <title>صيدلية رَحِيْقُ السَّلَامَة | النظام الدوائي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -18,34 +18,22 @@
             overflow-x: hidden;
             background-color: #060913;
             color: #f8fafc;
+            margin: 0;
+            padding: 0;
         }
 
-        /* زجاجية فائقة النقاء مستوحاة من الهوية السريرية */
         .glass-panel {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 15, 29, 0.95) 100%);
-            border: 1px solid rgba(6, 182, 212, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 15, 29, 0.98) 100%);
+            border: 1px solid rgba(6, 182, 212, 0.18);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
-        .gold-border-glow {
-            box-shadow: 0 0 25px -5px rgba(217, 119, 6, 0.25);
-            border-color: rgba(245, 158, 11, 0.4);
-        }
-
-        .teal-border-glow {
-            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.25);
-            border-color: rgba(6, 182, 212, 0.4);
-        }
-
-        /* توهجات الخلفية الديناميكية */
-        .ambient-glow {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.35;
-            pointer-events: none;
-            z-index: 0;
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            min-height: 44px;
         }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -55,123 +43,109 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
-    <!-- كرات الإضاءة المتوهجة المتغيرة -->
-    <div id="ambientTop" class="ambient-glow top-0 right-0 w-80 h-80 bg-teal-500"></div>
-    <div id="ambientBottom" class="ambient-glow bottom-10 left-0 w-96 h-96 bg-amber-600"></div>
-
-    <!-- شريط الهوية الرسمي -->
-    <div class="relative z-20 bg-gradient-to-r from-slate-950 via-teal-950/40 to-slate-950 border-b border-amber-500/20 text-[11px] py-1.5 px-4 text-center text-amber-300 flex justify-center items-center gap-2">
+    <!-- شريط الإعلان العلوي -->
+    <div class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1 px-3 text-center text-amber-300 flex justify-center items-center gap-1.5">
         <span>🌿</span>
-        <span class="font-bold tracking-wide">صحتكم أمانتنا • جودة ورعاية</span>
-        <span class="opacity-30">|</span>
-        <span class="text-cyan-400 font-semibold">نظام الصرف والرقابة السريرية</span>
+        <span class="font-bold">صحتكم أمانتنا • جودة ورعاية</span>
     </div>
 
-    <!-- ترويسة التطبيق مع الشعار الفاخر -->
-    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl px-4 py-3">
-        <div class="w-full flex items-center justify-between gap-3">
+    <!-- الترويسة الرئيسية المضبوطة للموبايل -->
+    <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
+        <div class="flex items-center justify-between gap-2 w-full">
             
-            <!-- اللوكو الرسمي بتصميم فكتور فاخر -->
-            <div class="flex items-center gap-3 cursor-pointer" onclick="resetView()">
-                <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-teal-900 via-slate-900 to-amber-950 p-[1.5px] shadow-lg shadow-teal-950/50 flex items-center justify-center shrink-0 border border-amber-500/30">
-                    <div class="w-full h-full rounded-2xl bg-slate-950 flex items-center justify-center p-1.5 relative overflow-hidden">
-                        <!-- رسم فني يطابق شعار صيدلية رحيق السلامة -->
-                        <svg viewBox="0 0 100 100" class="w-full h-full">
-                            <!-- الأغصان والزيتون -->
-                            <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16" opacity="0.9"/>
-                            <path d="M50 8 C70 10 80 30 78 45 C65 25 55 15 50 8 Z" fill="#84cc16" opacity="0.9"/>
-                            <!-- قطرة الرحيق الذهبية -->
-                            <path d="M50 14 C47 22 43 27 50 34 C57 27 53 22 50 14 Z" fill="#f59e0b"/>
-                            <!-- كفي الأمانة المحتضنة -->
-                            <path d="M18 55 C16 75 35 90 50 95 C30 85 24 70 26 55 C23 58 20 56 18 55 Z" fill="#0891b2"/>
-                            <path d="M82 55 C84 75 65 90 50 95 C70 85 76 70 74 55 C77 58 80 56 82 55 Z" fill="#0d9488"/>
-                            <!-- عصا الشفاء والأجنحة -->
-                            <circle cx="50" cy="38" r="4" fill="#38bdf8"/>
-                            <path d="M50 42 L50 85" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
-                            <path d="M38 46 C45 42 55 42 62 46 C55 50 45 50 38 46 Z" fill="#38bdf8"/>
-                            <path d="M42 56 Q58 56 50 64 Q42 72 58 72" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round"/>
-                        </svg>
-                    </div>
+            <!-- اللوكو واسم الصيدلية الثابت بدون تمدد -->
+            <div class="flex items-center gap-2 cursor-pointer min-w-0" onclick="resetView()">
+                <div class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <!-- الأغصان والزيتون -->
+                        <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
+                        <path d="M50 8 C70 10 80 30 78 45 C65 25 55 15 50 8 Z" fill="#84cc16"/>
+                        <!-- قطرة الرحيق الذهبية -->
+                        <path d="M50 14 C47 22 43 27 50 34 C57 27 53 22 50 14 Z" fill="#f59e0b"/>
+                        <!-- كفي الأمانة المحتضنة -->
+                        <path d="M18 55 C16 75 35 90 50 95 C30 85 24 70 26 55 C23 58 20 56 18 55 Z" fill="#0891b2"/>
+                        <path d="M82 55 C84 75 65 90 50 95 C70 85 76 70 74 55 C77 58 80 56 82 55 Z" fill="#0d9488"/>
+                        <!-- عصا الشفاء والأجنحة -->
+                        <circle cx="50" cy="38" r="4" fill="#38bdf8"/>
+                        <path d="M50 42 L50 85" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M38 46 C45 42 55 42 62 46 C55 50 45 50 38 46 Z" fill="#38bdf8"/>
+                        <path d="M42 56 Q58 56 50 64 Q42 72 58 72" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
                 </div>
-                <div class="flex flex-col">
-                    <h1 class="text-sm sm:text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-teal-300 to-cyan-400 leading-tight">
+                <div class="flex flex-col min-w-0">
+                    <h1 class="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-teal-300 to-cyan-400 truncate">
                         صيدلية رَحِيْقُ السَّلَامَة
                     </h1>
-                    <span class="text-[9px] text-slate-400 font-bold tracking-wider">RAHEEQ AL-SALAMA PHARMACY</span>
+                    <span class="text-[8px] text-slate-400 font-bold tracking-tight uppercase truncate">RAHEEQ AL-SALAMA</span>
                 </div>
             </div>
 
             <!-- أزرار الإجراءات السريعة -->
-            <div class="flex items-center gap-2">
-                <button onclick="openCartModal()" class="relative w-10 h-10 rounded-2xl bg-slate-900 border border-slate-700/80 flex items-center justify-center active:scale-90 transition shadow-inner">
-                    <span class="text-base">🛒</span>
-                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-lg">0</span>
+            <div class="flex items-center gap-1.5 shrink-0">
+                <button onclick="openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-95" title="السلة">
+                    <span class="text-sm">🛒</span>
+                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
                 <div id="adminActionHeader" class="hidden">
-                    <button onclick="openAddModal()" class="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 text-white font-bold text-xs px-3.5 py-2.5 rounded-2xl transition flex items-center gap-1.5 shadow-lg shadow-cyan-900/40 active:scale-95">
-                        <span>➕</span> <span>إضافة صنف</span>
+                    <button onclick="openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95">
+                        <span>➕</span> <span>إضافة</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- حقل البحث الموسع المتناسق بالكامل -->
-        <div class="mt-3 relative w-full">
+        <!-- حقل البحث -->
+        <div class="mt-2 relative w-full">
             <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث باسم الدواء، المادة الفعالة، الجرعة..." 
-                   class="w-full bg-slate-900/90 text-white placeholder-slate-500 text-xs rounded-2xl px-4 py-3 pr-11 border border-slate-800 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition shadow-inner">
-            <span class="absolute right-4 top-3 text-slate-400 text-sm">🔍</span>
+                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 pr-9 border border-slate-800 focus:outline-none focus:border-cyan-400">
+            <span class="absolute right-3 top-2 text-slate-500 text-xs">🔍</span>
         </div>
     </header>
 
-    <!-- شريط الأقسام السريع بالألوان الخاصة -->
-    <nav class="sticky top-[118px] z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 py-2.5 px-3">
-        <div class="flex gap-2 overflow-x-auto no-scrollbar w-full" id="circleCategories"></div>
+    <!-- شريط الأقسام السريع -->
+    <nav class="bg-slate-950/80 border-b border-slate-800/80 py-2 px-2">
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar w-full" id="circleCategories"></div>
     </nav>
 
-    <!-- المحتوى الطولي المتكامل بدون أي ضياع للمساحة -->
-    <main class="relative z-10 flex-grow w-full px-3 py-4 space-y-3.5 max-w-4xl mx-auto">
+    <!-- قائمة الأدوية الطولية -->
+    <main class="flex-grow w-full px-3 py-3 space-y-3 max-w-xl mx-auto">
 
-        <!-- ترويسة القسم النشط -->
         <div class="flex items-center justify-between px-1">
-            <div>
-                <h3 id="currentSectionTitle" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
-                    <span class="text-amber-400">●</span> كشف الأدوية والمستحضرات المعتمدة
-                </h3>
-            </div>
-            <select id="sortSelect" onchange="sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[11px] rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-cyan-400">
-                <option value="default">الترتيب: الافتراضي</option>
-                <option value="price-low">السعر: من الأقل</option>
-                <option value="price-high">السعر: من الأعلى</option>
+            <h3 id="currentSectionTitle" class="text-xs font-black text-white flex items-center gap-1.5">
+                <span class="text-amber-400">●</span> كشف الأدوية والمستحضرات المعتمدة
+            </h3>
+            <select id="sortSelect" onchange="sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] rounded-lg px-2 py-1 focus:outline-none">
+                <option value="default">الترتيب الافتراضي</option>
+                <option value="price-low">الأقل سعراً</option>
+                <option value="price-high">الأعلى سعراً</option>
                 <option value="stock-high">الكمية بالمخزن</option>
             </select>
         </div>
 
-        <!-- قائمة كروت الأدوية الطولية الانسيابية -->
-        <div id="productsGrid" class="space-y-3 w-full"></div>
+        <!-- كروت الأدوية -->
+        <div id="productsGrid" class="space-y-2.5 w-full"></div>
 
-        <!-- رسالة عدم وجود نتائج -->
-        <div id="noResults" class="hidden text-center py-16 text-slate-400 glass-panel rounded-3xl">
-            <div class="text-5xl mb-3">🔍</div>
-            <h4 class="text-sm font-bold text-white">لم يتم العثور على الصنف المطلوب</h4>
-            <p class="text-xs text-slate-500 mt-1">تأكد من كتابة الاسم أو التركيز بدقة.</p>
+        <div id="noResults" class="hidden text-center py-12 text-slate-400 glass-panel rounded-2xl">
+            <div class="text-3xl mb-2">🔍</div>
+            <h4 class="text-xs font-bold text-white">لم يتم العثور على الصنف المطلوب</h4>
         </div>
 
     </main>
 
-    <!-- نافذة المشرف (إضافة / تعديل دواء) -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-        <div class="glass-panel rounded-3xl p-5 w-full max-w-lg shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-                <h3 id="adminModalTitle" class="text-sm font-black text-white flex items-center gap-1.5"><span>🛡️</span> إدارة الصنف الدوائي</h3>
+    <!-- نافذة المشرف -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
+                <h3 id="adminModalTitle" class="text-xs font-black text-white flex items-center gap-1"><span>🛡️</span> إدارة الصنف الدوائي</h3>
                 <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
             
-            <form id="productForm" onsubmit="saveProduct(event)" class="space-y-3">
+            <form id="productForm" onsubmit="saveProduct(event)" class="space-y-2.5">
                 <input type="hidden" id="editIndex">
                 <div>
-                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">القسم الصيدلاني:</label>
-                    <select id="prodCategory" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">القسم الصيدلاني:</label>
+                    <select id="prodCategory" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                         <option value="المضادات الحيوية">🛡️ المضادات الحيوية والالتهاب</option>
                         <option value="المسكنات وخافضات الحرارة">💊 المسكنات وخافضات الحرارة</option>
                         <option value="القلب وضغط الدم">❤️ القلب وضغط الدم</option>
@@ -181,92 +155,85 @@
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">اسم الدواء التجاري (Trade Name):</label>
-                    <input type="text" id="prodName" required placeholder="مثال: Augmentin" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم الدواء التجاري:</label>
+                    <input type="text" id="prodName" required placeholder="Augmentin" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">المادة الفعالة المحتواة (Active Ingredient):</label>
-                    <input type="text" id="prodActive" required placeholder="مثال: Amoxicillin + Clavulanic acid" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">المادة الفعالة المحتواة:</label>
+                    <input type="text" id="prodActive" required placeholder="Amoxicillin + Clavulanic acid" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">الجرعة / التركيز:</label>
-                        <input type="text" id="prodDose" required placeholder="1000 mg" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الجرعة:</label>
+                        <input type="text" id="prodDose" required placeholder="1000 mg" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">السعر (د.ع):</label>
-                        <input type="text" id="prodPrice" required placeholder="14000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">السعر (د.ع):</label>
+                        <input type="text" id="prodPrice" required placeholder="14000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-semibold text-slate-300 mb-1">الكمية بالمخزن:</label>
-                        <input type="number" id="prodStock" required placeholder="50" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الكمية بالمخزن:</label>
+                        <input type="number" id="prodStock" required placeholder="50" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-semibold text-slate-300 mb-1">رابط صورة العلبة الدوائية:</label>
-                    <input type="text" id="prodImage" required placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">رابط صورة العلبة:</label>
+                    <input type="text" id="prodImage" required placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none">
                 </div>
 
-                <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
-                    <button type="button" onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold">إلغاء</button>
-                    <button type="submit" class="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 text-white px-5 py-2 rounded-xl text-xs font-bold shadow-lg">حفظ التغييرات</button>
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
+                    <button type="submit" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- نافذة سلة الطلبات -->
-    <div id="cartModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-        <div class="glass-panel rounded-3xl p-5 w-full max-w-lg shadow-2xl relative max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white flex items-center gap-1.5"><span>🛒</span> كشف الطلبيات الدوائية</h3>
+    <!-- نافذة السلة -->
+    <div id="cartModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>🛒</span> كشف الطلبيات</h3>
                 <button onclick="closeCartModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
-            <div id="cartItemsList" class="overflow-y-auto space-y-2.5 flex-grow my-2 pr-1 no-scrollbar"></div>
+            <div id="cartItemsList" class="overflow-y-auto space-y-2 flex-grow my-2 pr-0.5 no-scrollbar"></div>
 
-            <div class="border-t border-slate-800 pt-3 space-y-3">
+            <div class="border-t border-slate-800 pt-2.5 space-y-2">
                 <div class="flex justify-between items-center text-xs font-bold text-white">
-                    <span>المجموع الكلي:</span>
-                    <span id="cartTotalPrice" class="text-amber-400 font-black text-base">0 د.ع</span>
+                    <span>المجموع:</span>
+                    <span id="cartTotalPrice" class="text-amber-400 font-black text-sm">0 د.ع</span>
                 </div>
-                <button onclick="checkoutOrder()" class="w-full bg-gradient-to-r from-amber-500 via-teal-600 to-cyan-600 hover:opacity-95 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-xl transition active:scale-95">
+                <button onclick="checkoutOrder()" class="w-full bg-gradient-to-r from-amber-500 via-teal-600 to-cyan-600 text-slate-950 font-black py-2.5 rounded-xl text-xs shadow-md active:scale-95">
                     تأكيد وصرف الطلبية 🚀
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- التذييل الرسمي -->
-    <footer class="relative z-10 bg-slate-950 border-t border-slate-900 text-center py-6 text-xs text-slate-500 mt-auto">
-        <div class="max-w-4xl mx-auto px-4 space-y-2">
-            <p class="font-bold text-slate-300">صيدلية رَحِيْقُ السَّلَامَة • صحتكُم أمانتُنا</p>
-            <p class="text-[10px]">المنظومة الدوائية والسريرية المعتمدة © 2026</p>
-            <div class="pt-1">
-                <button onclick="toggleAdminMode()" id="adminFooterBtn" class="text-[11px] text-slate-500 hover:text-cyan-400 underline transition">
-                    🔒 لوحة المشرف الصيدلاني
-                </button>
-            </div>
-        </div>
+    <!-- التذييل -->
+    <footer class="bg-slate-950 border-t border-slate-900 text-center py-4 text-[10px] text-slate-500 mt-auto">
+        <p class="font-bold text-slate-400">صيدلية رَحِيْقُ السَّلَامَة • صحتكُم أمانتُنا</p>
+        <button onclick="toggleAdminMode()" id="adminFooterBtn" class="mt-1 text-slate-500 hover:text-cyan-400 underline block mx-auto">
+            🔒 لوحة المشرف الصيدلاني
+        </button>
     </footer>
 
     <script>
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
 
-        // تصنيفات الأقسام مع ألوان الهوية
         const categories = [
-            { name: "الكل", icon: "🌟", color: "#06b6d4" },
-            { name: "المضادات الحيوية", icon: "🛡️", color: "#0d9488" },
-            { name: "المسكنات وخافضات الحرارة", icon: "💊", color: "#ec4899" },
-            { name: "القلب وضغط الدم", icon: "❤️", color: "#ef4444" },
-            { name: "الجهاز الهضمي والمعدة", icon: "🍃", color: "#10b981" },
-            { name: "الفيتامينات والمكملات", icon: "🌿", color: "#f59e0b" }
+            { name: "الكل", icon: "🌟" },
+            { name: "المضادات الحيوية", icon: "🛡️" },
+            { name: "المسكنات وخافضات الحرارة", icon: "💊" },
+            { name: "القلب وضغط الدم", icon: "❤️" },
+            { name: "الجهاز الهضمي والمعدة", icon: "🍃" },
+            { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
-        // الأدوية الأولية بهيكلية الحقول المحددة (اسم الدواء، المادة الفعالة، الجرعة، السعر، المخزن)
         const defaultProducts = [
             {
                 id: 1,
@@ -317,16 +284,6 @@
                 price: "6,000 د.ع",
                 stock: 40,
                 image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 6,
-                name: "C-Viton",
-                activeIngredient: "Ascorbic Acid (Vitamin C)",
-                dose: "1000 mg",
-                category: "الفيتامينات والمكملات",
-                price: "5,500 د.ع",
-                stock: 60,
-                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=500&q=80"
             }
         ];
 
@@ -335,25 +292,25 @@
         let currentFilter = 'الكل';
 
         try {
-            const savedProducts = localStorage.getItem('sidalihet_final_app_v1');
+            const savedProducts = localStorage.getItem('sidalihet_fixed_v1');
             productsData = savedProducts ? JSON.parse(savedProducts) : defaultProducts;
         } catch(e) {
             productsData = defaultProducts;
         }
 
         try {
-            const savedCart = localStorage.getItem('sidalihet_final_cart_v1');
+            const savedCart = localStorage.getItem('sidalihet_fixed_cart_v1');
             cart = savedCart ? JSON.parse(savedCart) : [];
         } catch(e) {
             cart = [];
         }
 
         function saveProductsToStorage() {
-            localStorage.setItem('sidalihet_final_app_v1', JSON.stringify(productsData));
+            localStorage.setItem('sidalihet_fixed_v1', JSON.stringify(productsData));
         }
 
         function saveCartToStorage() {
-            localStorage.setItem('sidalihet_final_cart_v1', JSON.stringify(cart));
+            localStorage.setItem('sidalihet_fixed_cart_v1', JSON.stringify(cart));
             updateCartBadge();
         }
 
@@ -365,9 +322,9 @@
                 const isActive = currentFilter === cat.name;
                 html += `
                     <button onclick="filterByCategory('${cat.name}')" 
-                            class="px-3.5 py-2 rounded-2xl flex items-center gap-1.5 transition-all shrink-0 text-xs font-bold border ${
+                            class="px-2.5 py-1.5 rounded-xl flex items-center gap-1 transition shrink-0 text-[11px] font-bold border ${
                                 isActive 
-                                ? 'bg-gradient-to-r from-amber-500/20 to-teal-500/20 border-amber-400 text-amber-300 shadow-lg' 
+                                ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow' 
                                 : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white'
                             }">
                         <span>${cat.icon}</span>
@@ -394,49 +351,48 @@
             list.forEach((prod) => {
                 const isLow = prod.stock <= 5;
                 grid.innerHTML += `
-                    <div class="glass-panel rounded-3xl p-3.5 w-full flex flex-col gap-3 transition-all">
+                    <div class="glass-panel rounded-2xl p-3 w-full flex flex-col gap-2.5">
                         
-                        <!-- معلومات الدواء والصورة -->
-                        <div class="flex gap-3 items-center">
+                        <div class="flex gap-2.5 items-start">
                             
-                            <!-- صورة العلبة المربعة الثابتة -->
-                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-950 border border-slate-800 p-2 shrink-0 flex items-center justify-center relative overflow-hidden shadow-inner">
+                            <!-- صورة العلبة الثابتة بدون تمدد -->
+                            <div class="w-20 h-20 rounded-xl bg-slate-950 border border-slate-800 p-1 shrink-0 flex items-center justify-center relative overflow-hidden">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full">
-                                <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-500/90' : 'bg-emerald-600/90'} text-white text-[9px] font-black px-1.5 py-0.2 rounded-md shadow">
+                                <span class="absolute bottom-0.5 right-0.5 ${isLow ? 'bg-rose-500/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1 rounded shadow">
                                     المخزن: ${prod.stock}
                                 </span>
                             </div>
 
-                            <!-- تفاصيل المادة والجرعة والاسم -->
-                            <div class="flex-1 min-w-0 space-y-1.5">
+                            <!-- التفاصيل: الاسم، المادة، الجرعة، السعر -->
+                            <div class="flex-1 min-w-0 space-y-1">
                                 <div class="flex items-center justify-between gap-1">
-                                    <h4 class="text-sm sm:text-base font-black text-white truncate">${prod.name}</h4>
-                                    <span class="bg-cyan-950 text-cyan-300 border border-cyan-700/60 text-[10px] font-black px-2 py-0.5 rounded-lg shrink-0">
+                                    <h4 class="text-xs sm:text-sm font-black text-white truncate">${prod.name}</h4>
+                                    <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[9px] font-black px-1.5 py-0.5 rounded shrink-0">
                                         ${prod.dose}
                                     </span>
                                 </div>
 
-                                <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800/80">
-                                    <span class="text-[9px] text-amber-400 font-bold block">المادة الفعالة:</span>
-                                    <span class="text-[11px] text-slate-200 font-semibold line-clamp-1">${prod.activeIngredient}</span>
+                                <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800/80">
+                                    <span class="text-[8px] text-amber-400 font-bold block leading-none mb-0.5">المادة الفعالة:</span>
+                                    <span class="text-[10px] text-slate-200 font-semibold truncate block">${prod.activeIngredient}</span>
                                 </div>
 
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] text-slate-400 font-medium">${prod.category}</span>
-                                    <span class="text-xs sm:text-sm font-black text-amber-400">${prod.price}</span>
+                                <div class="flex items-center justify-between pt-0.5">
+                                    <span class="text-[9px] text-slate-400 truncate">${prod.category}</span>
+                                    <span class="text-xs font-black text-amber-400">${prod.price}</span>
                                 </div>
                             </div>
 
                         </div>
 
-                        <!-- أزرار الإضافة والتعديل للمشرف -->
-                        <div class="flex items-center gap-2 pt-2 border-t border-slate-800/70">
-                            <button onclick="addToCart(${prod.id})" class="flex-1 bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 hover:opacity-95 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-md active:scale-95">
+                        <!-- أزرار الإجراءات للموبايل -->
+                        <div class="flex items-center gap-1.5 pt-1.5 border-t border-slate-800/70">
+                            <button onclick="addToCart(${prod.id})" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-bold py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1 shadow active:scale-95">
                                 <span>🛒</span> <span>إضافة للطلبية</span>
                             </button>
                             ${isAdmin ? `
-                            <button onclick="openEditModal(${prod.id})" class="bg-slate-800 text-slate-200 px-3 py-2 rounded-xl text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
-                            <button onclick="deleteProduct(${prod.id})" class="bg-rose-950/60 text-rose-400 px-3 py-2 rounded-xl text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
+                            <button onclick="openEditModal(${prod.id})" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
+                            <button onclick="deleteProduct(${prod.id})" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
                             ` : ''}
                         </div>
 
@@ -510,7 +466,7 @@
                 cart.push({ ...prod, qty: 1 });
             }
             saveCartToStorage();
-            alert(`✅ تمت إضافة "${prod.name} (${prod.dose})" بنجاح!`);
+            alert(`✅ تمت إضافة "${prod.name}" بنجاح!`);
         }
 
         function updateCartBadge() {
@@ -525,7 +481,7 @@
             list.innerHTML = '';
 
             if (cart.length === 0) {
-                list.innerHTML = `<div class="text-center py-10 text-slate-500 text-xs">سلة الأدوية فارغة حالياً.</div>`;
+                list.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs">سلة الأدوية فارغة حالياً.</div>`;
                 totalPriceEl.innerText = '0 د.ع';
             } else {
                 let total = 0;
@@ -535,19 +491,19 @@
                     total += itemTotal;
 
                     list.innerHTML += `
-                        <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-2xl border border-slate-800">
-                            <div class="flex items-center gap-2.5">
-                                <img src="${item.image}" class="w-11 h-11 rounded-xl object-contain bg-slate-900 p-1 border border-slate-800">
+                        <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <img src="${item.image}" class="w-9 h-9 rounded-lg object-contain bg-slate-900 p-0.5 border border-slate-800">
                                 <div>
-                                    <h5 class="text-xs font-black text-white">${item.name} <span class="text-cyan-400 text-[10px]">(${item.dose})</span></h5>
-                                    <span class="text-[11px] text-amber-400 font-bold">${item.price}</span>
+                                    <h5 class="text-[11px] font-black text-white">${item.name} <span class="text-cyan-400 text-[9px]">(${item.dose})</span></h5>
+                                    <span class="text-[10px] text-amber-400 font-bold">${item.price}</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1.5">
-                                <button onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 text-xs font-bold active:scale-90">-</button>
+                            <div class="flex items-center gap-1">
+                                <button onclick="changeQty(${index}, -1)" class="w-6 h-6 rounded bg-slate-800 text-xs font-bold active:scale-90">-</button>
                                 <span class="text-xs font-bold text-cyan-400 px-1">${item.qty}</span>
-                                <button onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 text-xs font-bold active:scale-90">+</button>
-                                <button onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5">🗑️</button>
+                                <button onclick="changeQty(${index}, 1)" class="w-6 h-6 rounded bg-slate-800 text-xs font-bold active:scale-90">+</button>
+                                <button onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1">🗑️</button>
                             </div>
                         </div>
                     `;
@@ -617,11 +573,11 @@
             if (isAdmin) {
                 headerBtn.classList.remove('hidden');
                 footerBtn.innerText = "🔓 تسجيل خروج المشرف";
-                footerBtn.className = "text-xs text-rose-400 hover:underline transition font-bold";
+                footerBtn.className = "mt-1 text-rose-400 hover:underline block mx-auto font-bold";
             } else {
                 headerBtn.classList.add('hidden');
                 footerBtn.innerText = "🔒 لوحة المشرف الصيدلاني";
-                footerBtn.className = "text-xs text-slate-500 hover:text-cyan-400 underline transition";
+                footerBtn.className = "mt-1 text-slate-500 hover:text-cyan-400 underline block mx-auto";
             }
             renderProducts();
         }
@@ -717,11 +673,11 @@
             saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
-            alert('✅ تم حفظ الصنف الدوائي وتحديث المخزن بنجاح!');
+            alert('✅ تم حفظ الصنف الدوائي بنجاح!');
         }
 
         function deleteProduct(id) {
-            if (confirm('هل أنت متأكد من رغبتك في حذف هذا الدواء نهائياً؟')) {
+            if (confirm('هل أنت متأكد من حذف هذا الدواء نهائياً؟')) {
                 productsData = productsData.filter(p => p.id !== id);
                 saveProductsToStorage();
                 filterByCategory(currentFilter);
