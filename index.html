@@ -1,177 +1,267 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صيدلية رحيق السلامة | المتجر الإلكتروني</title>
-    <!-- Tailwind CSS للتصميم -->
+    <title>صيدلية رَحِيْقُ السَّلَامَة | المتجر الطبي الذكي</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- خط Cairo العربي -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#059669',
+                            dark: '#047857',
+                            light: '#34d399'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- خط Cairo العربي الفاخر -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #09090b; color: #f4f4f5; }
+        body { font-family: 'Cairo', sans-serif; }
+        /* تأثيرات الإضاءة والظلال الفاخرة */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-card {
+            background: rgba(18, 18, 22, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .glow-effect {
+            box-shadow: 0 10px 30px -10px rgba(5, 150, 105, 0.15);
+        }
+        .dark .glow-effect {
+            box-shadow: 0 10px 30px -10px rgba(52, 211, 153, 0.08);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-[#09090b] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- الهيدر العلوي -->
-    <header class="bg-black/90 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto px-4 py-3.5 flex justify-between items-center">
-            <!-- الشعار -->
+    <!-- شريط الإشعارات العلوي الترحيبي -->
+    <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-[11px] sm:text-xs py-1.5 px-4 text-center font-semibold shadow-sm">
+        ✨ صيدلية رحيق السلامة • استشارة أصلية ومخزون معتمد • توصيل سريع لكافة المناطق
+    </div>
+
+    <!-- الهيدر الرئيسي الاحترافي -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+            
+            <!-- الشعار وهوية المتجر -->
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-emerald-600 flex items-center justify-center text-xl shadow-lg">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-xl shadow-lg shadow-emerald-600/20 text-white font-black">
                     🌿
                 </div>
                 <div>
-                    <h1 class="text-sm sm:text-base font-black tracking-wide text-white">صيدلية رَحِيْقُ السَّلَامَة</h1>
-                    <p class="text-[10px] text-zinc-400">متجرك الطبي المتكامل • عروض وخيارات واسعة</p>
+                    <h1 class="text-sm sm:text-base font-black tracking-wider bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">صيدلية رَحِيْقُ السَّلَامَة</h1>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">المنصة الطبية الذكية لإدارة المخزون</p>
                 </div>
             </div>
 
-            <!-- زر إضافة دواء (للمشرف فقط) -->
-            <div id="adminActionHeader" class="hidden">
-                <button onclick="openAddModal()" class="bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-lg transition flex items-center gap-1.5">
-                    <span>➕</span> إضافة منتج
+            <!-- أدوات التحكم العلوية (الوضع الليلي + زر المشرف) -->
+            <div class="flex items-center gap-2.5">
+                <!-- زر تبديل الوضع (ليلي / نهاري) -->
+                <button onclick="toggleThemeMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:scale-105 transition shadow-sm text-base" title="تبديل المظهر">
+                    <span id="themeIcon">☀️</span>
                 </button>
+
+                <!-- زر إضافة منتج جديد (يظهر للمشرف حصراً) -->
+                <div id="adminActionHeader" class="hidden">
+                    <button onclick="openAddModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5 hover:scale-105">
+                        <span>➕</span> <span>إضافة منتج</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- شريط البحث السريع والفلاتر -->
-        <div class="bg-zinc-900/90 border-t border-zinc-800/80 px-4 py-2.5">
-            <div class="max-w-6xl mx-auto relative">
-                <input type="text" id="searchInput" placeholder="ابحث عن اسم الدواء، المادة العلمية، أو التصنيف..." 
-                       class="w-full bg-zinc-950 text-white placeholder-zinc-500 text-xs sm:text-sm rounded-xl px-4 py-2.5 pr-10 border border-zinc-800 focus:outline-none focus:border-amber-500 transition shadow-inner">
-                <span class="absolute right-3.5 top-3 text-zinc-400 text-sm">🔍</span>
+        <!-- شريط البحث المتقدم الفوري -->
+        <div class="bg-slate-100/70 dark:bg-slate-900/50 border-t border-slate-200/60 dark:border-slate-800/60 px-4 py-3">
+            <div class="max-w-3xl mx-auto relative">
+                <input type="text" id="searchInput" placeholder="ابحث بالاسم التجاري، المادة الفعالة، أو القسم..." 
+                       class="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs sm:text-sm rounded-2xl px-4 py-3 pr-11 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 transition shadow-sm">
+                <span class="absolute right-4 top-3.5 text-slate-400 text-base">🔍</span>
             </div>
         </div>
     </header>
 
-    <!-- بانر ترحيبي شبيه بالصور (Hero Banners) -->
-    <section class="max-w-6xl mx-auto px-4 pt-6 w-full">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-zinc-900 to-zinc-800 border border-zinc-800 p-6 flex flex-col justify-center shadow-lg">
-                <span class="text-amber-400 text-[11px] font-bold mb-1">عناية يومية متكاملة</span>
-                <h2 class="text-lg font-black text-white mb-2">مستحضرات العناية بالبشرة والأدوية</h2>
-                <p class="text-zinc-400 text-xs mb-4">أفضل المنتجات الطبية الأصلية المضمونة لتلبية احتياجاتك الصحية.</p>
-                <div class="inline-block border border-zinc-600 text-white text-xs font-bold px-4 py-1.5 rounded-lg w-fit">تصفح الأقسام</div>
-            </div>
-            <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-emerald-950/40 to-zinc-900 border border-zinc-800 p-6 flex flex-col justify-center shadow-lg">
-                <span class="text-emerald-400 text-[11px] font-bold mb-1">توصيلة سريعة وآمنة</span>
-                <h2 class="text-lg font-black text-white mb-2">الأجهزة الطبية والمضادات الحيوية</h2>
-                <p class="text-zinc-400 text-xs mb-4">نوفر كافة أنواع الأدوية والمستلزمات الطبية بأفضل الأسعار.</p>
-                <div class="inline-block border border-emerald-600/50 text-emerald-300 text-xs font-bold px-4 py-1.5 rounded-lg w-fit">المخزون المحدث</div>
+    <!-- بانر ترحيبي فخم للمتجر (Hero Section) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 w-full">
+        <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-900/40 p-6 sm:p-10 shadow-2xl">
+            <div class="absolute -left-10 -bottom-10 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-2xl">
+                <span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-3 py-1 rounded-full border border-emerald-500/30 inline-block mb-3">مخزون رقمي معتمد 2026</span>
+                <h2 class="text-xl sm:text-3xl font-black text-white mb-3">أفضل الأدوية والمستلزمات الطبية بين يديك</h2>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-5">تصفح أقسام الصيدلية بدقة عالية، واعرف المواد الفعالة، الجرعات المتاحة، والكميات المتوفرة فورياً.</p>
+                <div class="flex flex-wrap gap-2 text-xs text-slate-300 font-semibold">
+                    <span class="bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur border border-white/10">🛡️ منتجات أصلية 100%</span>
+                    <span class="bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur border border-white/10">⚡ تحديث فوري للمخزون</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- المحتوى الرئيسي (عرض المنتجات كبطاقات متجر) -->
-    <main class="max-w-6xl mx-auto px-4 py-6 space-y-8 flex-grow w-full">
+    <!-- المحتوى الرئيسي (عرض الكتالوج) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-10 flex-grow w-full">
 
         <!-- رسالة عدم وجود نتائج -->
-        <div id="noResults" class="hidden text-center py-16 text-zinc-500 font-semibold bg-zinc-900/50 rounded-2xl border border-zinc-800">
-            عذراً، لم يتم العثور على المنتج المطلوب.
+        <div id="noResults" class="hidden text-center py-20 text-slate-400 font-semibold glass-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="text-4xl mb-2">🔍</div>
+            عذراً، لم يتم العثور على أي منتج مطابق لبحثك.
         </div>
 
-        <!-- حاوية الأقسام والمنتجات -->
-        <div id="categoriesContainer" class="space-y-8">
-            <!-- يتم تعبئتها ديناميكياً -->
+        <!-- حاوية الأقسام والأدوية -->
+        <div id="categoriesContainer" class="space-y-10">
+            <!-- يتم تعبئتها تلقائياً عبر الجافاسكريبت -->
         </div>
 
     </main>
 
-    <!-- نافذة منبثقة لإضافة أو تعديل دواء -->
-    <div id="drugModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 w-full max-w-md shadow-2xl">
-            <h3 id="modalTitle" class="text-base font-black text-white mb-4 border-b border-zinc-800 pb-2">إضافة منتج جديد</h3>
-            <form id="drugForm" onsubmit="saveDrug(event)" class="space-y-3">
+    <!-- نافذة منبثقة احترافية لإضافة أو تعديل منتج -->
+    <div id="drugModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 transition-all">
+        <div class="glass-card bg-white dark:bg-[#121216] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative">
+            <div class="flex justify-between items-center mb-5 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 id="modalTitle" class="text-base font-black text-emerald-800 dark:text-emerald-400">إضافة منتج جديد للمخزون</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-rose-500 font-bold text-lg">✕</button>
+            </div>
+            
+            <form id="drugForm" onsubmit="saveDrug(event)" class="space-y-4">
                 <input type="hidden" id="drugIndex">
                 <div>
-                    <label class="block text-xs font-bold text-zinc-300 mb-1">المجموعة (التصنيف):</label>
-                    <input type="text" id="drugCategory" required placeholder="مثال: المضادات الحيوية واسعة النطاق" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">القسم (التصنيف):</label>
+                    <input type="text" id="drugCategory" required placeholder="مثال: المضادات الحيوية واسعة النطاق" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                 </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم التجاري:</label>
+                        <input type="text" id="drugTrade" required placeholder="مثال: Ciproker" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">المادة الفعالة (ما يحتويه):</label>
+                        <input type="text" id="drugGeneric" required placeholder="مثال: Ciprofloxacin" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-zinc-300 mb-1">المادة العلمية (اسم الدواء):</label>
-                    <input type="text" id="drugGeneric" required placeholder="مثال: سيبروفلوكساسين (Ciprofloxacin)" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الجرعة:</label>
+                    <input type="text" id="drugDosage" required placeholder="مثال: 500 مغ / قرص" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-300 mb-1">الأسماء التجارية والجرعات:</label>
-                    <input type="text" id="drugTrade" required placeholder="مثال: Ciproker | 500 مغ" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
-                </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-zinc-300 mb-1">السعر:</label>
-                        <input type="text" id="drugPrice" required placeholder="6,000 د.ع" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">السعر:</label>
+                        <input type="text" id="drugPrice" required placeholder="6,000 د.ع" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-zinc-300 mb-1">القطع المتبقية:</label>
-                        <input type="number" id="drugQuantity" required placeholder="25" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-500">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">كم حبة باقي (الكمية):</label>
+                        <input type="number" id="drugQuantity" required placeholder="25" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                     </div>
                 </div>
-                <div class="flex justify-end gap-2 pt-4 border-t border-zinc-800">
-                    <button type="button" onclick="closeModal()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold transition">إلغاء</button>
-                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-black px-5 py-2 rounded-xl text-xs font-bold transition shadow">حفظ</button>
+
+                <div class="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <button type="button" onclick="closeModal()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl text-xs font-bold transition">إلغاء</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-md">حفظ البيانات</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- الفوتر السفلي (يحتوي على زر دخول المشرف السري) -->
-    <footer class="bg-black border-t border-zinc-800 text-center py-6 text-xs text-zinc-400 mt-auto">
-        <p class="font-bold text-zinc-200 mb-1">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
-        <p class="mb-3 text-[11px]">جميع الحقوق محفوظة © 2026</p>
-        
-        <!-- زر دخول / خروج المشرف الخفي -->
-        <div id="adminControlArea">
-            <button onclick="toggleAdmin()" id="adminBtnText" class="text-[11px] text-zinc-500 hover:text-amber-400 underline transition">
-                🔒 لوحة تحكم المشرف
-            </button>
+    <!-- الفوتر السفلي الاحترافي -->
+    <footer class="bg-white dark:bg-[#09090b] border-t border-slate-200 dark:border-slate-800 text-center py-8 text-xs text-slate-500 dark:text-slate-400 mt-auto transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <p class="font-bold text-slate-800 dark:text-slate-200">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
+            <p class="text-[11px]">جميع الحقوق محفوظة © 2026 • تصميم وتطوير متقدم للمخزون الدوائي</p>
+            
+            <!-- زر لوحة تحكم المشرف (سري في الفوتر) -->
+            <div class="pt-2">
+                <button onclick="toggleAdmin()" id="adminBtnText" class="text-[11px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 underline transition font-semibold">
+                    🔒 لوحة تحكم المشرف
+                </button>
+            </div>
         </div>
     </footer>
 
-    <!-- جافاسكريبت لإدارة المتجر والأمان -->
+    <!-- المنطق البرمجي (JavaScript) -->
     <script>
+        // إدارة وضع المظهر (الليلي / النهاري)
+        let isDarkMode = localStorage.getItem('raheeq_theme') !== 'light';
+        
+        function initTheme() {
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').innerText = '🌙';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+            }
+        }
+
+        function toggleThemeMode() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('raheeq_theme', isDarkMode ? 'dark' : 'light');
+            initTheme();
+        }
+        initTheme();
+
+        // حالة المشرف
         let isAdmin = localStorage.getItem('raheeq_is_admin') === 'true';
 
+        // بيانات الأدوية والمخزون الافتراضية
         let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs')) || [
             {
-                category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون (Quinolones)",
-                generic: "سيبروفلوكساسين (Ciprofloxacin)",
-                trade: "Ciproker | Bactiflox Neo | Ciprobay | Microflox (500 و 750 مغ)",
+                category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون",
+                tradeName: "Ciproker",
+                activeIngredient: "سيبروفلوكساسين (Ciprofloxacin)",
+                dosage: "500 مغ / 750 مغ",
                 price: "6,000 د.ع",
                 quantity: 25
             },
             {
-                category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون (Quinolones)",
-                generic: "ليفوفلوكساسين (Levofloxacin)",
-                trade: "Tavanic | Levour | Levotop | Uniflox (500 مغ)",
+                category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون",
+                tradeName: "Tavanic",
+                activeIngredient: "ليفوفلوكساسين (Levofloxacin)",
+                dosage: "500 مغ",
                 price: "8,500 د.ع",
                 quantity: 12
             },
             {
-                category: "ثانياً: مجموعة السيفالوسبورين (Cephalosporins)",
-                generic: "سيفيكسيم (Cefixime)",
-                trade: "Fixim 400 | Mixif | Betixim | Winex",
+                category: "ثانياً: مجموعة السيفالوسبورين الحديثة (Cephalosporins)",
+                tradeName: "Fixim 400",
+                activeIngredient: "سيفيكسيم (Cefixime)",
+                dosage: "400 مغ كبسول",
                 price: "9,000 د.ع",
                 quantity: 30
             },
             {
-                category: "ثانياً: مجموعة السيفالوسبورين (Cephalosporins)",
-                generic: "سيفدينير (Cefdinir)",
-                trade: "Ceftinex 300mg | AltiCet 300mg",
+                category: "ثانياً: مجموعة السيفالوسبورين الحديثة (Cephalosporins)",
+                tradeName: "Ceftinex",
+                activeIngredient: "سيفدينير (Cefdinir)",
+                dosage: "300 مغ",
                 price: "8,000 د.ع",
                 quantity: 14
             },
             {
                 category: "ثالثاً: مجموعة الماكروليد والمضادات المعوية",
-                generic: "كلاريثروميسين (Clarithromycin)",
-                trade: "Claranta 500 | Clariva 500",
+                tradeName: "Claranta",
+                activeIngredient: "كلاريثروميسين (Clarithromycin)",
+                dosage: "500 مغ",
                 price: "11,000 د.ع",
                 quantity: 16
             },
             {
                 category: "رابعاً: مضادات الطفيليات والالتهابات البولية",
-                generic: "ميترونيدازول (Metronidazole)",
-                trade: "FLAGIMEL | Flagyl | SAFAGYL | NejAzole",
+                tradeName: "FLAGIMEL",
+                activeIngredient: "ميترونيدازول (Metronidazole)",
+                dosage: "500 مغ",
                 price: "3,000 د.ع",
                 quantity: 50
             }
@@ -181,6 +271,7 @@
             localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
         }
 
+        // تحديث واجهة المشرف
         function updateAdminUI() {
             const adminHeader = document.getElementById('adminActionHeader');
             const adminBtnText = document.getElementById('adminBtnText');
@@ -192,21 +283,22 @@
             } else {
                 adminHeader.classList.add('hidden');
                 adminBtnText.innerText = "🔒 لوحة تحكم المشرف";
-                adminBtnText.className = "text-[11px] text-zinc-500 hover:text-amber-400 underline transition";
+                adminBtnText.className = "text-[11px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 underline transition font-semibold";
             }
             renderDrugs(document.getElementById('searchInput').value.trim());
         }
 
+        // إدخال الرمز السري المعقد المطلوب
         function toggleAdmin() {
             if (isAdmin) {
-                if (confirm('هل تريد الخروج من وضع المشرف؟')) {
+                if (confirm('هل تريد تسجيل الخروج من وضع الإدارة؟')) {
                     localStorage.setItem('raheeq_is_admin', 'false');
                     isAdmin = false;
                     updateAdminUI();
                 }
             } else {
                 let pin = prompt('أدخل رمز المرور السري للمشرف:');
-                if (pin === '1234') { // رمز المرور الافتراضي
+                if (pin === 'google@199920012005') {
                     localStorage.setItem('raheeq_is_admin', 'true');
                     isAdmin = true;
                     updateAdminUI();
@@ -217,6 +309,7 @@
             }
         }
 
+        // عرض وترتيب الأدوية
         function renderDrugs(filter = '') {
             const container = document.getElementById('categoriesContainer');
             const noResults = document.getElementById('noResults');
@@ -224,9 +317,10 @@
 
             const filtered = drugsData.map((drug, index) => ({ ...drug, originalIndex: index })).filter(drug => {
                 const query = filter.toLowerCase();
-                return drug.generic.toLowerCase().includes(query) || 
-                       drug.trade.toLowerCase().includes(query) || 
-                       drug.category.toLowerCase().includes(query);
+                return drug.tradeName.toLowerCase().includes(query) || 
+                       drug.activeIngredient.toLowerCase().includes(query) || 
+                       drug.category.toLowerCase().includes(query) ||
+                       drug.dosage.toLowerCase().includes(query);
             });
 
             if (filtered.length === 0) {
@@ -247,37 +341,56 @@
             for (const [category, items] of Object.entries(grouped)) {
                 let sectionHTML = `
                     <div class="space-y-4">
-                        <div class="border-r-4 border-amber-500 bg-zinc-900/80 px-4 py-2.5 rounded-lg border-y border-l border-zinc-800">
-                            <h2 class="text-xs sm:text-sm font-black text-white">${category}</h2>
+                        <div class="border-r-4 border-emerald-500 bg-white dark:bg-slate-900 px-5 py-3 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                            <h2 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">${category}</h2>
+                            <span class="text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded-xl border border-emerald-500/20">${items.length} منتج</span>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 `;
 
                 items.forEach(drug => {
+                    // تحديد لون حالة الكمية
+                    let stockBadge = drug.quantity > 10 ? 
+                        `<span class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-xl text-[11px] font-bold">متوفر: ${drug.quantity} حبة</span>` : 
+                        `<span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-xl text-[11px] font-bold">متبقي قليل: ${drug.quantity} حبة</span>`;
+
                     sectionHTML += `
-                        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-4 flex flex-col justify-between hover:border-zinc-700 transition shadow-lg relative group">
-                            <!-- تاغ New شبيه بالصور -->
-                            <span class="absolute top-3 left-3 bg-zinc-800 text-amber-400 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-zinc-700">New</span>
+                        <div class="glass-card bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-5 flex flex-col justify-between glow-effect hover:scale-[1.01] transition duration-300 relative group">
                             
-                            <div>
-                                <div class="mb-3">
-                                    <span class="text-[10px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 inline-block mb-1.5">مادة فعالة</span>
-                                    <h3 class="text-xs sm:text-sm font-bold text-white">${drug.generic}</h3>
-                                </div>
-                                <p class="text-xs text-zinc-400 mb-4 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800/60">${drug.trade}</p>
+                            <!-- تاغ تجاري -->
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow">New</span>
                             </div>
 
-                            <div>
-                                <div class="flex justify-between items-center mb-3 pt-2 border-t border-zinc-800">
-                                    <span class="text-xs font-black text-amber-400">${drug.price}</span>
-                                    <span class="text-[11px] text-zinc-400 bg-zinc-950 px-2.5 py-1 rounded-lg border border-zinc-800">المتبقي: <b class="text-white">${drug.quantity}</b></span>
+                            <div class="space-y-3 mb-4 pr-2">
+                                <div>
+                                    <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-900/50 inline-block mb-1">الاسم التجاري</span>
+                                    <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">${drug.tradeName}</h3>
+                                </div>
+
+                                <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-800/50 space-y-1.5 text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">المادة الفعالة:</span>
+                                        <span class="font-bold text-slate-700 dark:text-slate-200 text-left">${drug.activeIngredient}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">الجرعة:</span>
+                                        <span class="font-bold text-slate-700 dark:text-slate-200">${drug.dosage}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-black text-emerald-700 dark:text-emerald-400">${drug.price}</span>
+                                    ${stockBadge}
                                 </div>
 
                                 <!-- أزرار التعديل والحذف تظهر للمشرف فقط -->
                                 ${isAdmin ? `
-                                <div class="flex gap-2 pt-2 border-t border-zinc-800">
-                                    <button onclick="openEditModal(${drug.originalIndex})" class="flex-1 bg-zinc-800 hover:bg-zinc-700 text-emerald-400 font-bold py-1.5 rounded-xl text-xs transition border border-zinc-700">✏️ تعديل</button>
-                                    <button onclick="deleteDrug(${drug.originalIndex})" class="bg-zinc-800 hover:bg-rose-950/50 text-rose-400 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-zinc-700">🗑️</button>
+                                <div class="flex gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                                    <button onclick="openEditModal(${drug.originalIndex})" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 font-bold py-2 rounded-xl text-xs transition border border-slate-200 dark:border-slate-700">✏️ تعديل</button>
+                                    <button onclick="deleteDrug(${drug.originalIndex})" class="bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-bold px-3.5 py-2 rounded-xl text-xs transition border border-slate-200 dark:border-slate-700">🗑️</button>
                                 </div>
                                 ` : ''}
                             </div>
@@ -295,11 +408,12 @@
         });
 
         function openAddModal() {
-            document.getElementById('modalTitle').innerText = 'إضافة منتج جديد';
+            document.getElementById('modalTitle').innerText = 'إضافة منتج جديد للمخزون';
             document.getElementById('drugIndex').value = '';
             document.getElementById('drugCategory').value = '';
-            document.getElementById('drugGeneric').value = '';
             document.getElementById('drugTrade').value = '';
+            document.getElementById('drugGeneric').value = '';
+            document.getElementById('drugDosage').value = '';
             document.getElementById('drugPrice').value = '';
             document.getElementById('drugQuantity').value = '';
             document.getElementById('drugModal').classList.remove('hidden');
@@ -307,14 +421,15 @@
 
         function openEditModal(index) {
             const drug = drugsData[index];
-            document.getElementById('modalTitle').innerText = 'تعديل بيانات المنتج';
+            document.getElementById('modalTitle').innerText = 'تعديل بيانات المنتج الدوائي';
             document.getElementById('drugIndex').value = index;
             document.getElementById('drugCategory').value = drug.category;
-            document.getElementById('drugGeneric').value = drug.generic;
-            document.getElementById('drugTrade').value = drug.trade;
+            document.getElementById('drugTrade').value = drug.tradeName;
+            document.getElementById('drugGeneric').value = drug.activeIngredient;
+            document.getElementById('drugDosage').value = drug.dosage;
             document.getElementById('drugPrice').value = drug.price;
             document.getElementById('drugQuantity').value = drug.quantity;
-            document.getElementById('drugModal'].classList.remove('hidden');
+            document.getElementById('drugModal').classList.remove('hidden');
         }
 
         function closeModal() {
@@ -326,8 +441,9 @@
             const index = document.getElementById('drugIndex').value;
             const newDrug = {
                 category: document.getElementById('drugCategory').value,
-                generic: document.getElementById('drugGeneric').value,
-                trade: document.getElementById('drugTrade').value,
+                tradeName: document.getElementById('drugTrade').value,
+                activeIngredient: document.getElementById('drugGeneric').value,
+                dosage: document.getElementById('drugDosage').value,
                 price: document.getElementById('drugPrice').value,
                 quantity: parseInt(document.getElementById('drugQuantity').value)
             };
@@ -344,7 +460,7 @@
         }
 
         function deleteDrug(index) {
-            if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج من المخزون؟')) {
                 drugsData.splice(index, 1);
                 saveToStorage();
                 updateAdminUI();
@@ -354,6 +470,5 @@
         // تشغيل أولي
         updateAdminUI();
     </script>
-
 </body>
 </html>
