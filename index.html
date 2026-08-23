@@ -14,7 +14,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- الهيدر العلوي تماماً مثل التصميم الأول -->
+    <!-- الهيدر العلوي -->
     <header class="bg-[#093d2e] text-white shadow-md sticky top-0 z-40 border-b-2 border-emerald-700">
         <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <!-- الشعار والعنوان -->
@@ -28,14 +28,14 @@
                         <p class="text-[11px] text-emerald-300 font-semibold">صحتكم أمانتنا • جودة ورعاية</p>
                     </div>
                 </div>
-                <!-- زر إضافة دواء للجوال -->
-                <button onclick="openAddModal()" class="sm:hidden bg-amber-500 hover:bg-amber-600 text-emerald-950 font-bold text-xs px-3 py-2 rounded-xl shadow">
+                <!-- زر إضافة دواء للجوال (يظهر للمشرف فقط) -->
+                <button id="mobileAddBtn" onclick="openAddModal()" class="hidden bg-amber-500 hover:bg-amber-600 text-emerald-950 font-bold text-xs px-3 py-2 rounded-xl shadow">
                     + دواء جديد
                 </button>
             </div>
 
-            <!-- زر إضافة دواء للشاشات الكبيرة -->
-            <div class="hidden sm:flex items-center gap-2">
+            <!-- زر إضافة دواء للشاشات الكبيرة (يظهر للمشرف فقط) -->
+            <div id="desktopAddBtn" class="hidden items-center gap-2">
                 <button onclick="openAddModal()" class="bg-amber-500 hover:bg-amber-600 text-emerald-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
                     <span>➕</span> إضافة دواء جديد
                 </button>
@@ -60,16 +60,16 @@
             عذراً، لم يتم العثور على الدواء المطلوب.
         </div>
 
-        <!-- حاوية الأدوية (ستتولد ديناميكياً) -->
+        <!-- حاوية الأدوية -->
         <div id="categoriesContainer" class="space-y-6">
-            <!-- يتم تعبئتها بواسطة الجافاسكريبت -->
+            <!-- يتم تعبئتها ديناميكياً -->
         </div>
 
     </main>
 
-    <!-- نافذة منبثقة (Modal) لإضافة أو تعديل دواء -->
+    <!-- نافذة منبثقة لإضافة أو تعديل دواء -->
     <div id="drugModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 animate-fadeIn">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100">
             <h3 id="modalTitle" class="text-lg font-black text-emerald-900 mb-4 border-b pb-2">إضافة دواء جديد</h3>
             <form id="drugForm" onsubmit="saveDrug(event)" class="space-y-3">
                 <input type="hidden" id="drugIndex">
@@ -103,15 +103,24 @@
         </div>
     </div>
 
-    <!-- الفوتر السفلي -->
+    <!-- الفوتر السفلي (يحتوي على زر دخول المشرف السري) -->
     <footer class="bg-white border-t border-slate-200 text-center py-6 text-xs text-slate-500 mt-auto">
         <p class="font-semibold text-emerald-900 mb-1">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
-        <p>جميع الحقوق محفوظة © 2026</p>
+        <p class="mb-3">جميع الحقوق محفوظة © 2026</p>
+        
+        <!-- زر دخول / خروج المشرف الخفي -->
+        <div id="adminControlArea">
+            <button onclick="toggleAdmin()" id="adminBtnText" class="text-[11px] text-slate-400 hover:text-emerald-700 underline transition">
+                🔒 لوحة تحكم المشرف
+            </button>
+        </div>
     </footer>
 
-    <!-- جافاسكريبت لإدارة البيانات والتفاعل -->
+    <!-- جافاسكريبت لإدارة الأمان والبيانات -->
     <script>
-        // البيانات الافتراضية أو المحفوظة في المتصفح
+        // هل المستخدم الحالي هو المشرف؟ (يفحص الذاكرة المحلية)
+        let isAdmin = localStorage.getItem('raheeq_is_admin') === 'true';
+
         let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs')) || [
             {
                 category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون (Quinolones)",
@@ -175,13 +184,55 @@
             localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
         }
 
-        // عرض الأدوية وترتيبها حسب المجموعات
+        // تطبيق حالة المشرف (إظهار أو إخفاء أزرار التعديل)
+        function updateAdminUI() {
+            const mobileBtn = document.getElementById('mobileAddBtn');
+            const desktopBtn = document.getElementById('desktopAddBtn');
+            const adminBtnText = document.getElementById('adminBtnText');
+
+            if (isAdmin) {
+                mobileBtn.classList.remove('hidden');
+                desktopBtn.classList.remove('flex');
+                desktopBtn.classList.add('flex');
+                adminBtnText.innerText = "🔓 تسجيل خروج المشرف";
+                adminBtnText.className = "text-[11px] text-rose-600 hover:underline transition font-bold";
+            } else {
+                mobileBtn.classList.add('hidden');
+                desktopBtn.classList.remove('flex');
+                desktopBtn.classList.add('hidden');
+                adminBtnText.innerText = "🔒 لوحة تحكم المشرف";
+                adminBtnText.className = "text-[11px] text-slate-400 hover:text-emerald-700 underline transition";
+            }
+            renderDrugs(document.getElementById('searchInput').value.trim());
+        }
+
+        // الدخول أو الخروج من وضع المشرف برمز سري
+        function toggleAdmin() {
+            if (isAdmin) {
+                if (confirm('هل تريد الخروج من وضع المشرف؟')) {
+                    localStorage.setItem('raheeq_is_admin', 'false');
+                    isAdmin = false;
+                    updateAdminUI();
+                }
+            } else {
+                let pin = prompt('أدخل رمز المرور السري للمشرف:');
+                if (pin === '1234') { // تقدر تغير الرمز من هنا إذا حبيت
+                    localStorage.setItem('raheeq_is_admin', 'true');
+                    isAdmin = true;
+                    updateAdminUI();
+                    alert('تم تسجيل الدخول بنجاح بصفتك المشرف!');
+                } else if (pin !== null) {
+                    alert('رمز المرور غير صحيح!');
+                }
+            }
+        }
+
+        // عرض الأدوية وترتيبها
         function renderDrugs(filter = '') {
             const container = document.getElementById('categoriesContainer');
             const noResults = document.getElementById('noResults');
             container.innerHTML = '';
 
-            // تصفية الأدوية حسب البحث
             const filtered = drugsData.map((drug, index) => ({ ...drug, originalIndex: index })).filter(drug => {
                 const query = filter.toLowerCase();
                 return drug.generic.toLowerCase().includes(query) || 
@@ -196,7 +247,6 @@
                 noResults.classList.add('hidden');
             }
 
-            // تجميع حسب التصنيف
             const grouped = {};
             filtered.forEach(drug => {
                 if (!grouped[drug.category]) {
@@ -205,7 +255,6 @@
                 grouped[drug.category].push(drug);
             });
 
-            // بناء العناصر في HTML
             for (const [category, items] of Object.entries(grouped)) {
                 let sectionHTML = `
                     <div class="space-y-3">
@@ -227,10 +276,14 @@
                             </div>
                             <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
                                 <span class="bg-emerald-100/70 text-emerald-900 font-bold px-2.5 py-1 rounded-md">المتبقي: ${drug.quantity} علبة</span>
+                                
+                                <!-- تظهر أزرار التعديل والحذف للمشرف فقط -->
+                                ${isAdmin ? `
                                 <div class="flex gap-1.5">
                                     <button onclick="openEditModal(${drug.originalIndex})" class="bg-slate-100 hover:bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-lg transition border border-slate-200">✏️ تعديل</button>
                                     <button onclick="deleteDrug(${drug.originalIndex})" class="bg-slate-100 hover:bg-rose-50 text-rose-600 font-bold px-2 py-1 rounded-lg transition border border-slate-200">🗑️</button>
                                 </div>
+                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -241,12 +294,10 @@
             }
         }
 
-        // تفاعل البحث الفوري
         document.getElementById('searchInput').addEventListener('input', function(e) {
             renderDrugs(e.target.value.trim());
         });
 
-        // فتح نافذة الإضافة
         function openAddModal() {
             document.getElementById('modalTitle').innerText = 'إضافة دواء جديد';
             document.getElementById('drugIndex').value = '';
@@ -258,7 +309,6 @@
             document.getElementById('drugModal').classList.remove('hidden');
         }
 
-        // فتح نافذة التعديل
         function openEditModal(index) {
             const drug = drugsData[index];
             document.getElementById('modalTitle').innerText = 'تعديل بيانات الدواء';
@@ -271,12 +321,10 @@
             document.getElementById('drugModal').classList.remove('hidden');
         }
 
-        // إغلاق النافذة
         function closeModal() {
             document.getElementById('drugModal').classList.add('hidden');
         }
 
-        // حفظ الدواء (إضافة أو تعديل)
         function saveDrug(event) {
             event.preventDefault();
             const index = document.getElementById('drugIndex').value;
@@ -289,29 +337,26 @@
             };
 
             if (index === '') {
-                // إضافة جديد
                 drugsData.push(newDrug);
             } else {
-                // تعديل موجود
                 drugsData[index] = newDrug;
             }
 
             saveToStorage();
-            renderDrugs();
+            updateAdminUI();
             closeModal();
         }
 
-        // حذف دواء
         function deleteDrug(index) {
             if (confirm('هل أنت متأكد من حذف هذا الدواء؟')) {
                 drugsData.splice(index, 1);
                 saveToStorage();
-                renderDrugs();
+                updateAdminUI();
             }
         }
 
-        // التشغيل الأولي
-        renderDrugs();
+        // التشغيل الأولي وتحديث واجهة المشرف
+        updateAdminUI();
     </script>
 
 </body>
