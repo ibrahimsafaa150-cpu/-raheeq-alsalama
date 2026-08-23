@@ -61,6 +61,20 @@
             cursor: grabbing;
         }
 
+        /* أنميشن الإشعار المخصص */
+        #customToast {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translate(-50%, -100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #customToast.toast-show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .modal-active { display: flex !important; }
@@ -68,11 +82,19 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
+    <!-- الإشعار المخصص الأنيق (Toast Notification) -->
+    <div id="customToast" class="fixed top-4 left-1/2 z-50 px-4 py-2.5 rounded-2xl glass-panel border border-cyan-500/40 shadow-2xl flex items-center gap-2 text-xs font-bold text-white max-w-[90vw]">
+        <span id="toastIcon" class="text-base">✅</span>
+        <span id="toastMessage">تمت العملية بنجاح!</span>
+    </div>
+
+    <!-- شريط الإعلان العلوي -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2 transition-colors">
         <span>🌿</span>
         <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة متاحة</span>
     </div>
 
+    <!-- الترويسة الرئيسية -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
         <div class="flex items-center justify-between gap-2 w-full">
             
@@ -142,7 +164,6 @@
             </select>
         </div>
 
-        <!-- قائمة المنتجات القابلة للسحب والإفلات -->
         <div id="productsGrid" class="space-y-2.5 w-full"></div>
 
         <div id="noResults" class="hidden text-center py-12 text-slate-400 glass-panel rounded-2xl">
@@ -151,6 +172,7 @@
         </div>
     </main>
 
+    <!-- نافذة سلة الطلبات -->
     <div id="cartModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -175,6 +197,7 @@
         </div>
     </div>
 
+    <!-- نافذة إدخال بيانات المشتري وتأكيد الطلب -->
     <div id="customerModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -207,6 +230,21 @@
         </div>
     </div>
 
+    <!-- نافذة تسجيل دخول المشرف المخصصة (بدون prompt) -->
+    <div id="adminPinModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
+            <div class="text-2xl">🔐</div>
+            <h3 class="text-xs font-black text-white">الدخول الإداري للمشرف</h3>
+            <p class="text-[10px] text-slate-400">أدخل رمز المرور السري لتفعيل لوحة التحكم</p>
+            <input type="password" id="adminPinInput" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
+            <div class="flex gap-2 pt-1">
+                <button onclick="closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
+                <button onclick="verifyAdminPin()" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-1.5 rounded-xl text-xs font-bold shadow">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إعدادات المتجر للمشرف -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -239,6 +277,7 @@
         </div>
     </div>
 
+    <!-- نافذة إضافة / تعديل صنف -->
     <div id="adminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -405,6 +444,20 @@
             updateCartBadge();
         }
 
+        // دالة الإشعار المخصص الأنيق بدلاً من alert
+        let toastTimeout = null;
+        function showToast(message, icon = "✅") {
+            const toast = document.getElementById('customToast');
+            document.getElementById('toastMessage').innerText = message;
+            document.getElementById('toastIcon').innerText = icon;
+
+            toast.classList.add('toast-show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('toast-show');
+            }, 2500);
+        }
+
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -439,26 +492,40 @@
 
         function triggerSecretAdmin() {
             if (isAdmin) {
-                alert('أنت مسجل حالياً كـ مشرف!');
+                showToast('أنت مسجل حالياً كـ مشرف!', 'ℹ️');
                 return;
             }
-            let pin = prompt('🔐 الدخول الإداري السري للمشرف:');
+            document.getElementById('adminPinInput').value = '';
+            const modal = document.getElementById('adminPinModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            document.getElementById('adminPinInput').focus();
+        }
+
+        function closePinModal() {
+            const modal = document.getElementById('adminPinModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        function verifyAdminPin() {
+            const pin = document.getElementById('adminPinInput').value;
             if (pin === 'google@199920012005') {
                 isAdmin = true;
                 localStorage.setItem('sidalihet_admin', 'true');
+                closePinModal();
                 updateAdminUI();
-                alert('تم تفعيل لوحة المشرف بنجاح! يمكنك الآن سحب الأدوية لترتيبها.');
-            } else if (pin !== null) {
-                alert('رمز المرور غير صحيح!');
+                showToast('تم تفعيل لوحة المشرف بنجاح! 🚀', '🛡️');
+            } else {
+                showToast('رمز المرور غير صحيح!', '❌');
             }
         }
 
         function logoutAdmin() {
-            if (confirm('هل تريد قفل لوحة المشرف وتسجيل الخروج؟')) {
-                isAdmin = false;
-                localStorage.setItem('sidalihet_admin', 'false');
-                updateAdminUI();
-            }
+            isAdmin = false;
+            localStorage.setItem('sidalihet_admin', 'false');
+            updateAdminUI();
+            showToast('تم قفل لوحة المشرف بنجاح', '🔒');
         }
 
         function updateDeliveryStatusUI() {
@@ -518,6 +585,7 @@
                         });
                         productsData = reordered;
                         saveProductsToStorage();
+                        showToast('تم تحديث ترتيب الأدوية بنجاح');
                     }
                 });
             }
@@ -635,7 +703,7 @@
 
         function addToCart(id) {
             if (!isOrderingActive) {
-                alert('⚠️ خدمة حجز الطلبيات متوقفة حالياً بأمر الصيدلية.');
+                showToast('خدمة الحجز متوقفة حالياً بأمر الصيدلية', '⚠️');
                 return;
             }
 
@@ -643,14 +711,14 @@
             if (!prod) return;
 
             if (prod.stock <= 0) {
-                alert('⚠️ هذا الدواء غير متوفر في المخزن حالياً!');
+                showToast('هذا الدواء غير متوفر في المخزن!', '⚠️');
                 return;
             }
 
             const existing = cart.find(item => item.id === id);
             if (existing) {
                 if (existing.qty >= prod.stock) {
-                    alert('⚠️ لقد بلغت الحد الأقصى المتوفر في المخزن.');
+                    showToast('بلغت الحد الأقصى المتوفر بالمخزن', '⚠️');
                     return;
                 }
                 existing.qty += 1;
@@ -658,7 +726,7 @@
                 cart.push({ ...prod, qty: 1 });
             }
             saveCartToStorage();
-            alert(`✅ تمت إضافة "${prod.name}" بنجاح!`);
+            showToast(`تمت إضافة "${prod.name}" بنجاح!`, '🛒');
         }
 
         function updateCartBadge() {
@@ -731,7 +799,7 @@
 
         function openCustomerDetailsModal() {
             if (cart.length === 0) {
-                alert('السلة فارغة!');
+                showToast('السلة فارغة!', '⚠️');
                 return;
             }
             closeCartModal();
@@ -751,7 +819,7 @@
             const originalProd = productsData.find(p => p.id === item.id);
 
             if (delta > 0 && originalProd && item.qty >= originalProd.stock) {
-                alert('⚠️ لا توجد كمية كافية بالمخزن.');
+                showToast('لا توجد كمية كافية بالمخزن', '⚠️');
                 return;
             }
 
@@ -767,6 +835,7 @@
             cart.splice(index, 1);
             saveCartToStorage();
             openCartModal();
+            showToast('تم حذف العنصر من السلة', '🗑️');
         }
 
         function processOrderAndSend(event) {
@@ -777,7 +846,7 @@
             const address = document.getElementById('custAddress').value.trim() || "غير محدد";
 
             if (!name || !phone) {
-                alert('يرجى إدخال الاسم ورقم الهاتف!');
+                showToast('يرجى إدخال الاسم ورقم الهاتف!', '⚠️');
                 return;
             }
 
@@ -854,7 +923,7 @@
         function saveSettings() {
             let phone = document.getElementById('settingPhone').value.trim();
             if (!phone) {
-                alert('يرجى إدخال رقم هاتف صحيح!');
+                showToast('يرجى إدخال رقم هاتف صحيح!', '⚠️');
                 return;
             }
             myReceiverPhone = phone;
@@ -865,7 +934,7 @@
 
             updateDeliveryStatusUI();
             closeSettingsModal();
-            alert('✅ تم حفظ الإعدادات بنجاح!');
+            showToast('تم حفظ الإعدادات بنجاح! ✅');
         }
 
         function openAddModal() {
@@ -941,15 +1010,14 @@
             saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
-            alert('✅ تم حفظ الصنف الدوائي بنجاح!');
+            showToast('تم حفظ الصنف الدوائي بنجاح! ✅');
         }
 
         function deleteProduct(id) {
-            if (confirm('هل أنت متأكد من حذف هذا الدواء نهائياً؟')) {
-                productsData = productsData.filter(p => p.id !== id);
-                saveProductsToStorage();
-                filterByCategory(currentFilter);
-            }
+            productsData = productsData.filter(p => p.id !== id);
+            saveProductsToStorage();
+            filterByCategory(currentFilter);
+            showToast('تم حذف الدواء بنجاح', '🗑️');
         }
 
         renderCircleCategories();
