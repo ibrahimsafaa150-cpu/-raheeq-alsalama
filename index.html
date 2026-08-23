@@ -36,7 +36,6 @@
             min-height: 44px;
         }
 
-        /* إطار ذهبي مخصص للصورة الدوائية */
         .med-img-frame {
             border: 1.5px solid rgba(245, 158, 11, 0.45);
             box-shadow: 0 0 10px -2px rgba(245, 158, 11, 0.2);
@@ -49,17 +48,14 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
-    <!-- شريط الإعلان العلوي -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2 transition-colors">
         <span>🌿</span>
         <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة متاحة</span>
     </div>
 
-    <!-- الترويسة الرئيسية -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
         <div class="flex items-center justify-between gap-2 w-full">
             
-            <!-- اللوكو واسم الصيدلية: النقر 5 مرات متتالية وسريعة يفتح لوحة المشرف -->
             <div class="flex items-center gap-2 min-w-0 select-none">
                 <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
@@ -88,7 +84,6 @@
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
-                <!-- أزرار المشرف تظهر فقط عند تسجيل الدخول -->
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
                     <button onclick="openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز والتوصيل">
                         <span>⚙️</span>
@@ -120,7 +115,7 @@
                 <span class="text-amber-400">●</span> كشف الأدوية والمستحضرات المعتمدة
             </h3>
             <select id="sortSelect" onchange="sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] rounded-lg px-2 py-1 focus:outline-none">
-                <option value="default">الترتيب الافتراضي</option>
+                <option value="default">الترتيب المخصص</option>
                 <option value="price-low">الأقل سعراً</option>
                 <option value="price-high">الأعلى سعراً</option>
                 <option value="stock-high">الكمية بالمخزن</option>
@@ -135,7 +130,6 @@
         </div>
     </main>
 
-    <!-- نافذة سلة الطلبات -->
     <div id="cartModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -160,7 +154,6 @@
         </div>
     </div>
 
-    <!-- نافذة إدخال بيانات المشتري وتأكيد الطلب -->
     <div id="customerModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -193,7 +186,6 @@
         </div>
     </div>
 
-    <!-- نافذة إعدادات المتجر للمشرف -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -226,7 +218,6 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة / تعديل صنف -->
     <div id="adminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -292,7 +283,6 @@
         </div>
     </div>
 
-    <!-- التذييل -->
     <footer class="bg-slate-950 border-t border-slate-900 text-center py-4 text-[10px] text-slate-500 mt-auto">
         <p class="font-bold text-slate-400">صيدلية رَحِيْقُ السَّلَامَة • صحتكُم أمانتُنا</p>
         <p class="text-[9px] text-slate-600 mt-0.5">جميع الحقوق محفوظة © 2026</p>
@@ -496,13 +486,12 @@
                 noResults.classList.add('hidden');
             }
 
-            list.forEach((prod) => {
+            list.forEach((prod, index) => {
                 const isLow = prod.stock <= 5;
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-3 w-full flex flex-col gap-2.5">
                         <div class="flex gap-2.5 items-start">
                             
-                            <!-- صورة العلبة بكامل الحجم ومحاطة بإطار ذهبي ناعم -->
                             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block">
                                 <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
@@ -536,13 +525,32 @@
                                 <span>🛒</span> <span>إضافة للطلبية</span>
                             </button>
                             ${isAdmin ? `
-                            <button onclick="openEditModal(${prod.id})" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
-                            <button onclick="deleteProduct(${prod.id})" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
+                            <div class="flex items-center gap-1">
+                                <button onclick="moveProduct(${prod.id}, -1)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تقديم للأعلى">⬆️</button>
+                                <button onclick="moveProduct(${prod.id}, 1)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تنزيل للأسفل">⬇️</button>
+                                <button onclick="openEditModal(${prod.id})" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
+                                <button onclick="deleteProduct(${prod.id})" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
+                            </div>
                             ` : ''}
                         </div>
                     </div>
                 `;
             });
+        }
+
+        function moveProduct(id, direction) {
+            const index = productsData.findIndex(p => p.id === id);
+            if (index === -1) return;
+
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= productsData.length) return;
+
+            const temp = productsData[index];
+            productsData[index] = productsData[newIndex];
+            productsData[newIndex] = temp;
+
+            saveProductsToStorage();
+            filterByCategory(currentFilter);
         }
 
         function filterByCategory(cat) {
