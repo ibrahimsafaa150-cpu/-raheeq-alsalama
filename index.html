@@ -3,154 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صيدلية رحيق السلامة | الدليل الدوائي</title>
+    <title>دليل الأدوية والمضادات | صيدلية رحيق السلامة</title>
+    <!-- Tailwind CSS للتصميم العصري -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emeraldBrand: '#0d5c45',
+                        emeraldDark: '#093d2e',
+                        goldBrand: '#c5a059',
+                        goldLight: '#fdf8ec',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- خط Cairo العربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #0284c7;
-            --secondary: #0ea5e9;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --border-color: #e2e8f0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
-        header h1 {
-            margin: 0 0 0.5rem 0;
-            font-size: 2.2rem;
-        }
-        header p {
-            margin: 0;
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .shelf-section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-        .shelf-title {
-            font-size: 1.4rem;
-            color: var(--primary);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .drug-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
-        }
-        .drug-card {
-            background: #f1f5f9;
-            border-radius: 8px;
-            padding: 1rem;
-            border-right: 4px solid var(--secondary);
-        }
-        .drug-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #0f172a;
-            margin-bottom: 0.3rem;
-        }
-        .drug-details {
-            font-size: 0.9rem;
-            color: #475569;
-            margin: 0;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: #64748b;
-            font-size: 0.9rem;
-        }
+        body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <header>
-        <h1>🌿 صيدلية رحيق السلامة</h1>
-        <p>بغداد - حي الحسين | دليل الأدوية والتصنيف الميداني</p>
+    <!-- الهيدر العلوي الفاخر -->
+    <header class="bg-gradient-to-r from-emeraldDark via-emeraldBrand to-emeraldDark text-white shadow-xl sticky top-0 z-50 border-b-2 border-goldBrand">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <!-- اللوجو -->
+                <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-goldBrand shadow-md bg-white flex-shrink-0">
+                    <img src="logo.jpg" alt="شعار صيدلية رحيق السلامة" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>'">
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wide text-white">صيدلية رَحِيْقُ السَّلَامَة</h1>
+                    <p class="text-xs text-amber-200 font-semibold tracking-wider">صحتكم أمانتنا • جودة ورعاية</p>
+                </div>
+            </div>
+            <!-- خانة البحث الفوري -->
+            <div class="w-full sm:w-72">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="ابحث عن اسم الدواء أو التجاري..." 
+                           class="w-full bg-emerald-950/60 text-white placeholder-emerald-300 text-xs rounded-xl px-4 py-2.5 pr-9 border border-emerald-600 focus:outline-none focus:border-goldBrand transition shadow-inner">
+                    <span class="absolute right-3 top-2.5 text-emerald-300 text-sm">🔍</span>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-4xl mx-auto px-4 py-6 space-y-6 flex-grow w-full">
 
-        <!-- الرف الأول -->
-        <div class="shelf-section">
-            <div class="shelf-title">📚 الرف الأول: المسكنات وخافضات الحرارة</div>
-            <div class="drug-grid">
-                <div class="drug-card">
-                    <div class="drug-name">باراسيتامول (Paracetamol)</div>
-                    <p class="drug-details">الاستخدام: خافض حرارة ومسكن آلام عام.<br>الجرعة الشائعة: 500 ملغ - 1 غرام عند الحاجة.</p>
-                </div>
-                <div class="drug-card">
-                    <div class="drug-name">ايبوبروفين (Ibuprofen)</div>
-                    <p class="drug-details">الاستخدام: مضاد التهاب غير استروئيدي (NSAID) ومسكن.<br>ملاحظة: يؤخذ بعد الطعام.</p>
-                </div>
-            </div>
+        <!-- رسالة التنبيه إن لم توجد نتائج -->
+        <div id="noResults" class="hidden text-center py-10 text-slate-400 font-semibold">
+            عذراً، لم يتم العثور على الدواء المطلوب. تحقق من كتابة الاسم بشكل صحيح.
         </div>
 
-        <!-- الرف الثاني -->
-        <div class="shelf-section">
-            <div class="shelf-title">📚 الرف الثاني: المضادات الحيوية (Antibiotics)</div>
-            <div class="drug-grid">
-                <div class="drug-card">
-                    <div class="drug-name">أموكسيسيلين (Amoxicillin)</div>
-                    <p class="drug-details">الاستخدام: مضاد حيوي واسع الطيف للتهابات الجيوب واللوزتين.</p>
+        <div id="drugContainer" class="space-y-6">
+
+            <!-- القسم الأول: الكويونولون -->
+            <section class="drug-section space-y-3">
+                <h2 class="text-base font-bold text-emeraldBrand border-r-4 border-goldBrand pr-3 bg-goldLight/40 py-1.5 rounded-l-lg">أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون (Quinolones)</h2>
+                
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">سيبروفلوكساسين (Ciprofloxacin)</h3>
+                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-semibold border border-emerald-100">500 مغ و 750 مغ</span>
+                    </div>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Ciproker | Bactiflox Neo | Ciprobay | Microflox</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> حبة واحدة كل 12 ساعة لمدة 7 أيام.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات مجاري البول، المسالك البولية، الإسهال البكتيري، والجهاز التنفسي العلوي.</p>
                 </div>
-                <div class="drug-card">
-                    <div class="drug-name">أوجمنتين (Augmentin)</div>
-                    <p class="drug-details">الاستخدام: أموكسيسيلين + كلافولانيك أسد للتهابات الجهاز التنفسي.</p>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">ليفوفلوكساسين (Levofloxacin)</h3>
+                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-semibold border border-emerald-100">500 مغ</span>
+                    </div>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Tavanic | Levour 500mg | Levotop 500mg | Uniflox</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> حبة واحدة كل 24 ساعة (مرة يومياً).</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات الجهاز التنفسي والمسالك البولية.</p>
                 </div>
-            </div>
+            </section>
+
+            <!-- القسم الثاني: السيفالوسبورين -->
+            <section class="drug-section space-y-3">
+                <h2 class="text-base font-bold text-emeraldBrand border-r-4 border-goldBrand pr-3 bg-goldLight/40 py-1.5 rounded-l-lg">ثانياً: مجموعة السيفالوسبورين (Cephalosporins)</h2>
+                
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">سيفوروكسيم (Cefuroxime)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية والتركيز:</strong> Auroxetil 500mg | Cefodox | Zamu (تركيزي 250 / 500 مغ)</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات اللوزتين، الجيوب الأنفية، الأذن الوسطى، والجهاز التنفسي.</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">سيفيكسيم (Cefixime)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Fixim 400 | Mixif 400 | Betixim | Supixime | Samaxime | Suraxim | Winex | Cefix</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> 400 مغ مرة يومياً، أو 200 مغ كل 12 ساعة بعد الأكل لمدة أسبوع.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات مجاري البول الحادة، الجيوب الأنفية، والأذن الوسطى.</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">سيفدينير (Cefdinir)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Ceftinex 300mg | AltiCet 300mg</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> 300 مغ كل 12 ساعة (مرتين باليوم).</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات الحلق، الأذن، الجيوب الأنفية، والتهابات الجلد والبلعوم.</p>
+                </div>
+            </section>
+
+            <!-- القسم الثالث: البنسلينات والمركبات الخاصة -->
+            <section class="drug-section space-y-3">
+                <h2 class="text-base font-bold text-emeraldBrand border-r-4 border-goldBrand pr-3 bg-goldLight/40 py-1.5 rounded-l-lg">ثالثاً: مجموعة البنسلينات والمركبات الخاصة</h2>
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">أموكسيسيلين + كلافولانات (Amoxicillin + Clavulanic acid)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> KoAct | Gloclav | Bactoclav | Ruxaclam | co-Amox Acino</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> 625 مغ أو 1000 مغ كل 12 ساعة.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات الأسنان، اللثة، اللوزتين، الجيوب الأنفية، الأذن، المسالك البولية، والجروح.</p>
+                </div>
+            </section>
+
+            <!-- القسم الرابع: مضادات الطفيليات والأمعاء -->
+            <section class="drug-section space-y-3">
+                <h2 class="text-base font-bold text-emeraldBrand border-r-4 border-goldBrand pr-3 bg-goldLight/40 py-1.5 rounded-l-lg">رابعاً: مضادات الطفيليات والتهابات الأمعاء</h2>
+                
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">ميترونيدازول (Metronidazole)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> FLAGIMEL | Flagyl | SAFAGYL | NejAzole | Midagyl</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> 500 مغ كل 8 ساعات (3 مرات باليوم) لمدة أسبوع.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> بكتيريا اللثة، الإسهال، الدوسنتاريا، الأميبا، التهابات الجهاز التناسلي، الخراج، والتهابات الأسنان.</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">ريفاكسيمين (Rifaximin)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية والتركيز:</strong> Urfaximin 550mg | Nimixa</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> مرتين إلى 4 مرات يومياً حسب الحالة.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> إسهال السفر، بكتيريا الأمعاء، والقولون العصبي (يعمل محلياً في الأمعاء ولا يمتص للدم).</p>
+                </div>
+            </section>
+
+            <!-- القسم الخامس: الماكروليد واللينكوساميد -->
+            <section class="drug-section space-y-3">
+                <h2 class="text-base font-bold text-emeraldBrand border-r-4 border-goldBrand pr-3 bg-goldLight/40 py-1.5 rounded-l-lg">خامساً: مجموعة الماكروليد واللينكوساميد (Macrolides & Lincosamides)</h2>
+                
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">كلاريثروميسين (Clarithromycin)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Claranta 500 | Clariva 500</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> 500 مغ كل 12 ساعة بعد الأكل لمدة 7 إلى 14 يوماً.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات الجهاز التنفسي والبلعوم، علاج جرثومة المعدة (H. pylori)، وبديل ممتاز لحساسية البنسلين.</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">كلينداميسين (Clindamycin)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Clindacin 150mg | Lanacin 150mg</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> 150 مغ كل 6 ساعات.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات الجدار البكتيرية، حب الشباب، التهابات العظام والمفاصل، والأسنان.</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">مينوسيكلين (Minocycline)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية والجرعة:</strong> Vulgar XR 80mg، تُعطى مرة باليوم.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> علاج حب الشباب الالتهابي الشديد.</p>
+                </div>
+            </section>
+
+            <!-- القسم السادس: المسالك البولية والمضادات الفيروسية -->
+            <section class="drug-section space-y-3">
+                <h2 class="text-base font-bold text-emeraldBrand border-r-4 border-goldBrand pr-3 bg-goldLight/40 py-1.5 rounded-l-lg">سادساً: مضادات المسالك البولية والمضادات الفيروسية</h2>
+                
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">تريمتوبريم + سلفاميثوكسازول (Trimethoprim + Sulfamethoxazole)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Trimoks Forte | Septrin D.S. | Piotrim</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> حبة واحدة كل 12 ساعة.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات المسالك البولية، النزلات المعوية، والتهابات الأذن الوسطى.</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">نايتروفورانتوين (Nitrofurantoin)</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Uvamin retard | Piyoseptyl</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> كبسولة كل 12 ساعة مع الحليب أو الطعام لتجنب الغثيان.</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> التهابات المسالك البولية والمثانة المتكررة (يُعتبر آمناً في الشهر الأخير من الحمل).</p>
+                </div>
+
+                <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-2 hover:shadow-md transition">
+                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">أسيكلوفير (Aciclovir) - مضاد فيروسي</h3>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الأسماء التجارية:</strong> Clovir 400mg / 800mg</p>
+                    <p class="text-xs text-slate-600"><strong class="text-slate-700">الجرعة:</strong> تختلف حسب نوع الفيروس (مثل 5 مرات يومياً للهرپس أو 800 مغ 5 مرات للحزام الناري).</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100"><strong class="text-slate-700">الاستخدام:</strong> حمى الشفاه (Herpes simplex)، الحزام الناري (Herpes zoster)، وجدري الماء (Chickenpox).</p>
+                </div>
+            </section>
+
         </div>
 
-        <!-- الرف الثالث -->
-        <div class="shelf-section">
-            <div class="shelf-title">📚 الرف الثالث: أدوية الجهاز الهضمي</div>
-            <div class="drug-grid">
-                <div class="drug-card">
-                    <div class="drug-name">أوميبرازول (Omeprazole)</div>
-                    <p class="drug-details">الاستخدام: مثبط لإنزيم البروتون لعلاج قرحة المعدة والحرقة.</p>
-                </div>
-                <div class="drug-card">
-                    <div class="drug-name">موتilium (Domperidone)</div>
-                    <p class="drug-details">الاستخدام: مضاد للغثيان والتقيؤ ومنظم لحركة الأمعاء.</p>
-                </div>
-            </div>
-        </div>
+    </main>
 
-    </div>
-
-    <footer>
-        <p>جميع الحقوق محفوظة © صيدلية رحيق السلامة 2026</p>
+    <!-- الفوتر السفلي -->
+    <footer class="bg-white border-t border-slate-200 text-center py-6 text-xs text-slate-500 mt-auto">
+        <p class="font-semibold text-emeraldBrand mb-1">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
+        <p>جميع الحقوق محفوظة © 2026</p>
     </footer>
+
+    <!-- سكريبت البحث الفوري -->
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const sections = document.querySelectorAll('.drug-section');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase().trim();
+            let totalVisible = 0;
+
+            sections.forEach(section => {
+                const cards = section.querySelectorAll('.drug-card');
+                let sectionHasVisible = false;
+
+                cards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(term)) {
+                        card.style.display = 'block';
+                        sectionHasVisible = true;
+                        totalVisible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (sectionHasVisible) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            if (totalVisible === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+    </script>
 
 </body>
 </html>
-
-
