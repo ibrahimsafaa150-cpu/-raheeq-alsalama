@@ -1,2 +1,156 @@
-<h1>مرحباً بكم في موقع رحيق السلامة الطبي</h1>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صيدلية رحيق السلامة | الدليل الدوائي</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --secondary: #0ea5e9;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.2rem;
+        }
+        header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .shelf-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+        .shelf-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .drug-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .drug-card {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 1rem;
+            border-right: 4px solid var(--secondary);
+        }
+        .drug-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #0f172a;
+            margin-bottom: 0.3rem;
+        }
+        .drug-details {
+            font-size: 0.9rem;
+            color: #475569;
+            margin: 0;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌿 صيدلية رحيق السلامة</h1>
+        <p>بغداد - حي الحسين | دليل الأدوية والتصنيف الميداني</p>
+    </header>
+
+    <div class="container">
+
+        <!-- الرف الأول -->
+        <div class="shelf-section">
+            <div class="shelf-title">📚 الرف الأول: المسكنات وخافضات الحرارة</div>
+            <div class="drug-grid">
+                <div class="drug-card">
+                    <div class="drug-name">باراسيتامول (Paracetamol)</div>
+                    <p class="drug-details">الاستخدام: خافض حرارة ومسكن آلام عام.<br>الجرعة الشائعة: 500 ملغ - 1 غرام عند الحاجة.</p>
+                </div>
+                <div class="drug-card">
+                    <div class="drug-name">ايبوبروفين (Ibuprofen)</div>
+                    <p class="drug-details">الاستخدام: مضاد التهاب غير استروئيدي (NSAID) ومسكن.<br>ملاحظة: يؤخذ بعد الطعام.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الرف الثاني -->
+        <div class="shelf-section">
+            <div class="shelf-title">📚 الرف الثاني: المضادات الحيوية (Antibiotics)</div>
+            <div class="drug-grid">
+                <div class="drug-card">
+                    <div class="drug-name">أموكسيسيلين (Amoxicillin)</div>
+                    <p class="drug-details">الاستخدام: مضاد حيوي واسع الطيف للتهابات الجيوب واللوزتين.</p>
+                </div>
+                <div class="drug-card">
+                    <div class="drug-name">أوجمنتين (Augmentin)</div>
+                    <p class="drug-details">الاستخدام: أموكسيسيلين + كلافولانيك أسد للتهابات الجهاز التنفسي.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الرف الثالث -->
+        <div class="shelf-section">
+            <div class="shelf-title">📚 الرف الثالث: أدوية الجهاز الهضمي</div>
+            <div class="drug-grid">
+                <div class="drug-card">
+                    <div class="drug-name">أوميبرازول (Omeprazole)</div>
+                    <p class="drug-details">الاستخدام: مثبط لإنزيم البروتون لعلاج قرحة المعدة والحرقة.</p>
+                </div>
+                <div class="drug-card">
+                    <div class="drug-name">موتilium (Domperidone)</div>
+                    <p class="drug-details">الاستخدام: مضاد للغثيان والتقيؤ ومنظم لحركة الأمعاء.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة © صيدلية رحيق السلامة 2026</p>
+    </footer>
+
+</body>
+</html>
+
 
