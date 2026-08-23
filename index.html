@@ -36,6 +36,12 @@
             min-height: 44px;
         }
 
+        /* إطار ذهبي مخصص للصورة الدوائية */
+        .med-img-frame {
+            border: 1.5px solid rgba(245, 158, 11, 0.45);
+            box-shadow: 0 0 10px -2px rgba(245, 158, 11, 0.2);
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .modal-active { display: flex !important; }
@@ -46,7 +52,7 @@
     <!-- شريط الإعلان العلوي -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2 transition-colors">
         <span>🌿</span>
-        <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة</span>
+        <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة متاحة</span>
     </div>
 
     <!-- الترويسة الرئيسية -->
@@ -295,7 +301,6 @@
     <script>
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
 
-        // رقم هاتفك المعتمد
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
@@ -399,7 +404,6 @@
             }
         }
 
-        // عداد دقيق لـ 5 نقرات متتالية وسريعة على اللوكو
         let tapCount = 0;
         let tapTimer = null;
 
@@ -498,9 +502,10 @@
                     <div class="glass-panel rounded-2xl p-3 w-full flex flex-col gap-2.5">
                         <div class="flex gap-2.5 items-start">
                             
-                            <div class="w-20 h-20 rounded-xl bg-slate-950 border border-slate-800 p-1 shrink-0 flex items-center justify-center relative overflow-hidden">
-                                <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full">
-                                <span class="absolute bottom-0.5 right-0.5 ${isLow ? 'bg-rose-500/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1 rounded shadow">
+                            <!-- صورة العلبة بكامل الحجم ومحاطة بإطار ذهبي ناعم -->
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden">
+                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block">
+                                <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
                                     المخزن: ${prod.stock}
                                 </span>
                             </div>
@@ -652,7 +657,7 @@
                     list.innerHTML += `
                         <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-slate-800">
                             <div class="flex items-center gap-2">
-                                <img src="${item.image}" class="w-9 h-9 rounded-lg object-contain bg-slate-900 p-0.5 border border-slate-800">
+                                <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-900 med-img-frame">
                                 <div>
                                     <h5 class="text-[11px] font-black text-white">${item.name} <span class="text-cyan-400 text-[9px]">(${item.dose})</span></h5>
                                     <span class="text-[10px] text-amber-400 font-bold">${item.price}</span>
@@ -721,7 +726,6 @@
             openCartModal();
         }
 
-        // إرسال الطلب باسم الصيدلي إبراهيم صفاء مباشرة إلى رقمك
         function processOrderAndSend(event) {
             event.preventDefault();
 
@@ -759,7 +763,6 @@
             message += `\n💰 *المجموع الكلي:* ${total.toLocaleString()} د.ع\n`;
             message += `⏰ *وقت الحجز:* ${new Date().toLocaleDateString('ar-IQ')} - ${new Date().toLocaleTimeString('ar-IQ')}`;
 
-            // خصم الكميات من المخزن وتحديث البيانات
             cart.forEach(cItem => {
                 const prod = productsData.find(p => p.id === cItem.id);
                 if (prod) {
@@ -773,7 +776,6 @@
             closeCustomerModal();
             filterByCategory(currentFilter);
 
-            // توجيه فوري ومباشر إلى محادثة واتساب
             let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
             
