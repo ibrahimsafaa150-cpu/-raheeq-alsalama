@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صيدلية رَحِيْقُ السَّلَامَة | المتجر الطبي الذكي</title>
+    <title>صيدلية رَحِيْقُ السَّلَامَة | النظام الدوائي الذكي</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -118,8 +118,8 @@
             <button onclick="filterByCategory('الكل')" class="cat-btn bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-md transition flex items-center gap-1.5 shrink-0">
                 <span>🏥</span> الكل
             </button>
-            <button onclick="filterByCategory('الفيتامينات والمكملات وبرتقال طبيعي')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>🍊</span> الفيتامينات وبرتقال طبيعي
+            <button onclick="filterByCategory('الفيتامينات والمكملات الغذائية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>🍋</span> الفيتامينات والمكملات الغذائية
             </button>
             <button onclick="filterByCategory('أمراض الكلى والمسالك البولية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
                 <span>💧</span> الكلى والمسالك البولية
@@ -166,7 +166,7 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">القسم (التصنيف):</label>
                     <select id="drugCategory" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
-                        <option value="الفيتامينات والمكملات وبرتقال طبيعي">🍊 الفيتامينات والمكملات وبرتقال طبيعي</option>
+                        <option value="الفيتامينات والمكملات الغذائية">🍋 الفيتامينات والمكملات الغذائية</option>
                         <option value="أمراض الكلى والمسالك البولية">💧 أمراض الكلى والمسالك البولية</option>
                         <option value="العناية بالبشرة والتجميل">✨ العناية بالبشرة والتجميل</option>
                         <option value="أمراض القلب والأوعية الدموية">❤️ أمراض القلب والأوعية الدموية</option>
@@ -178,11 +178,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم التجاري:</label>
-                        <input type="text" id="drugTrade" required placeholder="مثال: Orange C-1000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                        <input type="text" id="drugTrade" required placeholder="مثال: Vitamin C Effervescent" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">المادة الفعالة:</label>
-                        <input type="text" id="drugGeneric" required placeholder="مثال: برتقال طبيعي وفيتامين سي" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                        <input type="text" id="drugGeneric" required placeholder="مثال: Ascorbic Acid" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                     </div>
                 </div>
 
@@ -224,7 +224,7 @@
         </div>
     </footer>
 
-    <!-- الجافاسكريبت المحدث والمستقر -->
+    <!-- الجافاسكريبت المطور والثابت -->
     <script>
         let isDarkMode = localStorage.getItem('raheeq_theme') !== 'light';
         let currentCategoryFilter = 'الكل';
@@ -248,37 +248,29 @@
 
         let isAdmin = localStorage.getItem('raheeq_is_admin') === 'true';
 
-        // المخزون الأولي المحدث ليشمل الفيتامينات وبرتقال طبيعي والكلى بدقة
+        // المخزون الطبي الأولي الاحترافي
         let defaultDrugs = [
             {
-                category: "الفيتامينات والمكملات وبرتقال طبيعي",
-                tradeName: "Natural Orange C-1000",
-                activeIngredient: "خلاصة البرتقال الطبيعي وأسكوربيك أسيد",
-                dosage: "1000 مغ فوار طبيعي",
+                category: "الفيتامينات والمكملات الغذائية",
+                tradeName: "Ascorbic Acid C-1000",
+                activeIngredient: "فيتامين سي نقي",
+                dosage: "1000 مغ فوار",
                 price: "6,500 د.ع",
                 quantity: 50
             },
             {
-                category: "الفيتامينات والمكملات وبرتقال طبيعي",
-                tradeName: "Orange Zinc Immunity Drops",
-                activeIngredient: "مستخلص قشر البرتقال والزنك",
-                dosage: "قطرات مركزة 30 مل",
-                price: "9,000 د.ع",
-                quantity: 35
-            },
-            {
-                category: "الفيتامينات والمكملات وبرتقال طبيعي",
+                category: "الفيتامينات والمكملات الغذائية",
                 tradeName: "Vitamin D3 5000 IU",
-                activeIngredient: "كوليكالسيفيرول نقي",
-                dosage: "كبسولات 5000 وحدة",
+                activeIngredient: "كوليكالسيفيرول",
+                dosage: "كبسولات جيلاتينية",
                 price: "12,000 د.ع",
                 quantity: 30
             },
             {
                 category: "أمراض الكلى والمسالك البولية",
                 tradeName: "Ural Effervescent Granules",
-                activeIngredient: "سترات الصوديوم الحبيبية للمسالك",
-                dosage: "حبيبات فوارة معقمة",
+                activeIngredient: "سترات الصوديوم الحبيبية",
+                dosage: "فوار معقم للمسالك",
                 price: "8,000 د.ع",
                 quantity: 20
             },
@@ -292,7 +284,7 @@
             },
             {
                 category: "أمراض الكلى والمسالك البولية",
-                tradeName: "Rowatinex Capsules",
+                tradeName: "Rowatinex",
                 activeIngredient: "مزيج تربين طبيعي لتنظيف الكلى",
                 dosage: "كبسولات طاردة للحصى",
                 price: "10,000 د.ع",
@@ -324,14 +316,20 @@
             }
         ];
 
-        let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs'));
-        if (!drugsData || drugsData.length === 0) {
+        let drugsData = [];
+        try {
+            const saved = localStorage.getItem('raheeq_drugs');
+            drugsData = saved ? JSON.parse(saved) : defaultDrugs;
+        } catch (e) {
             drugsData = defaultDrugs;
-            localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
         }
 
         function saveToStorage() {
-            localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
+            try {
+                localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
+            } catch (e) {
+                console.error("فشل الحفظ في التخزين المحلي", e);
+            }
         }
 
         function updateAdminUI() {
@@ -481,7 +479,7 @@
         function openAddModal() {
             document.getElementById('modalTitle').innerText = 'إضافة منتج جديد للمخزون';
             document.getElementById('drugIndex').value = '';
-            document.getElementById('drugCategory').value = 'الفيتامينات والمكملات وبرتقال طبيعي';
+            document.getElementById('drugCategory').value = 'الفيتامينات والمكملات الغذائية';
             document.getElementById('drugTrade').value = '';
             document.getElementById('drugGeneric').value = '';
             document.getElementById('drugDosage').value = '';
@@ -518,7 +516,7 @@
         function saveDrug(event) {
             event.preventDefault();
             
-            const index = document.getElementById('drugIndex').value;
+            const indexStr = document.getElementById('drugIndex').value;
             const newDrug = {
                 category: document.getElementById('drugCategory').value,
                 tradeName: document.getElementById('drugTrade').value.trim(),
@@ -528,19 +526,17 @@
                 quantity: parseInt(document.getElementById('drugQuantity').value) || 0
             };
 
-            if (index === '' || index === null || index === undefined) {
+            if (indexStr === '' || indexStr === null || indexStr === undefined) {
                 drugsData.push(newDrug);
             } else {
-                drugsData[parseInt(index)] = newDrug;
+                const idx = parseInt(indexStr);
+                drugsData[idx] = newDrug;
             }
 
             saveToStorage();
             closeModal();
-            
-            // فلترة وعرض القسم الذي تمت الإضافة إليه ليرى المستخدم النتيجة فوراً
             filterByCategory(newDrug.category);
-            
-            alert('✅ تم حفظ المنتج بنجاح في الموقع!');
+            alert('✅ تم حفظ المنتج في النظام بنجاح!');
         }
 
         function deleteDrug(index) {
