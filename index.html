@@ -1,284 +1,559 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أقراص سنتروم للرجال - صيدلية الكوثر</title>
-    <!-- استيراد خط تجوال العصري من جوجل -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <!-- مكتبة أيقونات FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>صيدلية رَحِيْقُ السَّلَامَة | المتجر الطبي الذكي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#059669',
+                            dark: '#047857',
+                            light: '#34d399'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- خط Cairo العربي الفاخر -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Tajawal', sans-serif;
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
-        body {
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
+        .dark .glass-card {
+            background: rgba(18, 18, 22, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
-        .product-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            border: 1px solid #eaeaea;
+        .glow-effect {
+            box-shadow: 0 10px 30px -10px rgba(5, 150, 105, 0.15);
         }
-        .product-header {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            padding: 30px;
-            border-bottom: 1px solid #f0f0f0;
+        .dark .glow-effect {
+            box-shadow: 0 10px 30px -10px rgba(52, 211, 153, 0.08);
         }
-        .product-image-section {
-            flex: 1;
-            min-width: 280px;
-            text-align: center;
-            background: #fafafa;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        #drugModal.active {
+            display: flex !important;
         }
-        .badge-out {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ffebee;
-            color: #c62828;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-        .product-image-section img {
-            max-width: 100%;
-            height: auto;
-            max-height: 320px;
-            object-fit: contain;
-        }
-        .product-details {
-            flex: 1.2;
-            min-width: 280px;
-        }
-        .breadcrumb {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        .breadcrumb span {
-            color: #0077b6;
-            font-weight: 500;
-        }
-        .product-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 15px;
-        }
-        .product-price {
-            font-size: 26px;
-            font-weight: 800;
-            color: #009688;
-            margin-bottom: 20px;
-        }
-        .options-box {
-            background: #f1f8e9;
-            border: 2px solid #81c784;
-            border-radius: 10px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        .options-box span {
-            font-weight: 700;
-            color: #2e7d32;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .btn-notify {
-            flex: 1;
-            background: linear-gradient(135deg, #ff9800, #f57c00);
-            color: white;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
-        }
-        .btn-notify:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        .btn-action-icon {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            width: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #555;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-        .btn-action-icon:hover {
-            background: #f5f5f5;
-            color: #e91e63;
-        }
-        .product-body {
-            padding: 30px;
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #222;
-            margin-top: 25px;
-            margin-bottom: 12px;
-            border-right: 4px solid #009688;
-            padding-right: 10px;
-        }
-        .product-body p {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-        .feature-list, .ingredient-list, .usage-list {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-        .feature-list li, .ingredient-list li, .usage-list li {
-            position: relative;
-            padding-right: 22px;
-            margin-bottom: 8px;
-            color: #444;
-            font-size: 15px;
-        }
-        .feature-list li::before, .ingredient-list li::before, .usage-list li::before {
-            content: "✔";
-            position: absolute;
-            right: 0;
-            color: #009688;
-            font-weight: bold;
-        }
-        .warnings-box {
-            background: #fff8e1;
-            border-right: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .warnings-box h4 {
-            color: #856404;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-        .warnings-box ul {
-            list-style: none;
-        }
-        .warnings-box li {
-            color: #664d03;
-            font-size: 14px;
-            margin-bottom: 5px;
-            position: relative;
-            padding-right: 18px;
-        }
-        .warnings-box li::before {
-            content: "•";
-            position: absolute;
-            right: 0;
-            color: #ffc107;
-            font-weight: bold;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 dark:bg-[#09090b] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
 
-    <div class="product-container">
-        <!-- رأس الصفحة (الصورة والمعلومات الأساسية والسعر) -->
-        <div class="product-header">
-            <div class="product-image-section">
-                <span class="badge-out">غير متوفر</span>
-                <!-- ضع رابط الصورة هنا -->
-                <img src="https://m.media-amazon.com/images/I/71Yy8gA+yYL._AC_SL1500_.jpg" alt="سنتروم للرجال">
+    <!-- شريط الإشعارات العلوي -->
+    <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white text-[11px] sm:text-xs py-1.5 px-4 text-center font-semibold shadow-sm">
+        ✨ صيدلية رحيق السلامة • استشارة أصلية ومخزون معتمد • توصيل سريع لكافة المناطق
+    </div>
+
+    <!-- الهيدر الرئيسي -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-xl shadow-lg shadow-emerald-600/20 text-white font-black">
+                    🌿
+                </div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-black tracking-wider bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">صيدلية رَحِيْقُ السَّلَامَة</h1>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">المنصة الطبية الذكية لإدارة المخزون</p>
+                </div>
             </div>
-            <div class="product-details">
-                <div class="breadcrumb">
-                    الرئيسية > <span>مكملات غذائية</span> > ملتي فايتامين
-                </div>
-                <h1 class="product-title">أقراص سنتروم للرجال ملتي فيتامين ومعادن متطورة - 120 قرص</h1>
-                <div class="product-price">٤٥,000 د.ع</div>
-                
-                <div class="options-box">
-                    <div>الخيار المتاح: <span>120 قرص (٤٥,000 د.ع)</span></div>
-                </div>
 
-                <div class="action-buttons">
-                    <button class="btn-notify">
-                        <i class="fa-solid fa-bell"></i> ذكرني عند التوفر
+            <div class="flex items-center gap-2.5">
+                <button onclick="toggleThemeMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:scale-105 transition shadow-sm text-base" title="تبديل المظهر">
+                    <span id="themeIcon">☀️</span>
+                </button>
+
+                <div id="adminActionHeader" class="hidden">
+                    <button onclick="openAddModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 transition flex items-center gap-1.5 hover:scale-105">
+                        <span>➕</span> <span>إضافة منتج</span>
                     </button>
-                    <button class="btn-action-icon" title="المفضلة"><i class="fa-regular fa-heart"></i></button>
-                    <button class="btn-action-icon" title="مشاركة"><i class="fa-solid fa-share-nodes"></i></button>
                 </div>
             </div>
         </div>
 
-        <!-- تفاصيل المنتج والوصف والمكونات -->
-        <div class="product-body">
-            <h3 class="section-title">نبذة تعريفية عن المنتج</h3>
-            <p>مكمل غذائي من سنتروم مصمم خصيصًا للرجال، يحتوي على تركيبة متوازنة من الفيتامينات والمعادن للمساعدة في دعم الاحتياجات الغذائية اليومية، يساهم في دعم الطاقة، المناعة، التمثيل الغذائي، ووظائف العضلات.</p>
-
-            <h3 class="section-title">الفوائد الرئيسية</h3>
-            <ul class="feature-list">
-                <li><strong>دعم الطاقة والحيوية اليومية:</strong> يساهم في تحويل الغذاء إلى طاقة وتقليل الإرهاق.</li>
-                <li><strong>دعم الجهاز المناعي:</strong> يساعد في تعزيز كفاءة الجهاز المناعي بفضل مضادات الأكسدة.</li>
-                <li><strong>التمثيل الغذائي:</strong> يساهم بفاعلية في دعم عمليات الأيض الغذائي السليم.</li>
-                <li><strong>وظائف العضلات:</strong> يدعم صحة وكفاءة العضلات والوظائف الحيوية للجسم.</li>
-            </ul>
-
-            <h3 class="section-title">المكونات الأساسية</h3>
-            <ul class="ingredient-list">
-                <li>مجموعة فيتامينات B المركبة (لدعم الطاقة والتمثيل الغذائي).</li>
-                <li>فيتامين C وفيتامين D (لدعم المناعة والعظام).</li>
-                <li>عنصر الزنك والمغنيسيوم (لدعم الصحة العامة وصحة الرجال).</li>
-            </ul>
-
-            <h3 class="section-title">طريقة الاستخدام</h3>
-            <ul class="usage-list">
-                <li>الجرعة للرجال البالغين: قرص واحد (1) يوميًا مع الطعام.</li>
-                <li>يُؤخذ مع كمية كافية من الماء.</li>
-                <li>غير مخصص للاستخدام للأطفال.</li>
-            </ul>
-
-            <div class="warnings-box">
-                <h4>إرشادات وتحذيرات هامة:</h4>
-                <ul>
-                    <li>لا تتجاوز الجرعة اليومية الموصى بها.</li>
-                    <li>يُحفظ في مكان جاف وبارد بعيدًا عن متناول الأطفال.</li>
-                </ul>
+        <!-- شريط البحث المتقدم -->
+        <div class="bg-slate-100/70 dark:bg-slate-900/50 border-t border-slate-200/60 dark:border-slate-800/60 px-4 py-3">
+            <div class="max-w-3xl mx-auto relative">
+                <input type="text" id="searchInput" placeholder="ابحث بالاسم التجاري، المادة الفعالة، أو القسم..." 
+                       class="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs sm:text-sm rounded-2xl px-4 py-3 pr-11 border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-500 transition shadow-sm">
+                <span class="absolute right-4 top-3.5 text-slate-400 text-base">🔍</span>
             </div>
+        </div>
+    </header>
+
+    <!-- بانر ترحيبي -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 w-full">
+        <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-900/40 p-6 sm:p-10 shadow-2xl">
+            <div class="absolute -left-10 -bottom-10 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-2xl">
+                <span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-3 py-1 rounded-full border border-emerald-500/30 inline-block mb-3">مخزون رقمي معتمد 2026</span>
+                <h2 class="text-xl sm:text-3xl font-black text-white mb-3">أفضل الأدوية والمستلزمات الطبية بين يديك</h2>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-5">تصفح أقسام الصيدلية بدقة عالية، واعرف المواد الفعالة، الجرعات المتاحة، والكميات المتوفرة فورياً.</p>
+                <div class="flex flex-wrap gap-2 text-xs text-slate-300 font-semibold">
+                    <span class="bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur border border-white/10">🛡️ منتجات أصلية 100%</span>
+                    <span class="bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur border border-white/10">⚡ تحديث فوري للمخزون</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- أزرار الأقسام السريعة -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 w-full">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs sm:text-sm font-black text-slate-700 dark:text-slate-300">💡 تصفح حسب الأقسام والتخصصات الطبية:</h3>
+        </div>
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-2 pt-1">
+            <button onclick="filterByCategory('الكل')" class="cat-btn bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-md transition flex items-center gap-1.5 shrink-0">
+                <span>🏥</span> الكل
+            </button>
+            <button onclick="filterByCategory('الفيتامينات والمكملات')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>🍋</span> الفيتامينات والمكملات والبرتقال الطبيعي
+            </button>
+            <button onclick="filterByCategory('العناية بالبشرة والتجميل')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>✨</span> عناية بالبشرة
+            </button>
+            <button onclick="filterByCategory('أمراض القلب والأوعية الدموية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>❤️</span> وظائف القلب
+            </button>
+            <button onclick="filterByCategory('أمراض الكلى والمسالك البولية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>💧</span> الكلى والمسالك البولية
+            </button>
+            <button onclick="filterByCategory('المضادات الحيوية والمضادات')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>💊</span> المضادات الحيوية
+            </button>
+            <button onclick="filterByCategory('الفيروسات والمناعة')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>🛡️</span> مضادات الفايروسات
+            </button>
+        </div>
+    </section>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-10 flex-grow w-full">
+
+        <!-- رسالة عدم وجود نتائج -->
+        <div id="noResults" class="hidden text-center py-20 text-slate-400 font-semibold glass-card rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div class="text-4xl mb-2">🔍</div>
+            عذراً، لم يتم العثور على أي منتج مطابق لبحثك أو القسم المحدد.
+        </div>
+
+        <!-- حاوية الأقسام والأدوية -->
+        <div id="categoriesContainer" class="space-y-10"></div>
+
+    </main>
+
+    <!-- نافذة منبثقة للإضافة والتعديل -->
+    <div id="drugModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 hidden items-center justify-center p-4 transition-all">
+        <div class="glass-card bg-white dark:bg-[#121216] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative">
+            <div class="flex justify-between items-center mb-5 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 id="modalTitle" class="text-base font-black text-emerald-800 dark:text-emerald-400">إضافة منتج جديد للمخزون</h3>
+                <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-rose-500 font-bold text-lg p-1">✕</button>
+            </div>
+            
+            <form id="drugForm" onsubmit="saveDrug(event)" class="space-y-4">
+                <input type="hidden" id="drugIndex">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">القسم (التصنيف):</label>
+                    <select id="drugCategory" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                        <option value="الفيتامينات والمكملات">🍋 الفيتامينات والمكملات والبرتقال الطبيعي</option>
+                        <option value="العناية بالبشرة والتجميل">✨ العناية بالبشرة والتجميل</option>
+                        <option value="أمراض القلب والأوعية الدموية">❤️ أمراض القلب والأوعية الدموية</option>
+                        <option value="أمراض الكلى والمسالك البولية">💧 أمراض الكلى والمسالك البولية</option>
+                        <option value="المضادات الحيوية والمضادات">💊 المضادات الحيوية والمضادات</option>
+                        <option value="الفيروسات والمناعة">🛡️ الفيروسات والمناعة</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم التجاري:</label>
+                        <input type="text" id="drugTrade" required placeholder="مثال: Vitamin C Orange" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">المادة الفعالة:</label>
+                        <input type="text" id="drugGeneric" required placeholder="مثال: Ascorbic Acid / Extracts" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الجرعة:</label>
+                    <input type="text" id="drugDosage" required placeholder="مثال: 1000 مغ / فوار" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">السعر:</label>
+                        <input type="text" id="drugPrice" required placeholder="6,000 د.ع" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الكمية المتوفرة:</label>
+                        <input type="number" id="drugQuantity" required placeholder="25" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <button type="button" onclick="closeModal()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl text-xs font-bold transition">إلغاء</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py.5 rounded-xl text-xs font-bold transition shadow-md">حفظ البيانات</button>
+                </div>
+            </form>
         </div>
     </div>
 
+    <!-- الفوتر -->
+    <footer class="bg-white dark:bg-[#09090b] border-t border-slate-200 dark:border-slate-800 text-center py-8 text-xs text-slate-500 dark:text-slate-400 mt-auto transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <p class="font-bold text-slate-800 dark:text-slate-200">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
+            <p class="text-[11px]">جميع الحقوق محفوظة © 2026 • تصميم وتطوير متقدم للمخزون الدوائي</p>
+            
+            <div class="pt-2">
+                <button onclick="toggleAdmin()" id="adminBtnText" class="text-[11px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 underline transition font-semibold">
+                    🔒 لوحة تحكم المشرف
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- الجافاسكريبت المطور -->
+    <script>
+        let isDarkMode = localStorage.getItem('raheeq_theme') !== 'light';
+        let currentCategoryFilter = 'الكل';
+        
+        function initTheme() {
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').innerText = '🌙';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').innerText = '☀️';
+            }
+        }
+
+        function toggleThemeMode() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('raheeq_theme', isDarkMode ? 'dark' : 'light');
+            initTheme();
+        }
+        initTheme();
+
+        let isAdmin = localStorage.getItem('raheeq_is_admin') === 'true';
+
+        // المخزون الأولي الغني بالأدوية والمكملات ومنتجات الفيتامينات والكلى والبرتقال الطبيعي
+        let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs')) || [
+            {
+                category: "الفيتامينات والمكملات",
+                tradeName: "Orange C-1000 Natural",
+                activeIngredient: "مستخلص البرتقال الطبيعي وأسكوربيك أسيد",
+                dosage: "1000 مغ / فوار طبيعي",
+                price: "6,500 د.ع",
+                quantity: 45
+            },
+            {
+                category: "الفيتامينات والمكملات",
+                tradeName: "Vitamin D3 5000 IU",
+                activeIngredient: "كوليكالسيفيرول (Cholecalciferol)",
+                dosage: "كبسولات جيلاتينية 5000 وحدة",
+                price: "12,000 د.ع",
+                quantity: 30
+            },
+            {
+                category: "الفيتامينات والمكملات",
+                tradeName: "Omega-3 Fish Oil Ultra",
+                activeIngredient: "أوميغا 3 وزيت السمك النقي",
+                dosage: "1000 مغ / 60 كبسولة",
+                price: "15,000 د.ع",
+                quantity: 22
+            },
+            {
+                category: "أمراض الكلى والمسالك البولية",
+                tradeName: "Ural Effervescent Granules",
+                activeIngredient: "صوديوم بيوتارديت / سترات الصوديوم",
+                dosage: "حبيبات فوارة للمسالك (4 غرام)",
+                price: "8,000 د.ع",
+                quantity: 18
+            },
+            {
+                category: "أمراض الكلى والمسالك البولية",
+                tradeName: "Cystone Himalaya",
+                activeIngredient: "مستخلصات عشبية لتفتيت حصى الكلى",
+                dosage: "60 قرص عشبي",
+                price: "11,500 د.ع",
+                quantity: 25
+            },
+            {
+                category: "أمراض الكلى والمسالك البولية",
+                tradeName: "Rowatinex",
+                activeIngredient: "مزيج تربين طبيعي لتنظيف الكلى",
+                dosage: "كبسولات لتقليل التقلصات والحصى",
+                price: "10,000 د.ع",
+                quantity: 15
+            },
+            {
+                category: "المضادات الحيوية والمضادات",
+                tradeName: "Ciproker",
+                activeIngredient: "سيبروفلوكساسين (Ciprofloxacin)",
+                dosage: "500 مغ / قرص",
+                price: "6,000 د.ع",
+                quantity: 25
+            },
+            {
+                category: "العناية بالبشرة والتجميل",
+                tradeName: "Panthenol Cream",
+                activeIngredient: "ديكسبانثينول (Dexpanthenol)",
+                dosage: "مرهم موضعي 30 غم",
+                price: "4,500 د.ع",
+                quantity: 18
+            },
+            {
+                category: "أمراض القلب والأوعية الدموية",
+                tradeName: "Concor",
+                activeIngredient: "بيزوبرولول (Bisoprolol)",
+                dosage: "5 مغ",
+                price: "7,000 د.ع",
+                quantity: 30
+            },
+            {
+                category: "الفيروسات والمناعة",
+                tradeName: "Immunace Extra",
+                activeIngredient: "فيتامينات ومعادن متكاملة للمناعة",
+                dosage: "أقراص",
+                price: "14,000 د.ع",
+                quantity: 20
+            }
+        ];
+
+        function saveToStorage() {
+            localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
+        }
+
+        function updateAdminUI() {
+            const adminHeader = document.getElementById('adminActionHeader');
+            const adminBtnText = document.getElementById('adminBtnText');
+
+            if (isAdmin) {
+                adminHeader.classList.remove('hidden');
+                adminBtnText.innerText = "🔓 تسجيل خروج المشرف";
+                adminBtnText.className = "text-[11px] text-rose-500 hover:underline transition font-bold";
+            } else {
+                adminHeader.classList.add('hidden');
+                adminBtnText.innerText = "🔒 لوحة تحكم المشرف";
+                adminBtnText.className = "text-[11px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 underline transition font-semibold";
+            }
+            renderDrugs();
+        }
+
+        function toggleAdmin() {
+            if (isAdmin) {
+                if (confirm('هل تريد تسجيل الخروج من وضع الإدارة؟')) {
+                    localStorage.setItem('raheeq_is_admin', 'false');
+                    isAdmin = false;
+                    updateAdminUI();
+                }
+            } else {
+                let pin = prompt('أدخل رمز المرور السري للمشرف:');
+                if (pin === 'google@199920012005') {
+                    localStorage.setItem('raheeq_is_admin', 'true');
+                    isAdmin = true;
+                    updateAdminUI();
+                    alert('تم تسجيل الدخول بنجاح بصفتك المشرف!');
+                } else if (pin !== null) {
+                    alert('رمز المرور غير صحيح!');
+                }
+            }
+        }
+
+        function filterByCategory(cat) {
+            currentCategoryFilter = cat;
+            
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText.includes(cat) || (cat === 'الكل' && btn.innerText.includes('الكل'))) {
+                    btn.className = "cat-btn bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-md transition flex items-center gap-1.5 shrink-0";
+                } else {
+                    btn.className = "cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0";
+                }
+            });
+
+            renderDrugs();
+        }
+
+        function renderDrugs() {
+            const container = document.getElementById('categoriesContainer');
+            const noResults = document.getElementById('noResults');
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            container.innerHTML = '';
+
+            const filtered = drugsData.map((drug, index) => ({ ...drug, originalIndex: index })).filter(drug => {
+                const matchesSearch = drug.tradeName.toLowerCase().includes(searchTerm) || 
+                                      drug.activeIngredient.toLowerCase().includes(searchTerm) || 
+                                      drug.category.toLowerCase().includes(searchTerm) ||
+                                      drug.dosage.toLowerCase().includes(searchTerm);
+                
+                const matchesCategory = (currentCategoryFilter === 'الكل' || drug.category === currentCategoryFilter);
+
+                return matchesSearch && matchesCategory;
+            });
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            const grouped = {};
+            filtered.forEach(drug => {
+                if (!grouped[drug.category]) {
+                    grouped[drug.category] = [];
+                }
+                grouped[drug.category].push(drug);
+            });
+
+            for (const [category, items] of Object.entries(grouped)) {
+                let sectionHTML = `
+                    <div class="space-y-4">
+                        <div class="border-r-4 border-emerald-500 bg-white dark:bg-slate-900 px-5 py-3 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                            <h2 class="text-xs sm:text-sm font-black text-slate-800 dark:text-white">${category}</h2>
+                            <span class="text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded-xl border border-emerald-500/20">${items.length} منتج متوفر</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                `;
+
+                items.forEach(drug => {
+                    let stockBadge = drug.quantity > 5 ? 
+                        `<span class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-xl text-[11px] font-bold">متوفر: ${drug.quantity}</span>` : 
+                        `<span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-xl text-[11px] font-bold">متبقي قليل: ${drug.quantity}</span>`;
+
+                    sectionHTML += `
+                        <div class="glass-card bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-5 flex flex-col justify-between glow-effect hover:scale-[1.01] transition duration-300 relative group">
+                            
+                            <div class="space-y-3 mb-4">
+                                <div>
+                                    <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-900/50 inline-block mb-1">الاسم التجاري</span>
+                                    <h3 class="text-sm sm:text-base font-black text-slate-900 dark:text-white">${drug.tradeName}</h3>
+                                </div>
+
+                                <div class="bg-slate-50 dark:bg-slate-950/60 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-800/50 space-y-1.5 text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">المادة الفعالة:</span>
+                                        <span class="font-bold text-slate-700 dark:text-slate-200 text-left">${drug.activeIngredient}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">الجرعة:</span>
+                                        <span class="font-bold text-slate-700 dark:text-slate-200">${drug.dosage}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-black text-emerald-700 dark:text-emerald-400">${drug.price}</span>
+                                    ${stockBadge}
+                                </div>
+
+                                ${isAdmin ? `
+                                <div class="flex gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                                    <button onclick="openEditModal(${drug.originalIndex})" class="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 font-bold py-2 rounded-xl text-xs transition border border-slate-200 dark:border-slate-700">✏️ تعديل</button>
+                                    <button onclick="deleteDrug(${drug.originalIndex})" class="bg-slate-100 dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-bold px-3.5 py-2 rounded-xl text-xs transition border border-slate-200 dark:border-slate-700">🗑️</button>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                sectionHTML += `</div></div>`;
+                container.innerHTML += sectionHTML;
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            renderDrugs();
+        });
+
+        function openAddModal() {
+            document.getElementById('modalTitle').innerText = 'إضافة منتج جديد للمخزون';
+            document.getElementById('drugIndex').value = '';
+            document.getElementById('drugCategory').value = 'الفيتامينات والمكملات';
+            document.getElementById('drugTrade').value = '';
+            document.getElementById('drugGeneric').value = '';
+            document.getElementById('drugDosage').value = '';
+            document.getElementById('drugPrice').value = '';
+            document.getElementById('drugQuantity').value = '';
+            
+            const modal = document.getElementById('drugModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+        }
+
+        function openEditModal(index) {
+            const drug = drugsData[index];
+            document.getElementById('modalTitle').innerText = 'تعديل بيانات المنتج الدوائي';
+            document.getElementById('drugIndex').value = index;
+            document.getElementById('drugCategory').value = drug.category;
+            document.getElementById('drugTrade').value = drug.tradeName;
+            document.getElementById('drugGeneric').value = drug.activeIngredient;
+            document.getElementById('drugDosage').value = drug.dosage;
+            document.getElementById('drugPrice').value = drug.price;
+            document.getElementById('drugQuantity').value = drug.quantity;
+            
+            const modal = document.getElementById('drugModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('drugModal');
+            modal.classList.remove('active');
+            modal.classList.add('hidden');
+        }
+
+        function saveDrug(event) {
+            event.preventDefault();
+            
+            const index = document.getElementById('drugIndex').value;
+            const newDrug = {
+                category: document.getElementById('drugCategory').value,
+                tradeName: document.getElementById('drugTrade').value.trim(),
+                activeIngredient: document.getElementById('drugGeneric').value.trim(),
+                dosage: document.getElementById('drugDosage').value.trim(),
+                price: document.getElementById('drugPrice').value.trim(),
+                quantity: parseInt(document.getElementById('drugQuantity').value) || 0
+            };
+
+            if (index === '') {
+                drugsData.push(newDrug);
+            } else {
+                drugsData[index] = newDrug;
+            }
+
+            saveToStorage();
+            closeModal();
+            
+            // تحويل الفلتر تلقائياً إلى القسم الذي تم إضافة المنتج إليه ليظهر للمستخدم فوراً
+            filterByCategory(newDrug.category);
+            
+            alert('✅ تم حفظ المنتج بنجاح في المخزون!');
+        }
+
+        function deleteDrug(index) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج من المخزون؟')) {
+                drugsData.splice(index, 1);
+                saveToStorage();
+                updateAdminUI();
+            }
+        }
+
+        updateAdminUI();
+    </script>
 </body>
 </html>
