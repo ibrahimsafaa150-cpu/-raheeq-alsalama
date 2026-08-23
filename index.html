@@ -118,17 +118,17 @@
             <button onclick="filterByCategory('الكل')" class="cat-btn bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-md transition flex items-center gap-1.5 shrink-0">
                 <span>🏥</span> الكل
             </button>
-            <button onclick="filterByCategory('الفيتامينات والمكملات')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>🍋</span> الفيتامينات والمكملات والبرتقال الطبيعي
+            <button onclick="filterByCategory('الفيتامينات والمكملات وبرتقال طبيعي')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>🍊</span> الفيتامينات وبرتقال طبيعي
+            </button>
+            <button onclick="filterByCategory('أمراض الكلى والمسالك البولية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
+                <span>💧</span> الكلى والمسالك البولية
             </button>
             <button onclick="filterByCategory('العناية بالبشرة والتجميل')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
                 <span>✨</span> عناية بالبشرة
             </button>
             <button onclick="filterByCategory('أمراض القلب والأوعية الدموية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
                 <span>❤️</span> وظائف القلب
-            </button>
-            <button onclick="filterByCategory('أمراض الكلى والمسالك البولية')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
-                <span>💧</span> الكلى والمسالك البولية
             </button>
             <button onclick="filterByCategory('المضادات الحيوية والمضادات')" class="cat-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 font-bold text-xs px-4 py-2.5 rounded-2xl whitespace-nowrap shadow-sm transition flex items-center gap-1.5 shrink-0">
                 <span>💊</span> المضادات الحيوية
@@ -166,10 +166,10 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">القسم (التصنيف):</label>
                     <select id="drugCategory" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
-                        <option value="الفيتامينات والمكملات">🍋 الفيتامينات والمكملات والبرتقال الطبيعي</option>
+                        <option value="الفيتامينات والمكملات وبرتقال طبيعي">🍊 الفيتامينات والمكملات وبرتقال طبيعي</option>
+                        <option value="أمراض الكلى والمسالك البولية">💧 أمراض الكلى والمسالك البولية</option>
                         <option value="العناية بالبشرة والتجميل">✨ العناية بالبشرة والتجميل</option>
                         <option value="أمراض القلب والأوعية الدموية">❤️ أمراض القلب والأوعية الدموية</option>
-                        <option value="أمراض الكلى والمسالك البولية">💧 أمراض الكلى والمسالك البولية</option>
                         <option value="المضادات الحيوية والمضادات">💊 المضادات الحيوية والمضادات</option>
                         <option value="الفيروسات والمناعة">🛡️ الفيروسات والمناعة</option>
                     </select>
@@ -178,11 +178,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">الاسم التجاري:</label>
-                        <input type="text" id="drugTrade" required placeholder="مثال: Vitamin C Orange" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                        <input type="text" id="drugTrade" required placeholder="مثال: Orange C-1000" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">المادة الفعالة:</label>
-                        <input type="text" id="drugGeneric" required placeholder="مثال: Ascorbic Acid / Extracts" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
+                        <input type="text" id="drugGeneric" required placeholder="مثال: برتقال طبيعي وفيتامين سي" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition">
                     </div>
                 </div>
 
@@ -204,7 +204,7 @@
 
                 <div class="flex justify-end gap-2.5 pt-4 border-t border-slate-200 dark:border-slate-800">
                     <button type="button" onclick="closeModal()" class="bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl text-xs font-bold transition">إلغاء</button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py.5 rounded-xl text-xs font-bold transition shadow-md">حفظ البيانات</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-md">حفظ البيانات</button>
                 </div>
             </form>
         </div>
@@ -224,7 +224,7 @@
         </div>
     </footer>
 
-    <!-- الجافاسكريبت المطور -->
+    <!-- الجافاسكريبت المحدث والمستقر -->
     <script>
         let isDarkMode = localStorage.getItem('raheeq_theme') !== 'light';
         let currentCategoryFilter = 'الكل';
@@ -248,55 +248,55 @@
 
         let isAdmin = localStorage.getItem('raheeq_is_admin') === 'true';
 
-        // المخزون الأولي الغني بالأدوية والمكملات ومنتجات الفيتامينات والكلى والبرتقال الطبيعي
-        let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs')) || [
+        // المخزون الأولي المحدث ليشمل الفيتامينات وبرتقال طبيعي والكلى بدقة
+        let defaultDrugs = [
             {
-                category: "الفيتامينات والمكملات",
-                tradeName: "Orange C-1000 Natural",
-                activeIngredient: "مستخلص البرتقال الطبيعي وأسكوربيك أسيد",
-                dosage: "1000 مغ / فوار طبيعي",
+                category: "الفيتامينات والمكملات وبرتقال طبيعي",
+                tradeName: "Natural Orange C-1000",
+                activeIngredient: "خلاصة البرتقال الطبيعي وأسكوربيك أسيد",
+                dosage: "1000 مغ فوار طبيعي",
                 price: "6,500 د.ع",
-                quantity: 45
+                quantity: 50
             },
             {
-                category: "الفيتامينات والمكملات",
+                category: "الفيتامينات والمكملات وبرتقال طبيعي",
+                tradeName: "Orange Zinc Immunity Drops",
+                activeIngredient: "مستخلص قشر البرتقال والزنك",
+                dosage: "قطرات مركزة 30 مل",
+                price: "9,000 د.ع",
+                quantity: 35
+            },
+            {
+                category: "الفيتامينات والمكملات وبرتقال طبيعي",
                 tradeName: "Vitamin D3 5000 IU",
-                activeIngredient: "كوليكالسيفيرول (Cholecalciferol)",
-                dosage: "كبسولات جيلاتينية 5000 وحدة",
+                activeIngredient: "كوليكالسيفيرول نقي",
+                dosage: "كبسولات 5000 وحدة",
                 price: "12,000 د.ع",
                 quantity: 30
             },
             {
-                category: "الفيتامينات والمكملات",
-                tradeName: "Omega-3 Fish Oil Ultra",
-                activeIngredient: "أوميغا 3 وزيت السمك النقي",
-                dosage: "1000 مغ / 60 كبسولة",
-                price: "15,000 د.ع",
-                quantity: 22
-            },
-            {
                 category: "أمراض الكلى والمسالك البولية",
                 tradeName: "Ural Effervescent Granules",
-                activeIngredient: "صوديوم بيوتارديت / سترات الصوديوم",
-                dosage: "حبيبات فوارة للمسالك (4 غرام)",
+                activeIngredient: "سترات الصوديوم الحبيبية للمسالك",
+                dosage: "حبيبات فوارة معقمة",
                 price: "8,000 د.ع",
-                quantity: 18
+                quantity: 20
             },
             {
                 category: "أمراض الكلى والمسالك البولية",
                 tradeName: "Cystone Himalaya",
-                activeIngredient: "مستخلصات عشبية لتفتيت حصى الكلى",
-                dosage: "60 قرص عشبي",
+                activeIngredient: "مستخلصات عشبية لتفتيت الحصى",
+                dosage: "60 قرص طبي",
                 price: "11,500 د.ع",
                 quantity: 25
             },
             {
                 category: "أمراض الكلى والمسالك البولية",
-                tradeName: "Rowatinex",
+                tradeName: "Rowatinex Capsules",
                 activeIngredient: "مزيج تربين طبيعي لتنظيف الكلى",
-                dosage: "كبسولات لتقليل التقلصات والحصى",
+                dosage: "كبسولات طاردة للحصى",
                 price: "10,000 د.ع",
-                quantity: 15
+                quantity: 18
             },
             {
                 category: "المضادات الحيوية والمضادات",
@@ -321,16 +321,14 @@
                 dosage: "5 مغ",
                 price: "7,000 د.ع",
                 quantity: 30
-            },
-            {
-                category: "الفيروسات والمناعة",
-                tradeName: "Immunace Extra",
-                activeIngredient: "فيتامينات ومعادن متكاملة للمناعة",
-                dosage: "أقراص",
-                price: "14,000 د.ع",
-                quantity: 20
             }
         ];
+
+        let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs'));
+        if (!drugsData || drugsData.length === 0) {
+            drugsData = defaultDrugs;
+            localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
+        }
 
         function saveToStorage() {
             localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
@@ -483,7 +481,7 @@
         function openAddModal() {
             document.getElementById('modalTitle').innerText = 'إضافة منتج جديد للمخزون';
             document.getElementById('drugIndex').value = '';
-            document.getElementById('drugCategory').value = 'الفيتامينات والمكملات';
+            document.getElementById('drugCategory').value = 'الفيتامينات والمكملات وبرتقال طبيعي';
             document.getElementById('drugTrade').value = '';
             document.getElementById('drugGeneric').value = '';
             document.getElementById('drugDosage').value = '';
@@ -530,19 +528,19 @@
                 quantity: parseInt(document.getElementById('drugQuantity').value) || 0
             };
 
-            if (index === '') {
+            if (index === '' || index === null || index === undefined) {
                 drugsData.push(newDrug);
             } else {
-                drugsData[index] = newDrug;
+                drugsData[parseInt(index)] = newDrug;
             }
 
             saveToStorage();
             closeModal();
             
-            // تحويل الفلتر تلقائياً إلى القسم الذي تم إضافة المنتج إليه ليظهر للمستخدم فوراً
+            // فلترة وعرض القسم الذي تمت الإضافة إليه ليرى المستخدم النتيجة فوراً
             filterByCategory(newDrug.category);
             
-            alert('✅ تم حفظ المنتج بنجاح في المخزون!');
+            alert('✅ تم حفظ المنتج بنجاح في الموقع!');
         }
 
         function deleteDrug(index) {
