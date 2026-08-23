@@ -3,311 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دليل الأدوية والمخزون | صيدلية رحيق السلامة</title>
+    <title>صيدلية رحيق السلامة | مخزون الأدوية</title>
     <!-- Tailwind CSS للتصميم العصري -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        emeraldBrand: '#0d5c45',
-                        emeraldDark: '#093d2e',
-                        goldBrand: '#c5a059',
-                        goldLight: '#fdf8ec',
-                    }
-                }
-            }
-        }
-    </script>
     <!-- خط Cairo العربي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- الهيدر العلوي الفاخر -->
-    <header class="bg-gradient-to-r from-emeraldDark via-emeraldBrand to-emeraldDark text-white shadow-xl sticky top-0 z-50 border-b-2 border-goldBrand">
+    <!-- الهيدر العلوي تماماً مثل التصميم الأول -->
+    <header class="bg-[#093d2e] text-white shadow-md sticky top-0 z-40 border-b-2 border-emerald-700">
         <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <!-- اللوجو -->
-                <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-goldBrand shadow-md bg-white flex-shrink-0">
-                    <img src="logo.jpg" alt="شعار صيدلية رحيق السلامة" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>'">
+            <!-- الشعار والعنوان -->
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl shadow-inner">
+                        🌿
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-black tracking-wide text-white">صيدلية رَحِيْقُ السَّلَامَة</h1>
+                        <p class="text-[11px] text-emerald-300 font-semibold">صحتكم أمانتنا • جودة ورعاية</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-xl font-black tracking-wide text-white">صيدلية رَحِيْقُ السَّلَامَة</h1>
-                    <p class="text-xs text-amber-200 font-semibold tracking-wider">مخزون الأدوية والمضادات المباشر</p>
-                </div>
+                <!-- زر إضافة دواء للجوال -->
+                <button onclick="openAddModal()" class="sm:hidden bg-amber-500 hover:bg-amber-600 text-emerald-950 font-bold text-xs px-3 py-2 rounded-xl shadow">
+                    + دواء جديد
+                </button>
             </div>
-            <!-- خانة البحث الفوري -->
-            <div class="w-full sm:w-72">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="ابحث بالاسم التجاري أو المادة..." 
-                           class="w-full bg-emerald-950/60 text-white placeholder-emerald-300 text-xs rounded-xl px-4 py-2.5 pr-9 border border-emerald-600 focus:outline-none focus:border-goldBrand transition shadow-inner">
-                    <span class="absolute right-3 top-2.5 text-emerald-300 text-sm">🔍</span>
-                </div>
+
+            <!-- زر إضافة دواء للشاشات الكبيرة -->
+            <div class="hidden sm:flex items-center gap-2">
+                <button onclick="openAddModal()" class="bg-amber-500 hover:bg-amber-600 text-emerald-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-1.5">
+                    <span>➕</span> إضافة دواء جديد
+                </button>
+            </div>
+        </div>
+
+        <!-- شريط البحث الفوري -->
+        <div class="bg-[#062c21] px-4 py-3 border-t border-emerald-800/50">
+            <div class="max-w-4xl mx-auto relative">
+                <input type="text" id="searchInput" placeholder="ابحث عن اسم الدواء أو التجاري..." 
+                       class="w-full bg-emerald-900/80 text-white placeholder-emerald-300 text-xs sm:text-sm rounded-xl px-4 py-2.5 pr-10 border border-emerald-700 focus:outline-none focus:border-amber-400 transition shadow-inner">
+                <span class="absolute right-3.5 top-3 text-emerald-300 text-sm">🔍</span>
             </div>
         </div>
     </header>
 
     <!-- المحتوى الرئيسي -->
-    <main class="max-w-4xl mx-auto px-4 py-6 space-y-4 flex-grow w-full">
+    <main class="max-w-4xl mx-auto px-4 py-6 space-y-6 flex-grow w-full">
 
-        <!-- رسالة التنبيه إن لم توجد نتائج -->
-        <div id="noResults" class="hidden text-center py-10 text-slate-400 font-semibold bg-white rounded-2xl shadow-sm border border-slate-100">
+        <!-- رسالة عدم وجود نتائج -->
+        <div id="noResults" class="hidden text-center py-12 text-slate-400 font-semibold bg-white rounded-2xl shadow-sm border border-slate-200">
             عذراً، لم يتم العثور على الدواء المطلوب.
         </div>
 
-        <div id="drugContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            <!-- بطاقة 1 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Ciprofloxacin</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">6,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Ciproker | Bactiflox | Ciprobay</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">سيبروفلوكساسين</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 25 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 2 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Levofloxacin</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">8,500 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Tavanic | Levour | Levotop</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">ليفوفلوكساسين</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 12 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 3 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Cefuroxime</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">7,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Auroxetil | Cefodox | Zamu</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">سيفوروكسيم</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 19 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 4 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Cefixime</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">9,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Fixim | Mixif | Betixim | Winex</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">سيفيكسيم</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 30 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 5 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Cefdinir</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">8,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Ceftinex | AltiCet</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">سيفدينير</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 14 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 6 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Amoxicillin + Clav.</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">6,500 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">KoAct | Gloclav | Bactoclav</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">أموكسيسيلين كلافولانات</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 40 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 7 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Metronidazole</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">3,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">FLAGIMEL | Flagyl | SAFAGYL</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">ميترونيدازول</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 50 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 8 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Rifaximin</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">12,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Urfaximin 550mg | Nimixa</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">ريفاكسيمين</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 10 علب</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 9 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Clarithromycin</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">11,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Claranta 500 | Clariva 500</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">كلاريثروميسين</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 16 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 10 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Clindamycin</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">7,500 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Clindacin | Lanacin 150mg</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">كلينداميسين</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 21 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 11 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Minocycline</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">10,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Vulgar XR 80mg</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">مينوسيكلين</strong></span>
-                    <span class="bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded-md">المتبقي: 8 علب</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 12 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Trimethoprim / Sulfa</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">4,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Trimoks Forte | Septrin D.S.</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">تريمتوبريم وسلفاميثوكسازول</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 35 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 13 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Nitrofurantoin</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">5,500 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Uvamin retard | Piyoseptyl</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">نايتروفورانتوين</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 25 علبة</span>
-                </div>
-            </div>
-
-            <!-- بطاقة 14 -->
-            <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition">
-                <div>
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs bg-emerald-50 text-emeraldBrand px-2.5 py-1 rounded-lg font-bold border border-emerald-100">Aciclovir</span>
-                        <span class="text-xs font-black text-emerald-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">6,000 د.ع</span>
-                    </div>
-                    <h3 class="font-bold text-slate-900 text-sm sm:text-base">Clovir 400mg / 800mg</h3>
-                </div>
-                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                    <span class="text-slate-500">المادة: <strong class="text-slate-700">أسيكلوفير</strong></span>
-                    <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded-md">المتبقي: 18 علبة</span>
-                </div>
-            </div>
-
+        <!-- حاوية الأدوية (ستتولد ديناميكياً) -->
+        <div id="categoriesContainer" class="space-y-6">
+            <!-- يتم تعبئتها بواسطة الجافاسكريبت -->
         </div>
 
     </main>
 
+    <!-- نافذة منبثقة (Modal) لإضافة أو تعديل دواء -->
+    <div id="drugModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border border-slate-100 animate-fadeIn">
+            <h3 id="modalTitle" class="text-lg font-black text-emerald-900 mb-4 border-b pb-2">إضافة دواء جديد</h3>
+            <form id="drugForm" onsubmit="saveDrug(event)" class="space-y-3">
+                <input type="hidden" id="drugIndex">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المجموعة (التصنيف):</label>
+                    <input type="text" id="drugCategory" required placeholder="مثال: المضادات الحيوية واسعة النطاق" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المادة العلمية (اسم الدواء):</label>
+                    <input type="text" id="drugGeneric" required placeholder="مثال: سيبروفلوكساسين (Ciprofloxacin)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الأسماء التجارية والجرعات:</label>
+                    <input type="text" id="drugTrade" required placeholder="مثال: Ciproker | 500 مغ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-600">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">السعر (د.ع):</label>
+                        <input type="text" id="drugPrice" required placeholder="6,000 د.ع" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">القطع المتبقية:</label>
+                        <input type="number" id="drugQuantity" required placeholder="25" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-600">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-4 border-t">
+                    <button type="button" onclick="closeModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition">إلغاء</button>
+                    <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- الفوتر السفلي -->
     <footer class="bg-white border-t border-slate-200 text-center py-6 text-xs text-slate-500 mt-auto">
-        <p class="font-semibold text-emeraldBrand mb-1">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
+        <p class="font-semibold text-emerald-900 mb-1">صيدلية رحيق السلامة • بغداد - حي الحسين</p>
         <p>جميع الحقوق محفوظة © 2026</p>
     </footer>
 
-    <!-- سكريبت البحث الفوري -->
+    <!-- جافاسكريبت لإدارة البيانات والتفاعل -->
     <script>
-        const searchInput = document.getElementById('searchInput');
-        const drugCards = document.querySelectorAll('.drug-card');
-        const noResults = document.getElementById('noResults');
+        // البيانات الافتراضية أو المحفوظة في المتصفح
+        let drugsData = JSON.parse(localStorage.getItem('raheeq_drugs')) || [
+            {
+                category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون (Quinolones)",
+                generic: "سيبروفلوكساسين (Ciprofloxacin)",
+                trade: "Ciproker | Bactiflox Neo | Ciprobay | Microflox (500 و 750 مغ)",
+                price: "6,000 د.ع",
+                quantity: 25
+            },
+            {
+                category: "أولاً: المضادات الحيوية واسعة النطاق ومجموعة الكويونولون (Quinolones)",
+                generic: "ليفوفلوكساسين (Levofloxacin)",
+                trade: "Tavanic | Levour | Levotop | Uniflox (500 مغ)",
+                price: "8,500 د.ع",
+                quantity: 12
+            },
+            {
+                category: "ثانياً: مجموعة السيفالوسبورين (Cephalosporins)",
+                generic: "سيفيكسيم (Cefixime)",
+                trade: "Fixim 400 | Mixif | Betixim | Winex",
+                price: "9,000 د.ع",
+                quantity: 30
+            },
+            {
+                category: "ثانياً: مجموعة السيفالوسبورين (Cephalosporins)",
+                generic: "سيفدينير (Cefdinir)",
+                trade: "Ceftinex 300mg | AltiCet 300mg",
+                price: "8,000 د.ع",
+                quantity: 14
+            },
+            {
+                category: "ثالثاً: مجموعة الماكروليد والمضادات المعوية",
+                generic: "كلاريثروميسين (Clarithromycin)",
+                trade: "Claranta 500 | Clariva 500",
+                price: "11,000 د.ع",
+                quantity: 16
+            },
+            {
+                category: "ثالثاً: مجموعة الماكروليد والمضادات المعوية",
+                generic: "ريفاكسيمين (Rifaximin)",
+                trade: "Urfaximin 550mg | Nimixa",
+                price: "12,000 د.ع",
+                quantity: 10
+            },
+            {
+                category: "رابعاً: مضادات الطفيليات والالتهابات البولية",
+                generic: "ميترونيدازول (Metronidazole)",
+                trade: "FLAGIMEL | Flagyl | SAFAGYL | NejAzole",
+                price: "3,000 د.ع",
+                quantity: 50
+            },
+            {
+                category: "رابعاً: مضادات الطفيليات والالتهابات البولية",
+                generic: "نايتروفورانتوين (Nitrofurantoin)",
+                trade: "Uvamin retard | Piyoseptyl",
+                price: "5,500 د.ع",
+                quantity: 25
+            }
+        ];
 
-        searchInput.addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase().trim();
-            let visibleCount = 0;
+        function saveToStorage() {
+            localStorage.setItem('raheeq_drugs', JSON.stringify(drugsData));
+        }
 
-            drugCards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (text.includes(term)) {
-                    card.style.display = 'flex';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
-                }
+        // عرض الأدوية وترتيبها حسب المجموعات
+        function renderDrugs(filter = '') {
+            const container = document.getElementById('categoriesContainer');
+            const noResults = document.getElementById('noResults');
+            container.innerHTML = '';
+
+            // تصفية الأدوية حسب البحث
+            const filtered = drugsData.map((drug, index) => ({ ...drug, originalIndex: index })).filter(drug => {
+                const query = filter.toLowerCase();
+                return drug.generic.toLowerCase().includes(query) || 
+                       drug.trade.toLowerCase().includes(query) || 
+                       drug.category.toLowerCase().includes(query);
             });
 
-            if (visibleCount === 0) {
+            if (filtered.length === 0) {
                 noResults.classList.remove('hidden');
+                return;
             } else {
                 noResults.classList.add('hidden');
             }
+
+            // تجميع حسب التصنيف
+            const grouped = {};
+            filtered.forEach(drug => {
+                if (!grouped[drug.category]) {
+                    grouped[drug.category] = [];
+                }
+                grouped[drug.category].push(drug);
+            });
+
+            // بناء العناصر في HTML
+            for (const [category, items] of Object.entries(grouped)) {
+                let sectionHTML = `
+                    <div class="space-y-3">
+                        <div class="bg-amber-50 border-r-4 border-amber-600 px-4 py-2.5 rounded-lg shadow-sm">
+                            <h2 class="text-xs sm:text-sm font-black text-emerald-950">${category}</h2>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                `;
+
+                items.forEach(drug => {
+                    sectionHTML += `
+                        <div class="drug-card bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between hover:shadow-md transition">
+                            <div>
+                                <div class="flex justify-between items-start mb-2 gap-2">
+                                    <span class="text-xs font-bold text-emerald-900 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">${drug.generic}</span>
+                                    <span class="text-xs font-black text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 shrink-0">${drug.price}</span>
+                                </div>
+                                <p class="text-xs text-slate-700 font-semibold mb-3">${drug.trade}</p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+                                <span class="bg-emerald-100/70 text-emerald-900 font-bold px-2.5 py-1 rounded-md">المتبقي: ${drug.quantity} علبة</span>
+                                <div class="flex gap-1.5">
+                                    <button onclick="openEditModal(${drug.originalIndex})" class="bg-slate-100 hover:bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-lg transition border border-slate-200">✏️ تعديل</button>
+                                    <button onclick="deleteDrug(${drug.originalIndex})" class="bg-slate-100 hover:bg-rose-50 text-rose-600 font-bold px-2 py-1 rounded-lg transition border border-slate-200">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                sectionHTML += `</div></div>`;
+                container.innerHTML += sectionHTML;
+            }
+        }
+
+        // تفاعل البحث الفوري
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            renderDrugs(e.target.value.trim());
         });
+
+        // فتح نافذة الإضافة
+        function openAddModal() {
+            document.getElementById('modalTitle').innerText = 'إضافة دواء جديد';
+            document.getElementById('drugIndex').value = '';
+            document.getElementById('drugCategory').value = '';
+            document.getElementById('drugGeneric').value = '';
+            document.getElementById('drugTrade').value = '';
+            document.getElementById('drugPrice').value = '';
+            document.getElementById('drugQuantity').value = '';
+            document.getElementById('drugModal').classList.remove('hidden');
+        }
+
+        // فتح نافذة التعديل
+        function openEditModal(index) {
+            const drug = drugsData[index];
+            document.getElementById('modalTitle').innerText = 'تعديل بيانات الدواء';
+            document.getElementById('drugIndex').value = index;
+            document.getElementById('drugCategory').value = drug.category;
+            document.getElementById('drugGeneric').value = drug.generic;
+            document.getElementById('drugTrade').value = drug.trade;
+            document.getElementById('drugPrice').value = drug.price;
+            document.getElementById('drugQuantity').value = drug.quantity;
+            document.getElementById('drugModal').classList.remove('hidden');
+        }
+
+        // إغلاق النافذة
+        function closeModal() {
+            document.getElementById('drugModal').classList.add('hidden');
+        }
+
+        // حفظ الدواء (إضافة أو تعديل)
+        function saveDrug(event) {
+            event.preventDefault();
+            const index = document.getElementById('drugIndex').value;
+            const newDrug = {
+                category: document.getElementById('drugCategory').value,
+                generic: document.getElementById('drugGeneric').value,
+                trade: document.getElementById('drugTrade').value,
+                price: document.getElementById('drugPrice').value,
+                quantity: parseInt(document.getElementById('drugQuantity').value)
+            };
+
+            if (index === '') {
+                // إضافة جديد
+                drugsData.push(newDrug);
+            } else {
+                // تعديل موجود
+                drugsData[index] = newDrug;
+            }
+
+            saveToStorage();
+            renderDrugs();
+            closeModal();
+        }
+
+        // حذف دواء
+        function deleteDrug(index) {
+            if (confirm('هل أنت متأكد من حذف هذا الدواء؟')) {
+                drugsData.splice(index, 1);
+                saveToStorage();
+                renderDrugs();
+            }
+        }
+
+        // التشغيل الأولي
+        renderDrugs();
     </script>
 
 </body>
