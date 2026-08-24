@@ -24,10 +24,8 @@
         }
 
         .glass-panel {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(10, 15, 29, 0.98) 100%);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(10, 15, 29, 0.98) 100%);
             border: 1px solid rgba(6, 182, 212, 0.18);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
         }
 
         .logo-box {
@@ -62,11 +60,11 @@
         }
 
         #customToast {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translate(-50%, -120px);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translate(-50%, -150%);
             opacity: 0;
             pointer-events: none;
-            z-index: 99999 !important;
+            z-index: 999999 !important;
         }
 
         #customToast.toast-show {
@@ -82,12 +80,13 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
-    <div id="customToast" class="fixed top-4 left-1/2 px-4 py-2.5 rounded-2xl glass-panel border border-cyan-500/60 shadow-2xl flex items-center gap-2 text-xs font-bold text-white max-w-[90vw]">
-        <span id="toastIcon" class="text-base">✅</span>
-        <span id="toastMessage">تمت العملية بنجاح!</span>
+    <!-- الإشعار المنبثق -->
+    <div id="customToast" class="fixed top-5 left-1/2 bg-slate-900 border-2 border-cyan-400 px-5 py-3 rounded-2xl shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center gap-2.5 text-xs font-black text-white max-w-[92vw]">
+        <span id="toastIcon" class="text-lg">✅</span>
+        <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح!</span>
     </div>
 
-    <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2 transition-colors">
+    <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2">
         <span>🌿</span>
         <span id="deliveryBannerText" class="font-bold">صحتكم أمانتنا • خدمة حجز وتجهيز الأدوية المعتمدة متاحة</span>
     </div>
@@ -118,7 +117,7 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-95" title="السلة">
+                <button onclick="openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
                     <span class="text-sm">🛒</span>
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
@@ -467,31 +466,23 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        function restoreAllSavedProducts() {
-            const oldStorageKeys = [
-                'sidalihet_final_v10',
-                'sidalihet_master_db_v9',
-                'sidalihet_cloud_sync_v6',
-                'sidalihet_rx_synced_v5',
-                'sidalihet_pharma_perfect_2026',
-                'sidalihet_upload_v2',
-                'sidalihet_stable_v8'
-            ];
+        // تنظيف المخلفات القديمة لتسريع المتصفح واسترجاع الأدوية
+        function initializeData() {
+            const oldKeys = ['sidalihet_final_v10', 'sidalihet_master_db_v9', 'sidalihet_cloud_sync_v6', 'sidalihet_rx_synced_v5', 'sidalihet_stable_v8', 'sidalihet_ultra_v11'];
+            let foundProducts = [...defaultProducts];
 
-            let allFound = [...defaultProducts];
-
-            oldStorageKeys.forEach(key => {
+            oldKeys.forEach(k => {
                 try {
-                    const raw = localStorage.getItem(key);
+                    const raw = localStorage.getItem(k);
                     if (raw) {
                         const parsed = JSON.parse(raw);
                         if (Array.isArray(parsed)) {
                             parsed.forEach(p => {
-                                const existIndex = allFound.findIndex(item => item.name.toLowerCase().trim() === p.name.toLowerCase().trim());
-                                if (existIndex !== -1) {
-                                    allFound[existIndex] = p;
+                                const idx = foundProducts.findIndex(item => item.name.toLowerCase().trim() === p.name.toLowerCase().trim());
+                                if (idx !== -1) {
+                                    foundProducts[idx] = p;
                                 } else {
-                                    allFound.push(p);
+                                    foundProducts.push(p);
                                 }
                             });
                         }
@@ -499,23 +490,25 @@
                 } catch(e) {}
             });
 
-            productsData = allFound;
-            saveProductsToStorage();
+            productsData = foundProducts;
+            try {
+                localStorage.setItem('raheeq_db_clean_2026', JSON.stringify(productsData));
+            } catch(e) {}
         }
 
         try {
-            const master = localStorage.getItem('sidalihet_ultra_v11');
-            if (master) {
-                productsData = JSON.parse(master);
+            const saved = localStorage.getItem('raheeq_db_clean_2026');
+            if (saved) {
+                productsData = JSON.parse(saved);
             } else {
-                restoreAllSavedProducts();
+                initializeData();
             }
-        } catch (e) {
+        } catch(e) {
             productsData = defaultProducts;
         }
 
         try {
-            const savedCart = localStorage.getItem('sidalihet_upload_cart_v2');
+            const savedCart = localStorage.getItem('raheeq_cart_clean');
             cart = savedCart ? JSON.parse(savedCart) : [];
         } catch(e) {
             cart = [];
@@ -523,29 +516,35 @@
 
         function saveProductsToStorage() {
             try {
-                localStorage.setItem('sidalihet_ultra_v11', JSON.stringify(productsData));
-            } catch(e) {}
+                localStorage.setItem('raheeq_db_clean_2026', JSON.stringify(productsData));
+            } catch(e) {
+                console.warn("Quota reached");
+            }
         }
 
         function saveCartToStorage() {
-            localStorage.setItem('sidalihet_upload_cart_v2', JSON.stringify(cart));
+            try {
+                localStorage.setItem('raheeq_cart_clean', JSON.stringify(cart));
+            } catch(e) {}
             updateCartBadge();
         }
 
-        let toastTimeout = null;
+        let toastTimer = null;
         function showToast(message, icon = "✅") {
             const toast = document.getElementById('customToast');
             document.getElementById('toastMessage').innerText = message;
             document.getElementById('toastIcon').innerText = icon;
 
             toast.classList.remove('toast-show');
-            void toast.offsetWidth; // Force reflow
+            void toast.offsetWidth; // إعادة تهيئة الـ DOM فورياً
             toast.classList.add('toast-show');
 
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
+            if (navigator.vibrate) navigator.vibrate(40); // اهتزاز خفيف باللمس
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
                 toast.classList.remove('toast-show');
-            }, 2000);
+            }, 2200);
         }
 
         function handleImageUpload(event) {
@@ -557,7 +556,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 300;
+                    const MAX_WIDTH = 250;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
@@ -565,7 +564,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.55);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
                     document.getElementById('prodImage').value = compressedBase64;
                     showToast('تمت معالجة الصورة بنجاح', '🖼️');
                 };
@@ -682,10 +681,10 @@
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     onEnd: function () {
-                        const newOrderIds = Array.from(grid.children).map(card => parseInt(card.getAttribute('data-id')));
+                        const newOrderIds = Array.from(grid.children).map(card => card.getAttribute('data-id'));
                         const reordered = [];
                         newOrderIds.forEach(id => {
-                            const p = productsData.find(item => item.id === id);
+                            const p = productsData.find(item => String(item.id) === String(id));
                             if (p) reordered.push(p);
                         });
                         productsData = reordered;
@@ -743,14 +742,14 @@
                         </div>
 
                         <div class="flex items-center gap-1.5 pt-1.5 border-t border-slate-800/70">
-                            <button onclick="addToCart(${prod.id})" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-bold py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1 shadow active:scale-95">
+                            <button onclick="addToCart('${prod.id}')" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-bold py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1 shadow active:scale-95">
                                 <span>🛒</span> <span>إضافة للطلبية</span>
                             </button>
                             ${isAdmin ? `
                             <div class="flex items-center gap-1">
                                 <button class="drag-handle bg-slate-800 hover:bg-slate-700 text-amber-400 px-2.5 py-1.5 rounded-lg text-xs border border-slate-700 font-bold select-none" title="اسحب لتحريك الدواء">☰</button>
-                                <button onclick="openEditModal(${prod.id})" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
-                                <button onclick="deleteProduct(${prod.id})" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
+                                <button onclick="openEditModal('${prod.id}')" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
+                                <button onclick="deleteProduct('${prod.id}')" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
                             </div>
                             ` : ''}
                         </div>
@@ -812,7 +811,7 @@
                 return;
             }
 
-            const prod = productsData.find(p => p.id === id);
+            const prod = productsData.find(p => String(p.id) === String(id));
             if (!prod) return;
 
             if (prod.stock <= 0) {
@@ -820,7 +819,7 @@
                 return;
             }
 
-            const existing = cart.find(item => item.id === id);
+            const existing = cart.find(item => String(item.id) === String(id));
             if (existing) {
                 if (existing.qty >= prod.stock) {
                     showToast('بلغت الحد الأقصى المتوفر بالمخزن', '⚠️');
@@ -830,6 +829,7 @@
             } else {
                 cart.push({ ...prod, qty: 1 });
             }
+            
             saveCartToStorage();
             showToast(`تمت إضافة "${prod.name}" بنجاح!`, '🛒');
         }
@@ -926,7 +926,7 @@
             const item = cart[index];
             if (!item) return;
 
-            const originalProd = productsData.find(p => p.id === item.id);
+            const originalProd = productsData.find(p => String(p.id) === String(item.id));
 
             if (delta > 0 && originalProd && item.qty >= originalProd.stock) {
                 showToast('لا توجد كمية كافية بالمخزن', '⚠️');
@@ -938,7 +938,7 @@
                 cart.splice(index, 1);
             }
             saveCartToStorage();
-            renderCartContent();
+            renderCartContent(); // تحديث فوري مباشر للواجهة
         }
 
         function removeFromCart(index) {
@@ -985,7 +985,7 @@
             message += `⏰ *وقت الحجز:* ${new Date().toLocaleDateString('ar-IQ')} - ${new Date().toLocaleTimeString('ar-IQ')}`;
 
             cart.forEach(cItem => {
-                const prod = productsData.find(p => p.id === cItem.id);
+                const prod = productsData.find(p => String(p.id) === String(cItem.id));
                 if (prod) {
                     prod.stock = Math.max(0, prod.stock - cItem.qty);
                 }
@@ -1065,7 +1065,7 @@
         }
 
         function openEditModal(id) {
-            const prod = productsData.find(p => p.id === id);
+            const prod = productsData.find(p => String(p.id) === String(id));
             if (!prod) return;
 
             document.getElementById('adminModalTitle').innerHTML = '<span>✏️</span> تعديل بيانات الصنف الدوائي';
@@ -1103,7 +1103,7 @@
             }
 
             const newProdData = {
-                id: editId ? parseInt(editId) : Date.now(),
+                id: editId ? editId : 'med_' + Date.now(),
                 category: document.getElementById('prodCategory').value,
                 name: document.getElementById('prodName').value.trim(),
                 activeIngredient: document.getElementById('prodActive').value.trim(),
@@ -1114,7 +1114,7 @@
             };
 
             if (editId) {
-                const index = productsData.findIndex(p => p.id === parseInt(editId));
+                const index = productsData.findIndex(p => String(p.id) === String(editId));
                 if (index !== -1) {
                     productsData[index] = newProdData;
                 }
@@ -1129,7 +1129,7 @@
         }
 
         function deleteProduct(id) {
-            productsData = productsData.filter(p => p.id !== id);
+            productsData = productsData.filter(p => String(p.id) !== String(id));
             saveProductsToStorage();
             filterByCategory(currentFilter);
             showToast('تم حذف الدواء بنجاح', '🗑️');
