@@ -225,12 +225,12 @@
         </div>
     </div>
 
-    <!-- نافذة المشرف السري -->
+    <!-- نافذة المشرف المحمية -->
     <div id="adminPinModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
-            <h3 class="text-xs font-black text-white">الدخول الإداري للمشرف</h3>
-            <p class="text-[10px] text-slate-400">أدخل رمز المرور السري لتفعيل لوحة التحكم</p>
+            <h3 class="text-xs font-black text-white">الدخول الإداري المشفر</h3>
+            <p class="text-[10px] text-slate-400">أدخل رمز المرور السري للتحقق الآمن</p>
             <input type="password" id="adminPinInput" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
             <div class="flex gap-2 pt-1">
                 <button onclick="closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
@@ -344,6 +344,17 @@
     </footer>
 
     <script>
+        // بصمة التشفير الآمنة SHA-256 (مستحيل استخراج الرمز الأصلي منها عبر فحص الكود)
+        const SECURE_HASH = "809eeec7dfbdfae2ce5976b9f1d06b528be4876b5cf5eb3fe244a04684992160";
+
+        async function computeSHA256(text) {
+            const enc = new TextEncoder();
+            const data = enc.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
@@ -554,14 +565,16 @@
             modal.classList.add('hidden');
         }
 
-        function verifyAdminPin() {
+        async function verifyAdminPin() {
             const pin = document.getElementById('adminPinInput').value;
-            if (pin === 'google@199920012005') {
+            const enteredHash = await computeSHA256(pin);
+
+            if (enteredHash === SECURE_HASH) {
                 isAdmin = true;
                 localStorage.setItem('sidalihet_admin', 'true');
                 closePinModal();
                 updateAdminUI();
-                showToast('تم تفعيل لوحة المشرف بنجاح! 🚀', '🛡️');
+                showToast('تم التحقق الآمن وتفعيل لوحة المشرف! 🚀', '🛡️');
             } else {
                 showToast('رمز المرور غير صحيح!', '❌');
             }
