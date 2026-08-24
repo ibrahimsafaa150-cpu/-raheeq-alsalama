@@ -358,7 +358,6 @@
             { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
-        // القائمة الافتراضية الشاملة لكل الأصناف مع أحدث بيانات وصور
         const defaultProducts = [
             {
                 id: 1,
@@ -467,9 +466,9 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        // استرجاع ودمج تلقائي وذكي لكل الأدوية المضافة مسبقاً في هاتفك
         function restoreAllSavedProducts() {
             const oldStorageKeys = [
+                'sidalihet_master_db_v9',
                 'sidalihet_cloud_sync_v6',
                 'sidalihet_rx_synced_v5',
                 'sidalihet_pharma_perfect_2026',
@@ -488,9 +487,9 @@
                             parsed.forEach(p => {
                                 const existIndex = allFound.findIndex(item => item.name.toLowerCase().trim() === p.name.toLowerCase().trim());
                                 if (existIndex !== -1) {
-                                    allFound[existIndex] = p; // تحديث ببياناتك وصورك
+                                    allFound[existIndex] = p;
                                 } else {
-                                    allFound.push(p); // إضافة الصنف الجديد
+                                    allFound.push(p);
                                 }
                             });
                         }
@@ -499,11 +498,11 @@
             });
 
             productsData = allFound;
-            localStorage.setItem('sidalihet_master_db_v9', JSON.stringify(productsData));
+            saveProductsToStorage();
         }
 
         try {
-            const master = localStorage.getItem('sidalihet_master_db_v9');
+            const master = localStorage.getItem('sidalihet_final_v10');
             if (master) {
                 productsData = JSON.parse(master);
             } else {
@@ -521,7 +520,11 @@
         }
 
         function saveProductsToStorage() {
-            localStorage.setItem('sidalihet_master_db_v9', JSON.stringify(productsData));
+            try {
+                localStorage.setItem('sidalihet_final_v10', JSON.stringify(productsData));
+            } catch(e) {
+                console.warn("Storage quota full, clearing oversized images");
+            }
         }
 
         function saveCartToStorage() {
@@ -551,15 +554,18 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 350;
+                    const MAX_WIDTH = 300;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
 
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    document.getElementById('prodImage').value = canvas.toDataURL('image/jpeg', 0.65);
-                    showToast('تم حفظ الصورة بنجاح', '🖼️');
+                    
+                    // ضغط عالي جداً لا يتعدى 25 كيلوبايت
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.55);
+                    document.getElementById('prodImage').value = compressedBase64;
+                    showToast('تمت معالجة الصورة بنجاح', '🖼️');
                 };
                 img.src = e.target.result;
             };
@@ -707,7 +713,7 @@
                         <div class="flex gap-2.5 items-start">
                             
                             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden">
-                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy">
+                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'">
                                 <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
                                     المخزن: ${prod.stock}
                                 </span>
@@ -865,7 +871,7 @@
                     list.innerHTML += `
                         <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-slate-800">
                             <div class="flex items-center gap-2">
-                                <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-900 med-img-frame">
+                                <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-900 med-img-frame" onerror="this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'">
                                 <div>
                                     <h5 class="text-[11px] font-black text-white">${item.name} <span class="text-cyan-400 text-[9px]">(${item.dose})</span></h5>
                                     <span class="text-[10px] text-amber-400 font-bold">${item.price}</span>
@@ -1086,6 +1092,11 @@
             let rawPrice = document.getElementById('prodPrice').value.trim();
             let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : Number(rawPrice.replace(/[^0-9]/g, '')).toLocaleString() + ' د.ع';
 
+            let imgVal = document.getElementById('prodImage').value.trim();
+            if (!imgVal || (!imgVal.startsWith('http') && !imgVal.startsWith('data:image'))) {
+                imgVal = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80';
+            }
+
             const newProdData = {
                 id: editId ? parseInt(editId) : Date.now(),
                 category: document.getElementById('prodCategory').value,
@@ -1094,7 +1105,7 @@
                 dose: document.getElementById('prodDose').value.trim(),
                 price: formattedPrice,
                 stock: parseInt(document.getElementById('prodStock').value) || 0,
-                image: document.getElementById('prodImage').value.trim() || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'
+                image: imgVal
             };
 
             if (editId) {
