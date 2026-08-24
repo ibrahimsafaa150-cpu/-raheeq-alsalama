@@ -7,6 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK (App & Realtime Database) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -344,6 +349,21 @@
     </footer>
 
     <script>
+        // إعدادات وتهيئة Firebase السحابية
+        const firebaseConfig = {
+            apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
+            authDomain: "raheeq-pharmacy.firebaseapp.com",
+            databaseURL: "https://raheeq-pharmacy-default-rtdb.firebaseio.com",
+            projectId: "raheeq-pharmacy",
+            storageBucket: "raheeq-pharmacy.firebasestorage.app",
+            messagingSenderId: "80822739755",
+            appId: "1:80822739755:web:67b509f04b9e36081f1b6e"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const medsRef = db.ref('pharmacy_medicines');
+
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
@@ -361,26 +381,26 @@
         let cart = [];
         let currentFilter = 'الكل';
         let sortableInstance = null;
-
         let idb = null;
-        function initDB() {
-            return new Promise((resolve, reject) => {
+
+        function initIndexedDB() {
+            return new Promise((resolve) => {
                 const req = indexedDB.open('Raheeq_Permanent_Vault_2026', 1);
                 req.onupgradeneeded = function(e) {
-                    const db = e.target.result;
-                    if (!db.objectStoreNames.contains('meds')) {
-                        db.createObjectStore('meds', { keyPath: 'id' });
+                    const d = e.target.result;
+                    if (!d.objectStoreNames.contains('meds')) {
+                        d.createObjectStore('meds', { keyPath: 'id' });
                     }
                 };
                 req.onsuccess = function(e) {
                     idb = e.target.result;
                     resolve(idb);
                 };
-                req.onerror = function(e) { reject(e); };
+                req.onerror = function() { resolve(null); };
             });
         }
 
-        function dbGetAll() {
+        function getLocalMeds() {
             return new Promise((resolve) => {
                 if (!idb) return resolve([]);
                 const tx = idb.transaction('meds', 'readonly');
@@ -391,57 +411,51 @@
             });
         }
 
-        function dbSaveAll(list) {
-            return new Promise((resolve) => {
-                if (!idb) return resolve();
-                const tx = idb.transaction('meds', 'readwrite');
-                const store = tx.objectStore('meds');
-                store.clear().onsuccess = () => {
-                    list.forEach(item => store.put(item));
-                    resolve();
-                };
-            });
-        }
-
-        function dbDeleteOne(id) {
-            if (!idb) return;
-            const tx = idb.transaction('meds', 'readwrite');
-            const store = tx.objectStore('meds');
-            store.delete(id);
-        }
-
         async function startSystem() {
-            await initDB();
-            let stored = await dbGetAll();
+            await initIndexedDB();
 
-            if (stored && stored.length > 0) {
-                const savedOrder = JSON.parse(localStorage.getItem('raheeq_custom_display_order') || '[]');
-                if (savedOrder.length > 0) {
-                    stored.sort((a, b) => {
-                        const indexA = savedOrder.indexOf(String(a.id));
-                        const indexB = savedOrder.indexOf(String(b.id));
-                        if (indexA === -1 && indexB === -1) return 0;
-                        if (indexA === -1) return 1;
-                        if (indexB === -1) return -1;
-                        return indexA - indexB;
-                    });
-                }
-                productsData = stored;
-            } else {
-                productsData = [
-                    {
-                        id: "med_1",
-                        name: "Nimixa",
-                        activeIngredient: "Rifaximin",
-                        dose: "200mg",
-                        category: "المضادات الحيوية",
-                        price: "5,000 د.ع",
-                        stock: 24,
-                        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+            // الاستماع المباشر للتحديثات السحابية
+            medsRef.on('value', async (snapshot) => {
+                const cloudData = snapshot.val();
+                
+                if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
+                    productsData = cloudData;
+                } else {
+                    // في حال كانت السحابة فارغة لأول مرة، نرفع الأدوية الموجودة على هذا الجهاز
+                    let localStored = await getLocalMeds();
+                    if (localStored && localStored.length > 0) {
+                        const savedOrder = JSON.parse(localStorage.getItem('raheeq_custom_display_order') || '[]');
+                        if (savedOrder.length > 0) {
+                            localStored.sort((a, b) => {
+                                const indexA = savedOrder.indexOf(String(a.id));
+                                const indexB = savedOrder.indexOf(String(b.id));
+                                if (indexA === -1 && indexB === -1) return 0;
+                                if (indexA === -1) return 1;
+                                if (indexB === -1) return -1;
+                                return indexA - indexB;
+                            });
+                        }
+                        productsData = localStored;
+                        medsRef.set(productsData);
+                    } else {
+                        productsData = [
+                            {
+                                id: "med_1",
+                                name: "Nimixa",
+                                activeIngredient: "Rifaximin",
+                                dose: "200mg",
+                                category: "المضادات الحيوية",
+                                price: "5,000 د.ع",
+                                stock: 24,
+                                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+                            }
+                        ];
+                        medsRef.set(productsData);
                     }
-                ];
-                await dbSaveAll(productsData);
-            }
+                }
+
+                renderProducts();
+            });
 
             try {
                 const savedCart = localStorage.getItem('raheeq_active_cart');
@@ -449,14 +463,13 @@
             } catch(e) { cart = []; }
 
             renderCircleCategories();
-            renderProducts();
             updateAdminUI();
             updateDeliveryStatusUI();
             updateCartBadge();
         }
 
-        function saveProductsToStorage() {
-            dbSaveAll(productsData);
+        function saveProductsToCloud() {
+            medsRef.set(productsData);
         }
 
         function saveCartToStorage() {
@@ -517,9 +530,9 @@
                     ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    const fullHdBase64 = canvas.toDataURL('image/jpeg', 0.90);
+                    const fullHdBase64 = canvas.toDataURL('image/jpeg', 0.88);
                     document.getElementById('prodImage').value = fullHdBase64;
-                    showToast('تمت معالجة الصورة بدقة 1080p عالية الوضوح', '🖼️');
+                    showToast('تمت معالجة الصورة بجودة فائقة 1080p', '🖼️');
                 };
                 img.src = e.target.result;
             };
@@ -643,7 +656,8 @@
                             return newOrderIds.indexOf(String(a.id)) - newOrderIds.indexOf(String(b.id));
                         });
                         
-                        showToast('تم تثبيت الترتيب الجديد بنجاح 📌');
+                        saveProductsToCloud();
+                        showToast('تم حفظ الترتيب السحابي بنجاح 📌');
                     }
                 });
             }
@@ -654,14 +668,19 @@
             const noResults = document.getElementById('noResults');
             grid.innerHTML = '';
 
-            if (!list || list.length === 0) {
+            let displayList = list;
+            if (currentFilter !== 'الكل' && list === productsData) {
+                displayList = productsData.filter(p => p.category === currentFilter);
+            }
+
+            if (!displayList || displayList.length === 0) {
                 noResults.classList.remove('hidden');
                 return;
             } else {
                 noResults.classList.add('hidden');
             }
 
-            list.forEach((prod) => {
+            displayList.forEach((prod) => {
                 const isLow = prod.stock <= 5;
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-3 w-full flex flex-col gap-2.5" data-id="${prod.id}">
@@ -718,19 +737,13 @@
             currentFilter = cat;
             document.getElementById('currentSectionTitle').innerHTML = cat === 'الكل' ? '<span class="text-amber-400">●</span> كشف الأدوية والمستحضرات المعتمدة' : `<span class="text-teal-400">●</span> قسم: ${cat}`;
             renderCircleCategories();
-
-            if (cat === 'الكل') {
-                renderProducts(productsData);
-            } else {
-                const filtered = productsData.filter(p => p.category === cat);
-                renderProducts(filtered);
-            }
+            renderProducts();
         }
 
         function handleSearch(query) {
             const q = query.trim().toLowerCase();
             if (!q) {
-                filterByCategory(currentFilter);
+                renderProducts();
                 return;
             }
             const filtered = productsData.filter(p => 
@@ -944,11 +957,11 @@
                 }
             });
 
-            saveProductsToStorage();
+            saveProductsToCloud();
             cart = [];
             saveCartToStorage();
             closeCustomerModal();
-            filterByCategory(currentFilter);
+            renderProducts();
 
             let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
@@ -1080,18 +1093,15 @@
                 productsData.unshift(newProdData);
             }
 
-            saveProductsToStorage();
+            saveProductsToCloud();
             closeAdminModal();
-            filterByCategory(currentFilter);
-            showToast('تم حفظ الصنف بنجاح! ✅');
+            showToast('تم حفظ الصنف سحابياً بنجاح! ☁️');
         }
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => String(p.id) !== String(id));
-            dbDeleteOne(id);
-            saveProductsToStorage();
-            filterByCategory(currentFilter);
-            showToast('تم حذف الدواء نهائياً', '🗑️');
+            saveProductsToCloud();
+            showToast('تم حذف الدواء سحابياً', '🗑️');
         }
 
         startSystem();
