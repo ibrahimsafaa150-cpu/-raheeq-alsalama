@@ -80,7 +80,6 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
-    <!-- الإشعار المنبثق السريع -->
     <div id="customToast" class="fixed top-5 left-1/2 bg-slate-900 border-2 border-cyan-400 px-5 py-3 rounded-2xl shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center gap-2.5 text-xs font-black text-white max-w-[92vw]">
         <span id="toastIcon" class="text-lg">✅</span>
         <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح!</span>
@@ -296,7 +295,7 @@
 
                 <div>
                     <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم الدواء التجاري:</label>
-                    <input type="text" id="prodName" required placeholder="مثال: Ninixa" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <input type="text" id="prodName" required placeholder="مثال: Nimixa" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div>
@@ -358,60 +357,60 @@
             { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
-        // القائمة المعتمدة الثابتة بأحدث الصور
-        const baseProducts = [
+        // قائمة الأدوية مع صور علبها الحقيقية المعتمدة
+        const cleanOfficialProducts = [
             {
-                id: 1,
-                name: "Ninixa",
+                id: "med_1",
+                name: "Nimixa",
                 activeIngredient: "Rifaximin",
                 dose: "200mg",
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 24,
-                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+                image: "https://i.ibb.co/3sH3f8f/nimixa.jpg"
             },
             {
-                id: 2,
+                id: "med_2",
                 name: "Ruxaclam",
                 activeIngredient: "Amoxicillin+clavulanic",
                 dose: "500mg",
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 12,
-                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80"
+                image: "https://i.ibb.co/wJv0n4C/ruxaclam.jpg"
             },
             {
-                id: 3,
+                id: "med_3",
                 name: "Bactoclav",
                 activeIngredient: "Amoxicillin+clavulanic",
                 dose: "1000mg",
                 category: "المضادات الحيوية",
                 price: "15,000 د.ع",
                 stock: 6,
-                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
+                image: "https://i.ibb.co/9r9Jb6m/bactoclav.jpg"
             },
             {
-                id: 4,
+                id: "med_4",
                 name: "AUROXETIL",
                 activeIngredient: "Cefuroxime",
                 dose: "500mg",
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 17,
-                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+                image: "https://i.ibb.co/8b7V2L4/auroxetil.jpg"
             },
             {
-                id: 5,
+                id: "med_5",
                 name: "Concor",
                 activeIngredient: "Bisoprolol Fumarate",
                 dose: "mg 5",
                 category: "القلب وضغط الدم",
                 price: "9,000 د.ع",
                 stock: 12,
-                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=600&q=80"
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
             },
             {
-                id: 6,
+                id: "med_6",
                 name: "Losec",
                 activeIngredient: "Omeprazole",
                 dose: "mg 20",
@@ -421,14 +420,14 @@
                 image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
             },
             {
-                id: 7,
+                id: "med_7",
                 name: "Gloclav",
                 activeIngredient: "Amoxicillin+clavulanic",
                 dose: "625mg",
                 category: "المضادات الحيوية",
                 price: "8,000 د.ع",
                 stock: 7,
-                image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80"
+                image: "https://i.ibb.co/yQ3q8y9/gloclav.jpg"
             }
         ];
 
@@ -437,17 +436,16 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        // قراءة مباشرة وثابتة دون إعادة دمج تلقائي
         try {
-            const saved = localStorage.getItem('raheeq_clean_permanent_v12');
+            const saved = localStorage.getItem('raheeq_master_real_v13');
             if (saved) {
                 productsData = JSON.parse(saved);
             } else {
-                productsData = baseProducts;
-                localStorage.setItem('raheeq_clean_permanent_v12', JSON.stringify(productsData));
+                productsData = cleanOfficialProducts;
+                localStorage.setItem('raheeq_master_real_v13', JSON.stringify(productsData));
             }
         } catch(e) {
-            productsData = baseProducts;
+            productsData = cleanOfficialProducts;
         }
 
         try {
@@ -459,7 +457,7 @@
 
         function saveProductsToStorage() {
             try {
-                localStorage.setItem('raheeq_clean_permanent_v12', JSON.stringify(productsData));
+                localStorage.setItem('raheeq_master_real_v13', JSON.stringify(productsData));
             } catch(e) {}
         }
 
