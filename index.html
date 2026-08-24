@@ -6,7 +6,6 @@
     <title>صيدلية رَحِيْقُ السَّلَامَة | النظام الدوائي والسريري</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -359,6 +358,7 @@
             { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
+        // القائمة الافتراضية الشاملة لكل الأصناف مع أحدث بيانات وصور
         const defaultProducts = [
             {
                 id: 1,
@@ -399,19 +399,115 @@
                 price: "5,000 د.ع",
                 stock: 49,
                 image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 5,
+                name: "Ciprosam",
+                activeIngredient: "Ciprofloxacin",
+                dose: "500mg",
+                category: "المضادات الحيوية",
+                price: "5,000 د.ع",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 6,
+                name: "Ciprorux",
+                activeIngredient: "Ciprofloxacin",
+                dose: "500mg",
+                category: "المضادات الحيوية",
+                price: "7,000 د.ع",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 7,
+                name: "Bactiflox Neo",
+                activeIngredient: "Ciprofloxacin",
+                dose: "500mg",
+                category: "المضادات الحيوية",
+                price: "8,000 د.ع",
+                stock: 29,
+                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 8,
+                name: "AUROXETIL",
+                activeIngredient: "Cefuroxime",
+                dose: "500mg",
+                category: "المضادات الحيوية",
+                price: "5,000 د.ع",
+                stock: 20,
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 9,
+                name: "Concor",
+                activeIngredient: "Bisoprolol Fumarate",
+                dose: "mg 5",
+                category: "القلب وضغط الدم",
+                price: "9,000 د.ع",
+                stock: 12,
+                image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 10,
+                name: "Losec",
+                activeIngredient: "Omeprazole",
+                dose: "mg 20",
+                category: "الجهاز الهضمي والمعدة",
+                price: "6,000 د.ع",
+                stock: 40,
+                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
             }
         ];
 
-        let productsData = defaultProducts;
+        let productsData = [];
         let cart = [];
         let currentFilter = 'الكل';
         let sortableInstance = null;
-        const LOCAL_KEY = 'sidalihet_stable_v8';
+
+        // استرجاع ودمج تلقائي وذكي لكل الأدوية المضافة مسبقاً في هاتفك
+        function restoreAllSavedProducts() {
+            const oldStorageKeys = [
+                'sidalihet_cloud_sync_v6',
+                'sidalihet_rx_synced_v5',
+                'sidalihet_pharma_perfect_2026',
+                'sidalihet_upload_v2',
+                'sidalihet_stable_v8'
+            ];
+
+            let allFound = [...defaultProducts];
+
+            oldStorageKeys.forEach(key => {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) {
+                            parsed.forEach(p => {
+                                const existIndex = allFound.findIndex(item => item.name.toLowerCase().trim() === p.name.toLowerCase().trim());
+                                if (existIndex !== -1) {
+                                    allFound[existIndex] = p; // تحديث ببياناتك وصورك
+                                } else {
+                                    allFound.push(p); // إضافة الصنف الجديد
+                                }
+                            });
+                        }
+                    }
+                } catch(e) {}
+            });
+
+            productsData = allFound;
+            localStorage.setItem('sidalihet_master_db_v9', JSON.stringify(productsData));
+        }
 
         try {
-            const saved = localStorage.getItem(LOCAL_KEY);
-            if (saved) {
-                productsData = JSON.parse(saved);
+            const master = localStorage.getItem('sidalihet_master_db_v9');
+            if (master) {
+                productsData = JSON.parse(master);
+            } else {
+                restoreAllSavedProducts();
             }
         } catch (e) {
             productsData = defaultProducts;
@@ -425,7 +521,7 @@
         }
 
         function saveProductsToStorage() {
-            localStorage.setItem(LOCAL_KEY, JSON.stringify(productsData));
+            localStorage.setItem('sidalihet_master_db_v9', JSON.stringify(productsData));
         }
 
         function saveCartToStorage() {
@@ -455,15 +551,15 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 300;
+                    const MAX_WIDTH = 350;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
 
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    document.getElementById('prodImage').value = canvas.toDataURL('image/jpeg', 0.6);
-                    showToast('تمت معالجة الصورة بنجاح', '🖼️');
+                    document.getElementById('prodImage').value = canvas.toDataURL('image/jpeg', 0.65);
+                    showToast('تم حفظ الصورة بنجاح', '🖼️');
                 };
                 img.src = e.target.result;
             };
