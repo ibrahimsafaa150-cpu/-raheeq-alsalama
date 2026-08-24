@@ -397,10 +397,7 @@
                 const tx = idb.transaction('meds', 'readwrite');
                 const store = tx.objectStore('meds');
                 store.clear().onsuccess = () => {
-                    list.forEach((item, idx) => {
-                        item.orderIndex = idx;
-                        store.put(item);
-                    });
+                    list.forEach(item => store.put(item));
                     resolve();
                 };
             });
@@ -418,13 +415,22 @@
             let stored = await dbGetAll();
 
             if (stored && stored.length > 0) {
-                stored.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
+                const savedOrder = JSON.parse(localStorage.getItem('raheeq_custom_display_order') || '[]');
+                if (savedOrder.length > 0) {
+                    stored.sort((a, b) => {
+                        const indexA = savedOrder.indexOf(String(a.id));
+                        const indexB = savedOrder.indexOf(String(b.id));
+                        if (indexA === -1 && indexB === -1) return 0;
+                        if (indexA === -1) return 1;
+                        if (indexB === -1) return -1;
+                        return indexA - indexB;
+                    });
+                }
                 productsData = stored;
             } else {
                 productsData = [
                     {
                         id: "med_1",
-                        orderIndex: 0,
                         name: "Nimixa",
                         activeIngredient: "Rifaximin",
                         dose: "200mg",
@@ -630,19 +636,14 @@
                     chosenClass: 'sortable-chosen',
                     onEnd: function () {
                         const newOrderIds = Array.from(grid.children).map(card => card.getAttribute('data-id'));
-                        const reordered = [];
                         
-                        newOrderIds.forEach((id, idx) => {
-                            const p = productsData.find(item => String(item.id) === String(id));
-                            if (p) {
-                                p.orderIndex = idx;
-                                reordered.push(p);
-                            }
+                        localStorage.setItem('raheeq_custom_display_order', JSON.stringify(newOrderIds));
+                        
+                        productsData.sort((a, b) => {
+                            return newOrderIds.indexOf(String(a.id)) - newOrderIds.indexOf(String(b.id));
                         });
                         
-                        productsData = reordered;
-                        saveProductsToStorage();
-                        showToast('تم حفظ الترتيب الجديد نهائياً 📌');
+                        showToast('تم تثبيت الترتيب الجديد بنجاح 📌');
                     }
                 });
             }
@@ -1068,7 +1069,6 @@
             } else {
                 const newProdData = {
                     id: 'med_' + Date.now(),
-                    orderIndex: productsData.length,
                     category: document.getElementById('prodCategory').value,
                     name: document.getElementById('prodName').value.trim(),
                     activeIngredient: document.getElementById('prodActive').value.trim(),
@@ -1083,7 +1083,7 @@
             saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
-            showToast('تم حفظ الصنف بدقة عالية بنجاح! ✅');
+            showToast('تم حفظ الصنف بنجاح! ✅');
         }
 
         function deleteProduct(id) {
