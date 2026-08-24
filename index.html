@@ -319,9 +319,9 @@
                 </div>
 
                 <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-2">
-                    <label class="block text-[10px] font-bold text-amber-400">صورة الدواء:</label>
+                    <label class="block text-[10px] font-bold text-amber-400">صورة الدواء بجودة عالية HD:</label>
                     <div>
-                        <label class="block text-[9px] text-slate-400 mb-1">1. اختيار صورة مباشرة من الجهاز:</label>
+                        <label class="block text-[9px] text-slate-400 mb-1">1. اختيار صورة مباشرة من الجهاز (ستُحفظ بوضوح فائق):</label>
                         <input type="file" id="prodFileInput" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cyan-950 file:text-cyan-300 hover:file:bg-cyan-900 cursor-pointer">
                     </div>
                     <div>
@@ -357,113 +357,112 @@
             { name: "الفيتامينات والمكملات", icon: "🌿" }
         ];
 
-        // قائمة الأدوية مع صور علبها الحقيقية المعتمدة
-        const cleanOfficialProducts = [
-            {
-                id: "med_1",
-                name: "Nimixa",
-                activeIngredient: "Rifaximin",
-                dose: "200mg",
-                category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 24,
-                image: "https://i.ibb.co/3sH3f8f/nimixa.jpg"
-            },
-            {
-                id: "med_2",
-                name: "Ruxaclam",
-                activeIngredient: "Amoxicillin+clavulanic",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 12,
-                image: "https://i.ibb.co/wJv0n4C/ruxaclam.jpg"
-            },
-            {
-                id: "med_3",
-                name: "Bactoclav",
-                activeIngredient: "Amoxicillin+clavulanic",
-                dose: "1000mg",
-                category: "المضادات الحيوية",
-                price: "15,000 د.ع",
-                stock: 6,
-                image: "https://i.ibb.co/9r9Jb6m/bactoclav.jpg"
-            },
-            {
-                id: "med_4",
-                name: "AUROXETIL",
-                activeIngredient: "Cefuroxime",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 17,
-                image: "https://i.ibb.co/8b7V2L4/auroxetil.jpg"
-            },
-            {
-                id: "med_5",
-                name: "Concor",
-                activeIngredient: "Bisoprolol Fumarate",
-                dose: "mg 5",
-                category: "القلب وضغط الدم",
-                price: "9,000 د.ع",
-                stock: 12,
-                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: "med_6",
-                name: "Losec",
-                activeIngredient: "Omeprazole",
-                dose: "mg 20",
-                category: "الجهاز الهضمي والمعدة",
-                price: "6,000 د.ع",
-                stock: 40,
-                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: "med_7",
-                name: "Gloclav",
-                activeIngredient: "Amoxicillin+clavulanic",
-                dose: "625mg",
-                category: "المضادات الحيوية",
-                price: "8,000 د.ع",
-                stock: 7,
-                image: "https://i.ibb.co/yQ3q8y9/gloclav.jpg"
-            }
-        ];
-
         let productsData = [];
         let cart = [];
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        try {
-            const saved = localStorage.getItem('raheeq_master_real_v13');
-            if (saved) {
-                productsData = JSON.parse(saved);
-            } else {
-                productsData = cleanOfficialProducts;
-                localStorage.setItem('raheeq_master_real_v13', JSON.stringify(productsData));
-            }
-        } catch(e) {
-            productsData = cleanOfficialProducts;
+        // ==========================================
+        // محرك التخزين الفائق IndexedDB (لحفظ الصور بدقة عالية وتنظيف تلقائي)
+        // ==========================================
+        let idb = null;
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('RaheeqPharmacyMasterDB', 1);
+                request.onupgradeneeded = function(e) {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('products')) {
+                        db.createObjectStore('products', { keyPath: 'id' });
+                    }
+                };
+                request.onsuccess = function(e) {
+                    idb = e.target.result;
+                    resolve(idb);
+                };
+                request.onerror = function(e) {
+                    reject(e);
+                };
+            });
         }
 
-        try {
-            const savedCart = localStorage.getItem('raheeq_cart_clean');
-            cart = savedCart ? JSON.parse(savedCart) : [];
-        } catch(e) {
-            cart = [];
+        function dbGetAllProducts() {
+            return new Promise((resolve) => {
+                if (!idb) return resolve([]);
+                const tx = idb.transaction('products', 'readonly');
+                const store = tx.objectStore('products');
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => resolve([]);
+            });
+        }
+
+        function dbSaveAllProducts(list) {
+            return new Promise((resolve) => {
+                if (!idb) return resolve();
+                const tx = idb.transaction('products', 'readwrite');
+                const store = tx.objectStore('products');
+                store.clear().onsuccess = () => {
+                    list.forEach(item => store.put(item));
+                    resolve();
+                };
+            });
+        }
+
+        function dbDeleteProduct(id) {
+            if (!idb) return;
+            const tx = idb.transaction('products', 'readwrite');
+            const store = tx.objectStore('products');
+            store.delete(id);
+        }
+
+        // تنظيف مخلفات الـ LocalStorage القديمة نهائياً
+        function clearOldGarbageStorage() {
+            const trashKeys = ['sidalihet_final_v10', 'sidalihet_master_db_v9', 'sidalihet_cloud_sync_v6', 'sidalihet_rx_synced_v5', 'sidalihet_stable_v8', 'sidalihet_ultra_v11', 'raheeq_master_real_v13', 'raheeq_db_clean_2026', 'raheeq_clean_permanent_v12'];
+            trashKeys.forEach(k => localStorage.removeItem(k));
+        }
+
+        async function startApp() {
+            clearOldGarbageStorage();
+            await initDB();
+            const loaded = await dbGetAllProducts();
+            
+            if (loaded && loaded.length > 0) {
+                productsData = loaded;
+            } else {
+                productsData = [
+                    {
+                        id: "med_1",
+                        name: "Nimixa",
+                        activeIngredient: "Rifaximin",
+                        dose: "200mg",
+                        category: "المضادات الحيوية",
+                        price: "5,000 د.ع",
+                        stock: 24,
+                        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+                    }
+                ];
+                await dbSaveAllProducts(productsData);
+            }
+
+            try {
+                const savedCart = localStorage.getItem('raheeq_clean_cart_final');
+                cart = savedCart ? JSON.parse(savedCart) : [];
+            } catch(e) { cart = []; }
+
+            renderCircleCategories();
+            renderProducts();
+            updateAdminUI();
+            updateDeliveryStatusUI();
+            updateCartBadge();
         }
 
         function saveProductsToStorage() {
-            try {
-                localStorage.setItem('raheeq_master_real_v13', JSON.stringify(productsData));
-            } catch(e) {}
+            dbSaveAllProducts(productsData);
         }
 
         function saveCartToStorage() {
             try {
-                localStorage.setItem('raheeq_cart_clean', JSON.stringify(cart));
+                localStorage.setItem('raheeq_clean_cart_final', JSON.stringify(cart));
             } catch(e) {}
             updateCartBadge();
         }
@@ -478,7 +477,7 @@
             void toast.offsetWidth;
             toast.classList.add('toast-show');
 
-            if (navigator.vibrate) navigator.vibrate(40);
+            if (navigator.vibrate) navigator.vibrate(35);
 
             clearTimeout(toastTimer);
             toastTimer = setTimeout(() => {
@@ -486,6 +485,7 @@
             }, 2000);
         }
 
+        // حفظ بجودة عالية وواضحة جداً للأدوية (HD 800px)
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -495,17 +495,26 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 250;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
+                    const MAX_WIDTH = 800; // دقة وضوح ممتازة لقراءة أسماء الأدوية
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > MAX_WIDTH) {
+                        height = (MAX_WIDTH / width) * height;
+                        width = MAX_WIDTH;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
 
                     const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, width, height);
                     
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
-                    document.getElementById('prodImage').value = compressedBase64;
-                    showToast('تمت معالجة الصورة بنجاح', '🖼️');
+                    const highQualityBase64 = canvas.toDataURL('image/jpeg', 0.85);
+                    document.getElementById('prodImage').value = highQualityBase64;
+                    showToast('تمت معالجة وحفظ الصورة بدقة عالية HD', '🖼️');
                 };
                 img.src = e.target.result;
             };
@@ -628,7 +637,7 @@
                         });
                         productsData = reordered;
                         saveProductsToStorage();
-                        showToast('تم تحديث الترتيب بنجاح');
+                        showToast('تم حفظ الترتيب الجديد');
                     }
                 });
             }
@@ -653,7 +662,7 @@
                         <div class="flex gap-2.5 items-start">
                             
                             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden">
-                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'">
+                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy">
                                 <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
                                     المخزن: ${prod.stock}
                                 </span>
@@ -777,7 +786,6 @@
             const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById('cartBadge').innerText = totalCount;
         }
-        updateCartBadge();
 
         function renderCartContent() {
             const list = document.getElementById('cartItemsList');
@@ -812,7 +820,7 @@
                     list.innerHTML += `
                         <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-slate-800">
                             <div class="flex items-center gap-2">
-                                <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-900 med-img-frame" onerror="this.src='https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'">
+                                <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-900 med-img-frame">
                                 <div>
                                     <h5 class="text-[11px] font-black text-white">${item.name} <span class="text-cyan-400 text-[9px]">(${item.dose})</span></h5>
                                     <span class="text-[10px] text-amber-400 font-bold">${item.price}</span>
@@ -1069,15 +1077,13 @@
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => String(p.id) !== String(id));
+            dbDeleteProduct(id); // حذف فوري من الذاكرة لتفريغ المساحة
             saveProductsToStorage();
             filterByCategory(currentFilter);
             showToast('تم حذف الدواء بنجاح', '🗑️');
         }
 
-        renderCircleCategories();
-        renderProducts();
-        updateAdminUI();
-        updateDeliveryStatusUI();
+        startApp();
     </script>
 </body>
 </html>
