@@ -225,12 +225,12 @@
         </div>
     </div>
 
-    <!-- نافذة المشرف السري -->
+    <!-- نافذة تسجيل الدخول للمشرف -->
     <div id="adminPinModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
-            <h3 class="text-xs font-black text-white">الدخول الإداري للمشرف</h3>
-            <p class="text-[10px] text-slate-400">أدخل رمز المرور السري لتفعيل لوحة التحكم</p>
+            <h3 class="text-xs font-black text-white">تسجيل الدخول</h3>
+            <p class="text-[10px] text-slate-400">أدخل رمز المرور للمتابعة</p>
             <input type="password" id="adminPinInput" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
             <div class="flex gap-2 pt-1">
                 <button onclick="closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
@@ -397,7 +397,10 @@
                 const tx = idb.transaction('meds', 'readwrite');
                 const store = tx.objectStore('meds');
                 store.clear().onsuccess = () => {
-                    list.forEach(item => store.put(item));
+                    list.forEach((item, idx) => {
+                        item.orderIndex = idx;
+                        store.put(item);
+                    });
                     resolve();
                 };
             });
@@ -412,14 +415,16 @@
 
         async function startSystem() {
             await initDB();
-            const stored = await dbGetAll();
+            let stored = await dbGetAll();
 
             if (stored && stored.length > 0) {
+                stored.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
                 productsData = stored;
             } else {
                 productsData = [
                     {
                         id: "med_1",
+                        orderIndex: 0,
                         name: "Nimixa",
                         activeIngredient: "Rifaximin",
                         dose: "200mg",
@@ -555,13 +560,14 @@
         }
 
         function verifyAdminPin() {
-            const pin = document.getElementById('adminPinInput').value;
+            const pin = document.getElementById('adminPinInput').value.trim();
+
             if (pin === 'google@199920012005') {
                 isAdmin = true;
                 localStorage.setItem('sidalihet_admin', 'true');
                 closePinModal();
                 updateAdminUI();
-                showToast('تم تفعيل لوحة المشرف بنجاح! 🚀', '🛡️');
+                showToast('تم الدخول بنجاح! 🚀', '🛡️');
             } else {
                 showToast('رمز المرور غير صحيح!', '❌');
             }
@@ -626,9 +632,12 @@
                         const newOrderIds = Array.from(grid.children).map(card => card.getAttribute('data-id'));
                         const reordered = [];
                         
-                        newOrderIds.forEach(id => {
+                        newOrderIds.forEach((id, idx) => {
                             const p = productsData.find(item => String(item.id) === String(id));
-                            if (p) reordered.push(p);
+                            if (p) {
+                                p.orderIndex = idx;
+                                reordered.push(p);
+                            }
                         });
                         
                         productsData = reordered;
@@ -1045,23 +1054,29 @@
                 imgVal = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80';
             }
 
-            const newProdData = {
-                id: editId ? editId : 'med_' + Date.now(),
-                category: document.getElementById('prodCategory').value,
-                name: document.getElementById('prodName').value.trim(),
-                activeIngredient: document.getElementById('prodActive').value.trim(),
-                dose: document.getElementById('prodDose').value.trim(),
-                price: formattedPrice,
-                stock: parseInt(document.getElementById('prodStock').value) || 0,
-                image: imgVal
-            };
-
             if (editId) {
                 const index = productsData.findIndex(p => String(p.id) === String(editId));
                 if (index !== -1) {
-                    productsData[index] = newProdData;
+                    productsData[index].category = document.getElementById('prodCategory').value;
+                    productsData[index].name = document.getElementById('prodName').value.trim();
+                    productsData[index].activeIngredient = document.getElementById('prodActive').value.trim();
+                    productsData[index].dose = document.getElementById('prodDose').value.trim();
+                    productsData[index].price = formattedPrice;
+                    productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
+                    productsData[index].image = imgVal;
                 }
             } else {
+                const newProdData = {
+                    id: 'med_' + Date.now(),
+                    orderIndex: productsData.length,
+                    category: document.getElementById('prodCategory').value,
+                    name: document.getElementById('prodName').value.trim(),
+                    activeIngredient: document.getElementById('prodActive').value.trim(),
+                    dose: document.getElementById('prodDose').value.trim(),
+                    price: formattedPrice,
+                    stock: parseInt(document.getElementById('prodStock').value) || 0,
+                    image: imgVal
+                };
                 productsData.unshift(newProdData);
             }
 
