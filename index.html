@@ -225,12 +225,12 @@
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول للمشرف -->
+    <!-- نافذة المشرف السري -->
     <div id="adminPinModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
-            <h3 class="text-xs font-black text-white">تسجيل الدخول</h3>
-            <p class="text-[10px] text-slate-400">أدخل رمز المرور للمتابعة</p>
+            <h3 class="text-xs font-black text-white">الدخول الإداري للمشرف</h3>
+            <p class="text-[10px] text-slate-400">أدخل رمز المرور السري لتفعيل لوحة التحكم</p>
             <input type="password" id="adminPinInput" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
             <div class="flex gap-2 pt-1">
                 <button onclick="closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
@@ -365,7 +365,7 @@
         let idb = null;
         function initDB() {
             return new Promise((resolve, reject) => {
-                const req = indexedDB.open('Raheeq_Vault_Direct_v2026', 1);
+                const req = indexedDB.open('Raheeq_Permanent_Vault_2026', 1);
                 req.onupgradeneeded = function(e) {
                     const db = e.target.result;
                     if (!db.objectStoreNames.contains('meds')) {
@@ -397,10 +397,7 @@
                 const tx = idb.transaction('meds', 'readwrite');
                 const store = tx.objectStore('meds');
                 store.clear().onsuccess = () => {
-                    list.forEach((item, idx) => {
-                        item.orderIndex = idx;
-                        store.put(item);
-                    });
+                    list.forEach(item => store.put(item));
                     resolve();
                 };
             });
@@ -413,60 +410,16 @@
             store.delete(id);
         }
 
-        // استخراج ودمج كل الأدوية الـ 16 القديمة المحفوظة في هاتفك
-        function rescueOldLocalStorageData() {
-            const keys = [
-                'sidalihet_master_db_v9',
-                'sidalihet_final_v10',
-                'sidalihet_ultra_v11',
-                'raheeq_master_real_v13',
-                'raheeq_db_clean_2026',
-                'raheeq_clean_permanent_v12',
-                'sidalihet_rx_synced_v5',
-                'sidalihet_upload_v2'
-            ];
-            
-            let recovered = [];
-            keys.forEach(k => {
-                try {
-                    const raw = localStorage.getItem(k);
-                    if (raw) {
-                        const parsed = JSON.parse(raw);
-                        if (Array.isArray(parsed) && parsed.length > 0) {
-                            parsed.forEach(p => {
-                                const exist = recovered.find(item => item.name.toLowerCase().trim() === p.name.toLowerCase().trim());
-                                if (!exist) {
-                                    recovered.push(p);
-                                }
-                            });
-                        }
-                    }
-                } catch(e) {}
-            });
-            return recovered;
-        }
-
         async function startSystem() {
             await initDB();
-            let stored = await dbGetAll();
-
-            // إذا كان الجدول فارغاً، يسحب فوراً كل الأدوية التي أضفتها مسبقاً
-            if (!stored || stored.length === 0) {
-                const rescued = rescueOldLocalStorageData();
-                if (rescued.length > 0) {
-                    stored = rescued;
-                    await dbSaveAll(stored);
-                }
-            }
+            const stored = await dbGetAll();
 
             if (stored && stored.length > 0) {
-                stored.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
                 productsData = stored;
             } else {
                 productsData = [
                     {
                         id: "med_1",
-                        orderIndex: 0,
                         name: "Nimixa",
                         activeIngredient: "Rifaximin",
                         dose: "200mg",
@@ -602,14 +555,13 @@
         }
 
         function verifyAdminPin() {
-            const pin = document.getElementById('adminPinInput').value.trim();
-
+            const pin = document.getElementById('adminPinInput').value;
             if (pin === 'google@199920012005') {
                 isAdmin = true;
                 localStorage.setItem('sidalihet_admin', 'true');
                 closePinModal();
                 updateAdminUI();
-                showToast('تم الدخول بنجاح! 🚀', '🛡️');
+                showToast('تم تفعيل لوحة المشرف بنجاح! 🚀', '🛡️');
             } else {
                 showToast('رمز المرور غير صحيح!', '❌');
             }
@@ -674,12 +626,9 @@
                         const newOrderIds = Array.from(grid.children).map(card => card.getAttribute('data-id'));
                         const reordered = [];
                         
-                        newOrderIds.forEach((id, idx) => {
+                        newOrderIds.forEach(id => {
                             const p = productsData.find(item => String(item.id) === String(id));
-                            if (p) {
-                                p.orderIndex = idx;
-                                reordered.push(p);
-                            }
+                            if (p) reordered.push(p);
                         });
                         
                         productsData = reordered;
@@ -1096,36 +1045,30 @@
                 imgVal = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80';
             }
 
+            const newProdData = {
+                id: editId ? editId : 'med_' + Date.now(),
+                category: document.getElementById('prodCategory').value,
+                name: document.getElementById('prodName').value.trim(),
+                activeIngredient: document.getElementById('prodActive').value.trim(),
+                dose: document.getElementById('prodDose').value.trim(),
+                price: formattedPrice,
+                stock: parseInt(document.getElementById('prodStock').value) || 0,
+                image: imgVal
+            };
+
             if (editId) {
                 const index = productsData.findIndex(p => String(p.id) === String(editId));
                 if (index !== -1) {
-                    productsData[index].category = document.getElementById('prodCategory').value;
-                    productsData[index].name = document.getElementById('prodName').value.trim();
-                    productsData[index].activeIngredient = document.getElementById('prodActive').value.trim();
-                    productsData[index].dose = document.getElementById('prodDose').value.trim();
-                    productsData[index].price = formattedPrice;
-                    productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
-                    productsData[index].image = imgVal;
+                    productsData[index] = newProdData;
                 }
             } else {
-                const newProdData = {
-                    id: 'med_' + Date.now(),
-                    orderIndex: productsData.length,
-                    category: document.getElementById('prodCategory').value,
-                    name: document.getElementById('prodName').value.trim(),
-                    activeIngredient: document.getElementById('prodActive').value.trim(),
-                    dose: document.getElementById('prodDose').value.trim(),
-                    price: formattedPrice,
-                    stock: parseInt(document.getElementById('prodStock').value) || 0,
-                    image: imgVal
-                };
                 productsData.unshift(newProdData);
             }
 
             saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
-            showToast('تم حفظ الصنف بنجاح! ✅');
+            showToast('تم حفظ الصنف بدقة عالية بنجاح! ✅');
         }
 
         function deleteProduct(id) {
