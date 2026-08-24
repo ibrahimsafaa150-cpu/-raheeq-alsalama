@@ -230,7 +230,7 @@
         </div>
     </div>
 
-    <!-- نافذة دخول المشرف السري -->
+    <!-- نافذة المشرف السري -->
     <div id="adminPinModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
@@ -244,7 +244,7 @@
         </div>
     </div>
 
-    <!-- نافذة إعدادات الهاتف -->
+    <!-- نافذة الإعدادات -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -300,18 +300,18 @@
 
                 <div>
                     <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم الدواء التجاري:</label>
-                    <input type="text" id="prodName" required placeholder="Ciproker" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <input type="text" id="prodName" required placeholder="مثال: Ninixa" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div>
                     <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">المادة الفعالة المحتواة:</label>
-                    <input type="text" id="prodActive" required placeholder="Ciprofloxacin" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <input type="text" id="prodActive" required placeholder="مثال: Rifaximin" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div class="grid grid-cols-3 gap-2">
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الجرعة:</label>
-                        <input type="text" id="prodDose" required placeholder="500 mg" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                        <input type="text" id="prodDose" required placeholder="200mg" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">السعر (د.ع):</label>
@@ -319,7 +319,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الكمية بالمخزن:</label>
-                        <input type="number" id="prodStock" required placeholder="50" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                        <input type="number" id="prodStock" required placeholder="24" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
                 </div>
 
@@ -337,7 +337,7 @@
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
                     <button type="button" onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
-                    <button type="submit" id="saveProdSubmitBtn" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ الصنف</button>
+                    <button type="submit" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ الصنف</button>
                 </div>
             </form>
         </div>
@@ -349,25 +349,24 @@
     </footer>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDa5uGAYQPOIL-5UQ",
-            authDomain: "raheeq-pharmacy.firebaseapp.com",
-            databaseURL: "https://raheeq-pharmacy-default-rtdb.firebaseio.com",
-            projectId: "raheeq-pharmacy",
-            storageBucket: "raheeq-pharmacy.appspot.com",
-            messagingSenderId: "80822739755",
-            appId: "1:80822739755:web:67b509"
-        };
-
         let db = null;
         let isFirebaseAvailable = false;
 
         try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyDa5uGAYQPOIL-5UQ",
+                authDomain: "raheeq-pharmacy.firebaseapp.com",
+                databaseURL: "https://raheeq-pharmacy-default-rtdb.firebaseio.com",
+                projectId: "raheeq-pharmacy",
+                storageBucket: "raheeq-pharmacy.appspot.com",
+                messagingSenderId: "80822739755",
+                appId: "1:80822739755:web:67b509"
+            };
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
             isFirebaseAvailable = true;
         } catch (e) {
-            console.log("Fallback to LocalStorage");
+            console.log("Offline mode");
         }
 
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
@@ -430,26 +429,22 @@
         let cart = [];
         let currentFilter = 'الكل';
         let sortableInstance = null;
-        const LOCAL_KEY = 'sidalihet_cloud_sync_v6';
+        const LOCAL_KEY = 'sidalihet_fast_v7';
+
+        try {
+            const saved = localStorage.getItem(LOCAL_KEY);
+            if (saved) productsData = JSON.parse(saved);
+        } catch (e) {}
 
         if (isFirebaseAvailable) {
             db.ref('products').on('value', (snapshot) => {
                 const val = snapshot.val();
                 if (val && Array.isArray(val) && val.length > 0) {
                     productsData = val;
-                } else {
-                    productsData = defaultProducts;
-                    db.ref('products').set(defaultProducts);
+                    localStorage.setItem(LOCAL_KEY, JSON.stringify(productsData));
+                    renderProducts();
                 }
-                renderProducts();
             });
-        } else {
-            try {
-                const saved = localStorage.getItem(LOCAL_KEY);
-                productsData = saved ? JSON.parse(saved) : defaultProducts;
-            } catch (e) {
-                productsData = defaultProducts;
-            }
         }
 
         try {
@@ -462,9 +457,7 @@
         function saveProductsToStorage() {
             localStorage.setItem(LOCAL_KEY, JSON.stringify(productsData));
             if (isFirebaseAvailable) {
-                db.ref('products').set(productsData).catch(err => {
-                    console.error("Firebase Sync Error:", err);
-                });
+                db.ref('products').set(productsData);
             }
         }
 
@@ -486,7 +479,6 @@
             }, 2500);
         }
 
-        // دالة ضغط الصور لتجنب الثقل والتعليق
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -496,14 +488,14 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 400;
+                    const MAX_WIDTH = 350;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
 
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    document.getElementById('prodImage').value = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('prodImage').value = canvas.toDataURL('image/jpeg', 0.6);
                     showToast('تمت معالجة الصورة بنجاح', '🖼️');
                 };
                 img.src = e.target.result;
@@ -1049,17 +1041,17 @@
                 productsData.unshift(newProdData);
             }
 
-            saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
             showToast('تم حفظ الصنف ومزامنته سحابياً! ☁️');
+            saveProductsToStorage();
         }
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => p.id !== id);
-            saveProductsToStorage();
             filterByCategory(currentFilter);
             showToast('تم حذف الدواء سحابياً', '🗑️');
+            saveProductsToStorage();
         }
 
         renderCircleCategories();
