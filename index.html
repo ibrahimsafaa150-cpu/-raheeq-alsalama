@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     
-    <!-- مكتبات Firebase السحابية الرسمية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
@@ -67,7 +66,7 @@
         }
 
         #customToast {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translate(-50%, -100px);
             opacity: 0;
             pointer-events: none;
@@ -338,7 +337,7 @@
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
                     <button type="button" onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
-                    <button type="submit" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ الصنف</button>
+                    <button type="submit" id="saveProdSubmitBtn" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ الصنف</button>
                 </div>
             </form>
         </div>
@@ -368,7 +367,7 @@
             db = firebase.database();
             isFirebaseAvailable = true;
         } catch (e) {
-            console.log("Firebase Fallback: LocalStorage Active");
+            console.log("Fallback to LocalStorage");
         }
 
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
@@ -387,73 +386,43 @@
         const defaultProducts = [
             {
                 id: 1,
+                name: "Ninixa",
+                activeIngredient: "Rifaximin",
+                dose: "200mg",
+                category: "المضادات الحيوية",
+                price: "5,000 د.ع",
+                stock: 24,
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 2,
+                name: "Ruxaclam",
+                activeIngredient: "Amoxicillin+clavulanic",
+                dose: "500mg",
+                category: "المضادات الحيوية",
+                price: "5,000 د.ع",
+                stock: 12,
+                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 3,
+                name: "Bactoclav",
+                activeIngredient: "Amoxicillin+clavulanic",
+                dose: "1000mg",
+                category: "المضادات الحيوية",
+                price: "15,000 د.ع",
+                stock: 6,
+                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 4,
                 name: "Ciproker",
                 activeIngredient: "Ciprofloxacin",
                 dose: "500mg",
                 category: "المضادات الحيوية",
                 price: "5,000 د.ع",
                 stock: 49,
-                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 2,
-                name: "Ciprosam",
-                activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 1,
-                image: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 3,
-                name: "Ciprorux",
-                activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "7,000 د.ع",
-                stock: 2,
-                image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 4,
-                name: "Bactiflox Neo",
-                activeIngredient: "Ciprofloxacin",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "8,000 د.ع",
-                stock: 29,
                 image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 5,
-                name: "AUROXETIL",
-                activeIngredient: "Cefuroxime",
-                dose: "500mg",
-                category: "المضادات الحيوية",
-                price: "5,000 د.ع",
-                stock: 20,
-                image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 6,
-                name: "Concor",
-                activeIngredient: "Bisoprolol Fumarate",
-                dose: "mg 5",
-                category: "القلب وضغط الدم",
-                price: "9,000 د.ع",
-                stock: 12,
-                image: "https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=600&q=80"
-            },
-            {
-                id: 7,
-                name: "Losec",
-                activeIngredient: "Omeprazole",
-                dose: "mg 20",
-                category: "الجهاز الهضمي والمعدة",
-                price: "6,000 د.ع",
-                stock: 40,
-                image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
             }
         ];
 
@@ -491,10 +460,12 @@
         }
 
         function saveProductsToStorage() {
-            if (isFirebaseAvailable) {
-                db.ref('products').set(productsData);
-            }
             localStorage.setItem(LOCAL_KEY, JSON.stringify(productsData));
+            if (isFirebaseAvailable) {
+                db.ref('products').set(productsData).catch(err => {
+                    console.error("Firebase Sync Error:", err);
+                });
+            }
         }
 
         function saveCartToStorage() {
@@ -515,15 +486,29 @@
             }, 2500);
         }
 
+        // دالة ضغط الصور لتجنب الثقل والتعليق
         function handleImageUpload(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('prodImage').value = e.target.result;
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    document.getElementById('prodImage').value = canvas.toDataURL('image/jpeg', 0.7);
+                    showToast('تمت معالجة الصورة بنجاح', '🖼️');
                 };
-                reader.readAsDataURL(file);
-            }
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         let tapCount = 0;
@@ -642,7 +627,7 @@
                         });
                         productsData = reordered;
                         saveProductsToStorage();
-                        showToast('تم تحديث الترتيب ومزامنته سحابياً ☁️');
+                        showToast('تم تحديث الترتيب سحابياً ☁️');
                     }
                 });
             }
@@ -653,7 +638,7 @@
             const noResults = document.getElementById('noResults');
             grid.innerHTML = '';
 
-            if (list.length === 0) {
+            if (!list || list.length === 0) {
                 noResults.classList.remove('hidden');
                 return;
             } else {
@@ -667,7 +652,7 @@
                         <div class="flex gap-2.5 items-start">
                             
                             <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden">
-                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block">
+                                <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy">
                                 <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
                                     المخزن: ${prod.stock}
                                 </span>
