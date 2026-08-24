@@ -62,10 +62,11 @@
         }
 
         #customToast {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translate(-50%, -100px);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translate(-50%, -120px);
             opacity: 0;
             pointer-events: none;
+            z-index: 99999 !important;
         }
 
         #customToast.toast-show {
@@ -81,7 +82,7 @@
 </head>
 <body class="flex flex-col min-h-screen relative w-full">
 
-    <div id="customToast" class="fixed top-4 left-1/2 z-50 px-4 py-2.5 rounded-2xl glass-panel border border-cyan-500/40 shadow-2xl flex items-center gap-2 text-xs font-bold text-white max-w-[90vw]">
+    <div id="customToast" class="fixed top-4 left-1/2 px-4 py-2.5 rounded-2xl glass-panel border border-cyan-500/60 shadow-2xl flex items-center gap-2 text-xs font-bold text-white max-w-[90vw]">
         <span id="toastIcon" class="text-base">✅</span>
         <span id="toastMessage">تمت العملية بنجاح!</span>
     </div>
@@ -468,6 +469,7 @@
 
         function restoreAllSavedProducts() {
             const oldStorageKeys = [
+                'sidalihet_final_v10',
                 'sidalihet_master_db_v9',
                 'sidalihet_cloud_sync_v6',
                 'sidalihet_rx_synced_v5',
@@ -502,7 +504,7 @@
         }
 
         try {
-            const master = localStorage.getItem('sidalihet_final_v10');
+            const master = localStorage.getItem('sidalihet_ultra_v11');
             if (master) {
                 productsData = JSON.parse(master);
             } else {
@@ -521,10 +523,8 @@
 
         function saveProductsToStorage() {
             try {
-                localStorage.setItem('sidalihet_final_v10', JSON.stringify(productsData));
-            } catch(e) {
-                console.warn("Storage quota full, clearing oversized images");
-            }
+                localStorage.setItem('sidalihet_ultra_v11', JSON.stringify(productsData));
+            } catch(e) {}
         }
 
         function saveCartToStorage() {
@@ -538,11 +538,14 @@
             document.getElementById('toastMessage').innerText = message;
             document.getElementById('toastIcon').innerText = icon;
 
+            toast.classList.remove('toast-show');
+            void toast.offsetWidth; // Force reflow
             toast.classList.add('toast-show');
+
             clearTimeout(toastTimeout);
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('toast-show');
-            }, 2500);
+            }, 2000);
         }
 
         function handleImageUpload(event) {
@@ -562,7 +565,6 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    // ضغط عالي جداً لا يتعدى 25 كيلوبايت
                     const compressedBase64 = canvas.toDataURL('image/jpeg', 0.55);
                     document.getElementById('prodImage').value = compressedBase64;
                     showToast('تمت معالجة الصورة بنجاح', '🖼️');
@@ -838,7 +840,7 @@
         }
         updateCartBadge();
 
-        function openCartModal() {
+        function renderCartContent() {
             const list = document.getElementById('cartItemsList');
             const totalPriceEl = document.getElementById('cartTotalPrice');
             const actionContainer = document.getElementById('checkoutActionContainer');
@@ -878,17 +880,20 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button type="button" onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white">-</button>
+                                <button type="button" onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">-</button>
                                 <span class="text-xs font-bold text-cyan-400 px-2">${item.qty}</span>
-                                <button type="button" onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white">+</button>
-                                <button type="button" onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5">🗑️</button>
+                                <button type="button" onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">+</button>
+                                <button type="button" onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5 active:scale-90">🗑️</button>
                             </div>
                         </div>
                     `;
                 });
                 totalPriceEl.innerText = total.toLocaleString() + ' د.ع';
             }
+        }
 
+        function openCartModal() {
+            renderCartContent();
             const modal = document.getElementById('cartModal');
             modal.classList.remove('hidden');
             modal.classList.add('modal-active');
@@ -933,13 +938,13 @@
                 cart.splice(index, 1);
             }
             saveCartToStorage();
-            openCartModal();
+            renderCartContent();
         }
 
         function removeFromCart(index) {
             cart.splice(index, 1);
             saveCartToStorage();
-            openCartModal();
+            renderCartContent();
             showToast('تم حذف العنصر من السلة', '🗑️');
         }
 
