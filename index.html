@@ -362,7 +362,6 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        // قاعدة بيانات داخلية متطورة غير قابلة للمسح
         let idb = null;
         function initDB() {
             return new Promise((resolve, reject) => {
@@ -474,7 +473,6 @@
             }, 2000);
         }
 
-        // حفظ بدقة كاملة 1080p دون تشويه
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -484,7 +482,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 1080; // دقة 1080p كاملة
+                    const MAX_SIZE = 1080;
                     let width = img.width;
                     let height = img.height;
 
@@ -627,13 +625,15 @@
                     onEnd: function () {
                         const newOrderIds = Array.from(grid.children).map(card => card.getAttribute('data-id'));
                         const reordered = [];
+                        
                         newOrderIds.forEach(id => {
                             const p = productsData.find(item => String(item.id) === String(id));
                             if (p) reordered.push(p);
                         });
+                        
                         productsData = reordered;
                         saveProductsToStorage();
-                        showToast('تم حفظ الترتيب الجديد');
+                        showToast('تم حفظ الترتيب الجديد نهائياً 📌');
                     }
                 });
             }
@@ -1059,7 +1059,7 @@
             if (editId) {
                 const index = productsData.findIndex(p => String(p.id) === String(editId));
                 if (index !== -1) {
-                    productsData[index] = newProdData; // استبدال الصورة القديمة والبيانات بشكل فوري
+                    productsData[index] = newProdData;
                 }
             } else {
                 productsData.unshift(newProdData);
@@ -1073,7 +1073,7 @@
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => String(p.id) !== String(id));
-            dbDeleteOne(id); // حذف الدواء والصورة من الذاكرة نهائياً
+            dbDeleteOne(id);
             saveProductsToStorage();
             filterByCategory(currentFilter);
             showToast('تم حذف الدواء نهائياً', '🗑️');
