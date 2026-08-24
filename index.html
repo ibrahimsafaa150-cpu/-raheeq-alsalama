@@ -7,9 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -349,26 +346,6 @@
     </footer>
 
     <script>
-        let db = null;
-        let isFirebaseAvailable = false;
-
-        try {
-            const firebaseConfig = {
-                apiKey: "AIzaSyDa5uGAYQPOIL-5UQ",
-                authDomain: "raheeq-pharmacy.firebaseapp.com",
-                databaseURL: "https://raheeq-pharmacy-default-rtdb.firebaseio.com",
-                projectId: "raheeq-pharmacy",
-                storageBucket: "raheeq-pharmacy.appspot.com",
-                messagingSenderId: "80822739755",
-                appId: "1:80822739755:web:67b509"
-            };
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            isFirebaseAvailable = true;
-        } catch (e) {
-            console.log("Offline mode");
-        }
-
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
@@ -429,22 +406,15 @@
         let cart = [];
         let currentFilter = 'الكل';
         let sortableInstance = null;
-        const LOCAL_KEY = 'sidalihet_fast_v7';
+        const LOCAL_KEY = 'sidalihet_stable_v8';
 
         try {
             const saved = localStorage.getItem(LOCAL_KEY);
-            if (saved) productsData = JSON.parse(saved);
-        } catch (e) {}
-
-        if (isFirebaseAvailable) {
-            db.ref('products').on('value', (snapshot) => {
-                const val = snapshot.val();
-                if (val && Array.isArray(val) && val.length > 0) {
-                    productsData = val;
-                    localStorage.setItem(LOCAL_KEY, JSON.stringify(productsData));
-                    renderProducts();
-                }
-            });
+            if (saved) {
+                productsData = JSON.parse(saved);
+            }
+        } catch (e) {
+            productsData = defaultProducts;
         }
 
         try {
@@ -456,9 +426,6 @@
 
         function saveProductsToStorage() {
             localStorage.setItem(LOCAL_KEY, JSON.stringify(productsData));
-            if (isFirebaseAvailable) {
-                db.ref('products').set(productsData);
-            }
         }
 
         function saveCartToStorage() {
@@ -488,7 +455,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 350;
+                    const MAX_WIDTH = 300;
                     const scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH;
                     canvas.height = img.height * scaleSize;
@@ -619,7 +586,7 @@
                         });
                         productsData = reordered;
                         saveProductsToStorage();
-                        showToast('تم تحديث الترتيب سحابياً ☁️');
+                        showToast('تم تحديث الترتيب بنجاح');
                     }
                 });
             }
@@ -809,10 +776,10 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button onclick="changeQty(${index}, -1)" class="w-6 h-6 rounded bg-slate-800 text-xs font-bold active:scale-90">-</button>
-                                <span class="text-xs font-bold text-cyan-400 px-1">${item.qty}</span>
-                                <button onclick="changeQty(${index}, 1)" class="w-6 h-6 rounded bg-slate-800 text-xs font-bold active:scale-90">+</button>
-                                <button onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1">🗑️</button>
+                                <button type="button" onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white">-</button>
+                                <span class="text-xs font-bold text-cyan-400 px-2">${item.qty}</span>
+                                <button type="button" onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white">+</button>
+                                <button type="button" onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5">🗑️</button>
                             </div>
                         </div>
                     `;
@@ -850,6 +817,8 @@
 
         function changeQty(index, delta) {
             const item = cart[index];
+            if (!item) return;
+
             const originalProd = productsData.find(p => p.id === item.id);
 
             if (delta > 0 && originalProd && item.qty >= originalProd.stock) {
@@ -1041,17 +1010,17 @@
                 productsData.unshift(newProdData);
             }
 
+            saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
-            showToast('تم حفظ الصنف ومزامنته سحابياً! ☁️');
-            saveProductsToStorage();
+            showToast('تم حفظ الصنف الدوائي بنجاح! ✅');
         }
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => p.id !== id);
-            filterByCategory(currentFilter);
-            showToast('تم حذف الدواء سحابياً', '🗑️');
             saveProductsToStorage();
+            filterByCategory(currentFilter);
+            showToast('تم حذف الدواء بنجاح', '🗑️');
         }
 
         renderCircleCategories();
