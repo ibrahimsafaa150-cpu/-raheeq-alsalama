@@ -319,9 +319,9 @@
                 </div>
 
                 <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-2">
-                    <label class="block text-[10px] font-bold text-amber-400">صورة الدواء بجودة عالية HD:</label>
+                    <label class="block text-[10px] font-bold text-amber-400">صورة الدواء بجودة فائقة 1080p:</label>
                     <div>
-                        <label class="block text-[9px] text-slate-400 mb-1">1. اختيار صورة مباشرة من الجهاز (ستُحفظ بوضوح فائق):</label>
+                        <label class="block text-[9px] text-slate-400 mb-1">1. اختيار صورة مباشرة من الجهاز (ستُحفظ بدقة عالية جداً):</label>
                         <input type="file" id="prodFileInput" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cyan-950 file:text-cyan-300 hover:file:bg-cyan-900 cursor-pointer">
                     </div>
                     <div>
@@ -362,45 +362,41 @@
         let currentFilter = 'الكل';
         let sortableInstance = null;
 
-        // ==========================================
-        // محرك التخزين الفائق IndexedDB (لحفظ الصور بدقة عالية وتنظيف تلقائي)
-        // ==========================================
+        // قاعدة بيانات داخلية متطورة غير قابلة للمسح
         let idb = null;
         function initDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open('RaheeqPharmacyMasterDB', 1);
-                request.onupgradeneeded = function(e) {
+                const req = indexedDB.open('Raheeq_Permanent_Vault_2026', 1);
+                req.onupgradeneeded = function(e) {
                     const db = e.target.result;
-                    if (!db.objectStoreNames.contains('products')) {
-                        db.createObjectStore('products', { keyPath: 'id' });
+                    if (!db.objectStoreNames.contains('meds')) {
+                        db.createObjectStore('meds', { keyPath: 'id' });
                     }
                 };
-                request.onsuccess = function(e) {
+                req.onsuccess = function(e) {
                     idb = e.target.result;
                     resolve(idb);
                 };
-                request.onerror = function(e) {
-                    reject(e);
-                };
+                req.onerror = function(e) { reject(e); };
             });
         }
 
-        function dbGetAllProducts() {
+        function dbGetAll() {
             return new Promise((resolve) => {
                 if (!idb) return resolve([]);
-                const tx = idb.transaction('products', 'readonly');
-                const store = tx.objectStore('products');
+                const tx = idb.transaction('meds', 'readonly');
+                const store = tx.objectStore('meds');
                 const req = store.getAll();
                 req.onsuccess = () => resolve(req.result || []);
                 req.onerror = () => resolve([]);
             });
         }
 
-        function dbSaveAllProducts(list) {
+        function dbSaveAll(list) {
             return new Promise((resolve) => {
                 if (!idb) return resolve();
-                const tx = idb.transaction('products', 'readwrite');
-                const store = tx.objectStore('products');
+                const tx = idb.transaction('meds', 'readwrite');
+                const store = tx.objectStore('meds');
                 store.clear().onsuccess = () => {
                     list.forEach(item => store.put(item));
                     resolve();
@@ -408,26 +404,19 @@
             });
         }
 
-        function dbDeleteProduct(id) {
+        function dbDeleteOne(id) {
             if (!idb) return;
-            const tx = idb.transaction('products', 'readwrite');
-            const store = tx.objectStore('products');
+            const tx = idb.transaction('meds', 'readwrite');
+            const store = tx.objectStore('meds');
             store.delete(id);
         }
 
-        // تنظيف مخلفات الـ LocalStorage القديمة نهائياً
-        function clearOldGarbageStorage() {
-            const trashKeys = ['sidalihet_final_v10', 'sidalihet_master_db_v9', 'sidalihet_cloud_sync_v6', 'sidalihet_rx_synced_v5', 'sidalihet_stable_v8', 'sidalihet_ultra_v11', 'raheeq_master_real_v13', 'raheeq_db_clean_2026', 'raheeq_clean_permanent_v12'];
-            trashKeys.forEach(k => localStorage.removeItem(k));
-        }
-
-        async function startApp() {
-            clearOldGarbageStorage();
+        async function startSystem() {
             await initDB();
-            const loaded = await dbGetAllProducts();
-            
-            if (loaded && loaded.length > 0) {
-                productsData = loaded;
+            const stored = await dbGetAll();
+
+            if (stored && stored.length > 0) {
+                productsData = stored;
             } else {
                 productsData = [
                     {
@@ -441,11 +430,11 @@
                         image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
                     }
                 ];
-                await dbSaveAllProducts(productsData);
+                await dbSaveAll(productsData);
             }
 
             try {
-                const savedCart = localStorage.getItem('raheeq_clean_cart_final');
+                const savedCart = localStorage.getItem('raheeq_active_cart');
                 cart = savedCart ? JSON.parse(savedCart) : [];
             } catch(e) { cart = []; }
 
@@ -457,12 +446,12 @@
         }
 
         function saveProductsToStorage() {
-            dbSaveAllProducts(productsData);
+            dbSaveAll(productsData);
         }
 
         function saveCartToStorage() {
             try {
-                localStorage.setItem('raheeq_clean_cart_final', JSON.stringify(cart));
+                localStorage.setItem('raheeq_active_cart', JSON.stringify(cart));
             } catch(e) {}
             updateCartBadge();
         }
@@ -485,7 +474,7 @@
             }, 2000);
         }
 
-        // حفظ بجودة عالية وواضحة جداً للأدوية (HD 800px)
+        // حفظ بدقة كاملة 1080p دون تشويه
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -495,13 +484,20 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; // دقة وضوح ممتازة لقراءة أسماء الأدوية
+                    const MAX_SIZE = 1080; // دقة 1080p كاملة
                     let width = img.width;
                     let height = img.height;
 
-                    if (width > MAX_WIDTH) {
-                        height = (MAX_WIDTH / width) * height;
-                        width = MAX_WIDTH;
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
                     }
 
                     canvas.width = width;
@@ -512,9 +508,9 @@
                     ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    const highQualityBase64 = canvas.toDataURL('image/jpeg', 0.85);
-                    document.getElementById('prodImage').value = highQualityBase64;
-                    showToast('تمت معالجة وحفظ الصورة بدقة عالية HD', '🖼️');
+                    const fullHdBase64 = canvas.toDataURL('image/jpeg', 0.90);
+                    document.getElementById('prodImage').value = fullHdBase64;
+                    showToast('تمت معالجة الصورة بدقة 1080p عالية الوضوح', '🖼️');
                 };
                 img.src = e.target.result;
             };
@@ -1063,7 +1059,7 @@
             if (editId) {
                 const index = productsData.findIndex(p => String(p.id) === String(editId));
                 if (index !== -1) {
-                    productsData[index] = newProdData;
+                    productsData[index] = newProdData; // استبدال الصورة القديمة والبيانات بشكل فوري
                 }
             } else {
                 productsData.unshift(newProdData);
@@ -1072,18 +1068,18 @@
             saveProductsToStorage();
             closeAdminModal();
             filterByCategory(currentFilter);
-            showToast('تم حفظ الصنف الدوائي بنجاح! ✅');
+            showToast('تم حفظ الصنف بدقة عالية بنجاح! ✅');
         }
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => String(p.id) !== String(id));
-            dbDeleteProduct(id); // حذف فوري من الذاكرة لتفريغ المساحة
+            dbDeleteOne(id); // حذف الدواء والصورة من الذاكرة نهائياً
             saveProductsToStorage();
             filterByCategory(currentFilter);
-            showToast('تم حذف الدواء بنجاح', '🗑️');
+            showToast('تم حذف الدواء نهائياً', '🗑️');
         }
 
-        startApp();
+        startSystem();
     </script>
 </body>
 </html>
