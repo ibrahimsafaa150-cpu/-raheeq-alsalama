@@ -413,9 +413,51 @@
             store.delete(id);
         }
 
+        // استخراج ودمج كل الأدوية الـ 16 القديمة المحفوظة في هاتفك
+        function rescueOldLocalStorageData() {
+            const keys = [
+                'sidalihet_master_db_v9',
+                'sidalihet_final_v10',
+                'sidalihet_ultra_v11',
+                'raheeq_master_real_v13',
+                'raheeq_db_clean_2026',
+                'raheeq_clean_permanent_v12',
+                'sidalihet_rx_synced_v5',
+                'sidalihet_upload_v2'
+            ];
+            
+            let recovered = [];
+            keys.forEach(k => {
+                try {
+                    const raw = localStorage.getItem(k);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            parsed.forEach(p => {
+                                const exist = recovered.find(item => item.name.toLowerCase().trim() === p.name.toLowerCase().trim());
+                                if (!exist) {
+                                    recovered.push(p);
+                                }
+                            });
+                        }
+                    }
+                } catch(e) {}
+            });
+            return recovered;
+        }
+
         async function startSystem() {
             await initDB();
-            const stored = await dbGetAll();
+            let stored = await dbGetAll();
+
+            // إذا كان الجدول فارغاً، يسحب فوراً كل الأدوية التي أضفتها مسبقاً
+            if (!stored || stored.length === 0) {
+                const rescued = rescueOldLocalStorageData();
+                if (rescued.length > 0) {
+                    stored = rescued;
+                    await dbSaveAll(stored);
+                }
+            }
 
             if (stored && stored.length > 0) {
                 stored.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
