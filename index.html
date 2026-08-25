@@ -759,7 +759,6 @@
         let isWishlistMode = false;
         let sortableInstance = null;
 
-        // دالة تلوين المخزن للجميع (أحمر، برتقالي، أخضر)
         function getStockBadgeStyle(stock) {
             if (stock <= 2) {
                 return {
@@ -882,9 +881,6 @@
             showToast('تحفيز عناية متجدد 💖', item.icon);
         }
 
-        let backPressCount = 0;
-        let backPressTimer = null;
-
         function pushModalState(modalName) {
             history.pushState({ activeModal: modalName }, "");
         }
@@ -911,13 +907,11 @@
         window.addEventListener('popstate', function(event) {
             const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal'];
             
-            let closedAny = false;
             allModals.forEach(id => {
                 const el = document.getElementById(id);
                 if (el && !el.classList.contains('hidden')) {
                     el.classList.remove('modal-active');
                     el.classList.add('hidden');
-                    closedAny = true;
                 }
             });
 
@@ -925,25 +919,8 @@
             if (drawer && !drawer.classList.contains('drawer-closed')) {
                 drawer.classList.add('drawer-closed');
                 document.getElementById('drawerBackdrop').classList.add('hidden');
-                closedAny = true;
-            }
-
-            if (!closedAny) {
-                backPressCount++;
-                if (backPressCount === 1) {
-                    showToast('اضغط رجوع مرة أخرى للخروج من الموقع 🚪', 'ℹ️');
-                    history.pushState(null, "", window.location.href);
-                    clearTimeout(backPressTimer);
-                    backPressTimer = setTimeout(() => {
-                        backPressCount = 0;
-                    }, 2000);
-                } else if (backPressCount >= 2) {
-                    history.back();
-                }
             }
         });
-
-        history.pushState(null, "", window.location.href);
 
         async function startSystem() {
             productsRef.on('value', (snapshot) => {
@@ -1150,12 +1127,13 @@
 
                 listEl.innerHTML += `
                     <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border ${isCrit ? 'border-rose-700 bg-rose-950/30' : isLow ? 'border-amber-700/70 bg-amber-950/20' : 'border-slate-800'}">
-                        <div class="flex items-center gap-2 min-w-0">
+                        <!-- تم إضافة النقر هنا لمعاينة تفاصيل المنتج كاملة -->
+                        <div onclick="openProductDetailModal('${p.id}')" class="flex items-center gap-2 min-w-0 cursor-pointer active:scale-95 transition">
                             <div class="w-10 h-10 rounded-lg bg-white med-img-frame flex items-center justify-center p-1 shrink-0 overflow-hidden">
                                 <img src="${p.image}" class="max-w-full max-h-full object-contain">
                             </div>
                             <div class="min-w-0">
-                                <h5 class="text-[11px] font-black text-white truncate">${p.name}</h5>
+                                <h5 class="text-[11px] font-black text-white truncate hover:text-cyan-300 transition">${p.name} 🔍</h5>
                                 <span class="text-[9px] text-slate-400 block">${p.category} • ${p.size}</span>
                             </div>
                         </div>
