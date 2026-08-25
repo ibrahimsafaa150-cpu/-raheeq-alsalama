@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>صيدلية رَحِيْقُ السَّلَامَة | النظام الدوائي والعناية التخصصية</title>
+    <title>صيدلية رَحِيْقُ السَّلَامَة | المتجر الذكي للعناية والجمال</title>
     
-    <!-- إعدادات تطبيق الويب والتثبيت على الهاتف PWA -->
+    <!-- إعدادات تطبيق الويب PWA -->
     <meta name="theme-color" content="#060913">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK (App & Realtime Database) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -98,7 +98,7 @@
         }
 
         .fade-transition {
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.4s ease-in-out;
         }
     </style>
 </head>
@@ -113,7 +113,7 @@
     <!-- Delivery Status Banner -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2">
         <span>🌿</span>
-        <span id="deliveryBannerText" class="font-bold">صيدلية رَحِيْقُ السَّلَامَة • رعاية صيدلانية ومستحضرات تخصصية معتمدة</span>
+        <span id="deliveryBannerText" class="font-bold">صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية</span>
     </div>
 
     <!-- App Header -->
@@ -125,7 +125,7 @@
                     <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
-                <!-- Secret Logo Trigger (5 Taps for Admin) -->
+                <!-- Secret Logo Trigger (5 Taps for Admin Panel) -->
                 <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
@@ -155,7 +155,7 @@
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
-                    <button onclick="openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز والتوصيل">
+                    <button onclick="openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
                         <span>⚙️</span>
                     </button>
                     <button onclick="openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95">
@@ -169,7 +169,7 @@
         </div>
 
         <div class="mt-2 relative w-full">
-            <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث عن مستحضر، بروتوكول علاجي، حجم، ماركة..." 
+            <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
                    class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 pr-9 border border-slate-800 focus:outline-none focus:border-cyan-400">
             <span class="absolute right-3 top-2 text-slate-500 text-xs">🔍</span>
         </div>
@@ -192,11 +192,11 @@
                 <div class="text-[10px] font-bold text-amber-400/80 uppercase px-2 mb-1">الرئيسية والخدمات</div>
                 
                 <button onclick="closeDrawer(); filterByCategory('الكل')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-200 transition text-right">
-                    <span>🗂️</span> <span>كافة الأقسام والبروتوكولات</span>
+                    <span>🗂️</span> <span>جميع الأقسام</span>
                 </button>
                 
                 <button onclick="openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
-                    <span>✨</span> <span>خدماتنا ورعايتنا السريرية</span>
+                    <span>✨</span> <span>خدماتنا المميزة</span>
                 </button>
                 
                 <button onclick="openStaticModal('mapModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
@@ -204,7 +204,7 @@
                 </button>
                 
                 <button onclick="openStaticModal('contactModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
-                    <span>🎧</span> <span>تواصل مع الصيدلي المناوب</span>
+                    <span>🎧</span> <span>تواصل مع الصيدلية</span>
                 </button>
             </div>
 
@@ -216,15 +216,15 @@
                 </button>
                 
                 <button onclick="openStaticModal('privacyModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
-                    <span>🛡️</span> <span>سياسة الخصوصية وأمان البيانات</span>
+                    <span>🛡️</span> <span>سياسة الخصوصية</span>
                 </button>
                 
                 <button onclick="openStaticModal('termsModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
-                    <span>🔄</span> <span>الأحكام وضوابط الصرف</span>
+                    <span>🔄</span> <span>الأحكام والشروط</span>
                 </button>
                 
                 <button onclick="openStaticModal('aboutModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
-                    <span>ℹ️</span> <span>عن صيدلية رحيق السلامة</span>
+                    <span>ℹ️</span> <span>من نحن</span>
                 </button>
             </div>
         </div>
@@ -234,7 +234,7 @@
         </div>
     </div>
 
-    <!-- Category Filter Bar (Custom Clinical Names) -->
+    <!-- Category Filter Bar -->
     <nav class="bg-slate-950/80 border-b border-slate-800/80 py-2 px-2">
         <div class="flex gap-1.5 overflow-x-auto no-scrollbar w-full" id="circleCategories"></div>
     </nav>
@@ -242,14 +242,14 @@
     <!-- Main Content Area -->
     <main class="flex-grow w-full px-3 py-3 space-y-3.5 max-w-xl mx-auto">
         
-        <!-- Interactive Routine Finder Assistant (Innovative Smart Widget) -->
+        <!-- 1. Interactive Routine Finder -->
         <div class="glass-panel rounded-2xl p-3.5 border border-cyan-500/30 space-y-2.5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <span class="text-base">🧬</span>
                     <div>
-                        <h2 class="text-xs font-black text-white">مُرشد الروتين الصيدلاني الذكي</h2>
-                        <p class="text-[9px] text-slate-400">حدد هدفك الصحي لنفرز لك المستحضر الأدق فوراً</p>
+                        <h2 class="text-xs font-black text-white">مُرشد الروتين الذكي</h2>
+                        <p class="text-[9px] text-slate-400">اختر هدفك لنعرض لك المنتجات المطابقة فوراً</p>
                     </div>
                 </div>
                 <button onclick="resetRoutineFilter()" id="resetRoutineBtn" class="hidden text-[9px] text-amber-400 bg-amber-950/50 border border-amber-800/60 px-2 py-0.5 rounded-lg">إلغاء الفرز</button>
@@ -262,11 +262,11 @@
                 </button>
                 <button onclick="filterByTarget('علاج')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
                     <span class="text-xs block">🛡️</span>
-                    <span class="text-[10px] font-bold text-slate-200">تصفية وتجديد</span>
+                    <span class="text-[10px] font-bold text-slate-200">تصفية وحبوب</span>
                 </button>
                 <button onclick="filterByTarget('تفتيح')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
                     <span class="text-xs block">✨</span>
-                    <span class="text-[10px] font-bold text-slate-200">تفتيح وحماية</span>
+                    <span class="text-[10px] font-bold text-slate-200">تفتيح وتوحيد</span>
                 </button>
                 <button onclick="filterByTarget('شعر')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
                     <span class="text-xs block">🌿</span>
@@ -275,13 +275,27 @@
             </div>
         </div>
 
+        <!-- 2. Interactive Daily Glow Booster -->
+        <div class="glass-panel rounded-2xl p-3 border border-pink-500/25 flex items-center justify-between gap-2.5 bg-gradient-to-r from-slate-950 via-pink-950/20 to-slate-950">
+            <div class="flex items-center gap-2 min-w-0">
+                <span class="text-lg">💖</span>
+                <div class="min-w-0">
+                    <span class="text-[9px] font-black text-pink-400 block uppercase tracking-wider">تحفيز الإشراقة اليومي</span>
+                    <p id="glowChallengeText" class="text-[10.5px] font-bold text-slate-200 truncate">تذكري شرب 2 لتر ماء وتجديد واقي الشمس اليوم!</p>
+                </div>
+            </div>
+            <button onclick="nextGlowChallenge()" class="bg-pink-950/80 hover:bg-pink-900 border border-pink-700/60 text-pink-300 text-[9.5px] font-extrabold px-2.5 py-1.5 rounded-xl shrink-0 active:scale-90 transition shadow">
+                تحفيز جديد ✨
+            </button>
+        </div>
+
         <!-- Section Header -->
         <div class="flex items-center justify-between px-1 pt-1">
             <h3 id="currentSectionTitle" class="text-xs font-black text-white flex items-center gap-1.5">
-                <span class="text-amber-400">●</span> المستحضرات والبروتوكولات المعتمدة
+                <span class="text-amber-400">●</span> المنتجات ومستحضرات العناية
             </h3>
             <select id="sortSelect" onchange="sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] rounded-lg px-2 py-1 focus:outline-none">
-                <option value="default">الترتيب المخصص</option>
+                <option value="default">الترتيب الافتراضي</option>
                 <option value="price-low">الأقل سعراً</option>
                 <option value="price-high">الأعلى سعراً</option>
                 <option value="stock-high">الكمية بالمخزن</option>
@@ -293,40 +307,40 @@
 
         <div id="noResults" class="hidden text-center py-12 text-slate-400 glass-panel rounded-2xl">
             <div class="text-3xl mb-2">🔍</div>
-            <h4 class="text-xs font-bold text-white">لم يتم العثور على أي مستحضر مطابق للبحث</h4>
+            <h4 class="text-xs font-bold text-white">لم يتم العثور على أي منتج مطابق</h4>
         </div>
 
-        <!-- Smart Clinical Daily Pill (Dynamic Knowledge Carousel) -->
+        <!-- 3. Smart Clinical Knowledge Pill -->
         <div class="relative w-full rounded-2xl p-3.5 glass-panel border border-amber-500/30 overflow-hidden shadow-lg">
             <div class="flex items-start gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-base">💡</div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between">
-                        <span class="text-[9px] font-black text-amber-400 uppercase tracking-wider">كبسولة صيدلانية إرشادية</span>
-                        <span id="pillIndex" class="text-[8px] text-slate-500">1 / 3</span>
+                        <span class="text-[9px] font-black text-amber-400 uppercase tracking-wider">نصيحة صيدلانية ذكية</span>
+                        <span id="pillIndex" class="text-[8px] text-slate-500">1 / 4</span>
                     </div>
                     <p id="smartPillText" class="text-[11px] font-semibold text-slate-200 mt-1 leading-relaxed fade-transition">
-                        أحماض التقشير (AHA/BHA) يُفضل تطبيقها ليلاً فقط، مع الالتزام التام بواقي الشمس صباحاً لحماية الخلايا المجددة.
+                        أحماض التقشير (AHA/BHA) تُطبق ليلاً فقط، مع الالتزام التام بواقي الشمس صباحاً لحماية البشرة.
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Authenticity & Quality Assurance Badge -->
+        <!-- Quality Guarantee Badge -->
         <div class="bg-slate-950/80 rounded-2xl p-3 border border-slate-800 flex items-center justify-between text-[10px]">
             <div class="flex items-center gap-2">
                 <span class="text-teal-400 text-base">🛡️</span>
                 <div>
-                    <span class="font-black text-white block">ضمان الجودة والأصالة الصيدلانية</span>
-                    <span class="text-[9px] text-slate-400">مستورد ومفحوص رسمياً من الوكالات المعتمدة 100%</span>
+                    <span class="font-black text-white block">ضمان الأصالة والجودة الصيدلانية</span>
+                    <span class="text-[9px] text-slate-400">منتجات أصلية 100% مستوردة ومفحوصة معتمدة</span>
                 </div>
             </div>
-            <span class="text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-lg">معتمد سريرياً</span>
+            <span class="text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-lg">أصلي ومضمون</span>
         </div>
 
     </main>
 
-    <!-- App Bottom Navigation Bar (No Admin Button) -->
+    <!-- Bottom App Navigation Bar -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#090d1a]/95 backdrop-blur-md border-t border-slate-800 z-40 py-2 px-6 flex justify-around items-center">
         <button onclick="resetView()" class="flex flex-col items-center text-amber-400 text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🏠</span>
@@ -346,17 +360,17 @@
     <div id="servicesModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white">✨ خدماتنا ورعايتنا السريرية</h3>
+                <h3 class="text-xs font-black text-white">✨ خدماتنا المميزة</h3>
                 <button onclick="closeStaticModal('servicesModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <div class="space-y-2 text-xs text-slate-300">
                 <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-                    <p class="font-bold text-cyan-300">🧴 استشارات عناية وبروتوكولات موجهة</p>
-                    <p class="text-[10px] text-slate-400 mt-0.5">تحديد الروتين الأنسب للجلد والشعر بالاعتماد على أسس صيدلانية دقيقة.</p>
+                    <p class="font-bold text-cyan-300">🧴 استشارات عناية وبشرة مخصصة</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">توجيه صيدلاني لاختيار الروتين الأنسب لنوع بشرتك وشعرك.</p>
                 </div>
                 <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400">📦 حجز وتجهيز دوائي فوري</p>
-                    <p class="text-[10px] text-slate-400 mt-0.5">تجهيز المستلزمات الطبية ومستحضرات العناية للاستلام المباشر أو التوصيل.</p>
+                    <p class="font-bold text-amber-400">📦 حجز وتجهيز فوري</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">تجهيز مستحضرات العناية والمستلزمات الطبية بسرعة ودقة.</p>
                 </div>
             </div>
         </div>
@@ -378,12 +392,12 @@
     <div id="contactModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white">🎧 تواصل مع الصيدلي</h3>
+                <h3 class="text-xs font-black text-white">🎧 تواصل معنا</h3>
                 <button onclick="closeStaticModal('contactModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <div class="space-y-2 text-xs">
                 <a href="https://wa.me/9647726053522" target="_blank" class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800 p-2.5 rounded-xl text-emerald-300 font-bold">
-                    <span>💬</span> <span>محادثة فورية عبر واتساب</span>
+                    <span>💬</span> <span>محادثة واتساب مباشرة</span>
                 </a>
                 <a href="tel:07726053522" class="flex items-center gap-2 bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-slate-200 font-bold">
                     <span>📞</span> <span>اتصال هاتفي مباشر</span>
@@ -399,8 +413,8 @@
                 <button onclick="closeStaticModal('guideModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                1. اختر البروتوكول العلاجي أو القسم المناسب لاحتياجك.<br>
-                2. أضف المستحضرات إلى سلة الحجز.<br>
+                1. اختر القسم المناسب أو استخدم مرشد الروتين الذكي.<br>
+                2. أضف المنتجات المطلوبة إلى سلة الحجز.<br>
                 3. اضغط على تأكيد الطلب لتجهيز مشترياتك وإرسالها فوراً للصيدلية عبر WhatsApp.
             </p>
         </div>
@@ -421,11 +435,11 @@
     <div id="termsModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white">🔄 ضوابط الصرف والأحكام</h3>
+                <h3 class="text-xs font-black text-white">🔄 الأحكام والشروط</h3>
                 <button onclick="closeStaticModal('termsModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                جميع المعروضات هي مستحضرات عناية متخصصة ومستلزمات طبية وتغذوية معتمدة. صرف الأدوية الوصفية يتم وفق اللوائح النقابية المباشرة داخل الصيدلية.
+                جميع المعروضات هي مستحضرات عناية وتجميل ومستلزمات طبية وتغذوية معتمدة ومصرحة. صرف الأدوية الوصفية يتم وفق اللوائح النقابية المباشرة داخل الصيدلية.
             </p>
         </div>
     </div>
@@ -433,11 +447,11 @@
     <div id="aboutModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white">ℹ️ عن الصيدلية</h3>
+                <h3 class="text-xs font-black text-white">ℹ️ من نحن</h3>
                 <button onclick="closeStaticModal('aboutModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                صيدلية رَحِيْقُ السَّلَامَة • صرح صيدلاني يُعنى بتقديم المشورة العلاجية، مستحضرات العناية التخصصية، والمستلزمات الطبية الموثوقة.
+                صيدلية رَحِيْقُ السَّلَامَة • وجهتكم الموثوقة للعناية، الجمال، والمستلزمات الطبية بأعلى معايير الجودة الصيدلانية.
             </p>
         </div>
     </div>
@@ -446,7 +460,7 @@
     <div id="cartModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>🛒</span> كشف مشتريات العناية المحجوزة</h3>
+                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>🛒</span> كشف مشتريات العناية</h3>
                 <button onclick="closeCartModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
@@ -471,7 +485,7 @@
     <div id="customerModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>📋</span> بيانات تأكيد الحجز والتواصل</h3>
+                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>📋</span> بيانات تأكيد الحجز</h3>
                 <button onclick="closeCustomerModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
@@ -551,36 +565,36 @@
     <div id="adminModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-                <h3 id="adminModalTitle" class="text-xs font-black text-white flex items-center gap-1"><span>✨</span> إضافة مستحضر عناية جديد</h3>
+                <h3 id="adminModalTitle" class="text-xs font-black text-white flex items-center gap-1"><span>✨</span> إضافة منتج جديد</h3>
                 <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
             
             <form id="productForm" onsubmit="saveProduct(event)" class="space-y-2.5">
                 <input type="hidden" id="editIndex">
                 <div>
-                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">القسم والبروتوكول:</label>
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">القسم:</label>
                     <select id="prodCategory" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
-                        <option value="البروتوكول الجلدي والوجه">🧴 البروتوكول الجلدي والوجه</option>
-                        <option value="الترطيب والتجديد الجسدي">✨ الترطيب والتجديد الجسدي</option>
-                        <option value="صحة البصيلات والفروة">🌿 صحة البصيلات والفروة</option>
-                        <option value="صحة الفم واللثة">🪥 صحة الفم واللثة</option>
-                        <option value="العناية النسائية التخصصية">🌸 العناية النسائية التخصصية</option>
-                        <option value="التجميل والمظهر الحيوي">💄 التجميل والمظهر الحيوي</option>
-                        <option value="العناية الرجالية الشاملة">🧔 العناية الرجالية الشاملة</option>
-                        <option value="الرعاية الفائقة للطفل">👶 الرعاية الفائقة للطفل</option>
-                        <option value="المكملات الغذائية الدقيقة">💊 المكملات الغذائية الدقيقة</option>
-                        <option value="التغذية والحمية العلاجية">🥑 التغذية والحمية العلاجية</option>
-                        <option value="المعدات والمستلزمات الطبية">🩺 المعدات والمستلزمات الطبية</option>
+                        <option value="العناية بالبشرة والوجه">🧴 العناية بالبشرة والوجه</option>
+                        <option value="العناية بالجسم والترطيب">✨ العناية بالجسم والترطيب</option>
+                        <option value="العناية بالشعر والفروة">🌿 العناية بالشعر والفروة</option>
+                        <option value="صحة الفم والأسنان">🪥 صحة الفم والأسنان</option>
+                        <option value="العناية النسائية">🌸 العناية النسائية</option>
+                        <option value="التجميل والميك آب">💄 التجميل والميك آب</option>
+                        <option value="العناية الرجالية">🧔 العناية الرجالية</option>
+                        <option value="رعاية الطفل والأم">👶 رعاية الطفل والأم</option>
+                        <option value="الفيتامينات والمكملات">💊 الفيتامينات والمكملات</option>
+                        <option value="الأغذية الصحية">🥑 الأغذية الصحية</option>
+                        <option value="المستلزمات الطبية">🩺 المستلزمات الطبية</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم المستحضر والماركة:</label>
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم المنتج والماركة:</label>
                     <input type="text" id="prodName" required placeholder="مثال: The Ordinary Glycolic Acid 7%" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الفوائد والاستخدام الصيدلاني / نوع البشرة:</label>
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الفوائد والاستخدام / نوع البشرة:</label>
                     <input type="text" id="prodUsage" required placeholder="مثال: تونر مقشر لعلاج التصبغات وتوحيد لون البشرة ونضارتها" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
@@ -600,7 +614,7 @@
                 </div>
 
                 <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-2">
-                    <label class="block text-[10px] font-bold text-amber-400">صورة المستحضر بدقة 1080p عالية الوضوح:</label>
+                    <label class="block text-[10px] font-bold text-amber-400">صورة المنتج بدقة 1080p:</label>
                     <div>
                         <input type="file" id="prodFileInput" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cyan-950 file:text-cyan-300 hover:file:bg-cyan-900 cursor-pointer">
                     </div>
@@ -611,7 +625,7 @@
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
                     <button type="button" onclick="closeAdminModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
-                    <button type="submit" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ المستحضر</button>
+                    <button type="submit" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ المنتج</button>
                 </div>
             </form>
         </div>
@@ -619,7 +633,7 @@
 
     <!-- Core App Logic -->
     <script>
-        // Firebase Configuration & Realtime Sync
+        // Firebase Cloud Initialization
         const firebaseConfig = {
             apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
             authDomain: "raheeq-pharmacy.firebaseapp.com",
@@ -638,20 +652,20 @@
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
-        // Customized Clinical Category Architecture
+        // Simplified Categories Architecture
         const categories = [
             { name: "الكل", icon: "🌟" },
-            { name: "البروتوكول الجلدي والوجه", icon: "🧴" },
-            { name: "الترطيب والتجديد الجسدي", icon: "✨" },
-            { name: "صحة البصيلات والفروة", icon: "🌿" },
-            { name: "صحة الفم واللثة", icon: "🪥" },
-            { name: "العناية النسائية التخصصية", icon: "🌸" },
-            { name: "التجميل والمظهر الحيوي", icon: "💄" },
-            { name: "العناية الرجالية الشاملة", icon: "🧔" },
-            { name: "الرعاية الفائقة للطفل", icon: "👶" },
-            { name: "المكملات الغذائية الدقيقة", icon: "💊" },
-            { name: "التغذية والحمية العلاجية", icon: "🥑" },
-            { name: "المعدات والمستلزمات الطبية", icon: "🩺" }
+            { name: "العناية بالبشرة والوجه", icon: "🧴" },
+            { name: "العناية بالجسم والترطيب", icon: "✨" },
+            { name: "العناية بالشعر والفروة", icon: "🌿" },
+            { name: "صحة الفم والأسنان", icon: "🪥" },
+            { name: "العناية النسائية", icon: "🌸" },
+            { name: "التجميل والميك آب", icon: "💄" },
+            { name: "العناية الرجالية", icon: "🧔" },
+            { name: "رعاية الطفل والأم", icon: "👶" },
+            { name: "الفيتامينات والمكملات", icon: "💊" },
+            { name: "الأغذية الصحية", icon: "🥑" },
+            { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
         let productsData = [];
@@ -661,11 +675,33 @@
 
         // Clinical Tips Database
         const clinicalTips = [
-            "أحماض التقشير (AHA/BHA) يُفضل تطبيقها ليلاً فقط، مع الالتزام التام بواقي الشمس صباحاً لحماية الخلايا المجددة.",
-            "الترتيب الصيدلاني الصحيح للعناية: الغسول أولاً، ثم التونر، يليه السيروم العلاجي، وتُختتم بالمرطب لحبس الرطوبة.",
-            "فيتامين C صباحاً يعزز حماية البشرة من أكسدة الشمس والتلوث، بينما حمض الهيالورونيك يحتاج لبشرة رطبة ليعطي أقصى امتلاء."
+            "أحماض التقشير (AHA/BHA) تُطبق ليلاً فقط، مع الالتزام التام بواقي الشمس صباحاً لحماية البشرة.",
+            "الترتيب الصحيح للعناية: الغسول أولاً، ثم التونر، يليه السيروم العلاجي، وتُختتم بالمرطب لحبس الرطوبة.",
+            "فيتامين C صباحاً يعزز حماية البشرة من التصبغات، بينما حمض الهيالورونيك يحتاج لبشرة رطبة ليعطي أقصى امتلاء.",
+            "استخدام بلسم الشعر على الأطراف فقط وتجنب الفروة يمنع التزييت السريع ويحافظ على خفة الشعر ونعومته."
         ];
         let currentTipIndex = 0;
+
+        // Glow Challenges Database
+        const glowChallenges = [
+            "تذكري شرب 2 لتر ماء وتجديد واقي الشمس اليوم! 💧",
+            "لا تلمسي الحبوب بيدك أبداً، اتركي السيروم العلاجي يقوم بعمله ✨",
+            "دلكي بشرتك بلطف بحركات دائرية لأعلى عند وضع المرطب 🌸",
+            "النوم الكافي 7-8 ساعات هو أساس نضارة البشرة وتجديد خلاياها 😴",
+            "استخدمي وسادة حريرية أو ساتان لتقليل احتكاك الشعر وتقصفه 🌿"
+        ];
+        let currentGlowIndex = 0;
+
+        function nextGlowChallenge() {
+            currentGlowIndex = (currentGlowIndex + 1) % glowChallenges.length;
+            const textEl = document.getElementById('glowChallengeText');
+            textEl.style.opacity = '0';
+            setTimeout(() => {
+                textEl.innerText = glowChallenges[currentGlowIndex];
+                textEl.style.opacity = '1';
+            }, 200);
+            showToast('تحفيز عناية متجدد! 💖', '✨');
+        }
 
         async function startSystem() {
             // Live Firebase Cloud Sync
@@ -677,7 +713,7 @@
                     productsData = [
                         {
                             id: "prod_1",
-                            category: "البروتوكول الجلدي والوجه",
+                            category: "العناية بالبشرة والوجه",
                             name: "The Ordinary Glycolic Acid 7%",
                             usage: "تونر جلايكوليك اسيد لعلاج تصبغات البشرة وتوحيد لونها ونضارتها",
                             size: "240ml",
@@ -811,7 +847,7 @@
                     textEl.innerText = clinicalTips[currentTipIndex];
                     indexEl.innerText = `${currentTipIndex + 1} / ${clinicalTips.length}`;
                     textEl.style.opacity = '1';
-                }, 500);
+                }, 400);
             }, 5500);
         }
 
@@ -877,7 +913,7 @@
             const banner = document.getElementById('deliveryStatusBanner');
 
             if (isOrderingActive) {
-                bannerText.innerText = "صيدلية رَحِيْقُ السَّلَامَة • رعاية صيدلانية ومستحضرات تخصصية معتمدة";
+                bannerText.innerText = "صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية";
                 banner.className = "w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2";
             } else {
                 bannerText.innerText = "⚠️ خدمة حجز وتوصيل الطلبيات متوقفة مؤقتاً • المعاينة والاستشارة فقط";
@@ -982,7 +1018,7 @@
                                 </div>
 
                                 <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800/80">
-                                    <span class="text-[8px] text-amber-400 font-bold block leading-none mb-0.5">الفوائد والاستخدام الصيدلاني:</span>
+                                    <span class="text-[8px] text-amber-400 font-bold block leading-none mb-0.5">الفوائد والاستخدام:</span>
                                     <span class="text-[10px] text-slate-200 font-semibold line-clamp-2">${prod.usage}</span>
                                 </div>
 
@@ -1000,7 +1036,7 @@
                             </button>
                             ${isAdmin ? `
                             <div class="flex items-center gap-1">
-                                <button class="drag-handle bg-slate-800 hover:bg-slate-700 text-amber-400 px-2.5 py-1.5 rounded-lg text-xs border border-slate-700 font-bold select-none" title="اسحب لتحريك المستحضر">☰</button>
+                                <button class="drag-handle bg-slate-800 hover:bg-slate-700 text-amber-400 px-2.5 py-1.5 rounded-lg text-xs border border-slate-700 font-bold select-none" title="اسحب لتحريك المنتج">☰</button>
                                 <button onclick="openEditModal('${prod.id}')" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
                                 <button onclick="deleteProduct('${prod.id}')" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
                             </div>
@@ -1015,7 +1051,7 @@
 
         function filterByCategory(cat) {
             currentFilter = cat;
-            document.getElementById('currentSectionTitle').innerHTML = cat === 'الكل' ? '<span class="text-amber-400">●</span> المستحضرات والبروتوكولات المعتمدة' : `<span class="text-teal-400">●</span> بروتوكول: ${cat}`;
+            document.getElementById('currentSectionTitle').innerHTML = cat === 'الكل' ? '<span class="text-amber-400">●</span> المنتجات ومستحضرات العناية' : `<span class="text-teal-400">●</span> قسم: ${cat}`;
             document.getElementById('resetRoutineBtn').classList.add('hidden');
             renderCircleCategories();
             renderProducts();
@@ -1079,7 +1115,7 @@
             if (!prod) return;
 
             if (prod.stock <= 0) {
-                showToast('هذا المستحضر غير متوفر حالياً بالمخزن!', '⚠️');
+                showToast('هذا المنتج غير متوفر حالياً بالمخزن!', '⚠️');
                 return;
             }
 
@@ -1207,7 +1243,7 @@
             cart.splice(index, 1);
             saveCartToStorage();
             renderCartContent();
-            showToast('تم حذف المستحضر من السلة', '🗑️');
+            showToast('تم حذف المنتج من السلة', '🗑️');
         }
 
         function processOrderAndSend(event) {
@@ -1222,13 +1258,13 @@
                 return;
             }
 
-            let message = `🌸 *طلب مشتريات عناية تخصصية - صيدلية رَحِيْقُ السَّلَامَة*\n`;
+            let message = `🌸 *طلب مشتريات عناية - صيدلية رَحِيْقُ السَّلَامَة*\n`;
             message += `━━━━━━━━━━━━━━━━━━━━\n`;
             message += `👤 *اسم الزبون:* ${name}\n`;
             message += `📞 *رقم الهاتف:* ${phone}\n`;
             message += `📍 *العنوان / الاستلام:* ${address}\n`;
             message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-            message += `📦 *تفاصيل المستحضرات المحجوزة:*\n`;
+            message += `📦 *تفاصيل المنتجات المحجوزة:*\n`;
 
             let total = 0;
             cart.forEach((item, idx) => {
@@ -1236,7 +1272,7 @@
                 let subTotal = itemPriceNum * item.qty;
                 total += subTotal;
 
-                message += `*${idx + 1}. المستحضر:* ${item.name} (${item.size})\n`;
+                message += `*${idx + 1}. المنتج:* ${item.name} (${item.size})\n`;
                 message += `▫️ *الفوائد:* ${item.usage}\n`;
                 message += `▫️ *الكمية:* ${item.qty} قطعة\n`;
                 message += `▫️ *السعر:* ${item.price}\n`;
@@ -1309,9 +1345,9 @@
         }
 
         function openAddModal() {
-            document.getElementById('adminModalTitle').innerHTML = '<span>✨</span> إضافة مستحضر عناية جديد';
+            document.getElementById('adminModalTitle').innerHTML = '<span>✨</span> إضافة منتج جديد';
             document.getElementById('editIndex').value = '';
-            document.getElementById('prodCategory').value = 'البروتوكول الجلدي والوجه';
+            document.getElementById('prodCategory').value = 'العناية بالبشرة والوجه';
             document.getElementById('prodName').value = '';
             document.getElementById('prodUsage').value = '';
             document.getElementById('prodSize').value = '';
@@ -1329,7 +1365,7 @@
             const prod = productsData.find(p => String(p.id) === String(id));
             if (!prod) return;
 
-            document.getElementById('adminModalTitle').innerHTML = '<span>✏️</span> تعديل بيانات المستحضر';
+            document.getElementById('adminModalTitle').innerHTML = '<span>✏️</span> تعديل بيانات المنتج';
             document.getElementById('editIndex').value = prod.id;
             document.getElementById('prodCategory').value = prod.category;
             document.getElementById('prodName').value = prod.name;
@@ -1390,13 +1426,13 @@
 
             saveProductsToCloud();
             closeAdminModal();
-            showToast('تم حفظ المستحضر سحابياً بنجاح! ☁️');
+            showToast('تم حفظ المنتج سحابياً بنجاح! ☁️');
         }
 
         function deleteProduct(id) {
             productsData = productsData.filter(p => String(p.id) !== String(id));
             saveProductsToCloud();
-            showToast('تم حذف المستحضر سحابياً', '🗑️');
+            showToast('تم حذف المنتج سحابياً', '🗑️');
         }
 
         startSystem();
