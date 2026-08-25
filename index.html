@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>صيدلية رَحِيْقُ السَّلَامَة | المتجر الذكي للعناية والجمال</title>
+    <title>صيدلية رَحِيْقُ السَّلَامَة</title>
     
-    <!-- إعدادات تطبيق الويب PWA -->
+    <!-- إعدادات تطبيق الويب PWA لتثبيته كتطبيق مستقل -->
     <meta name="theme-color" content="#060913">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="رحيق السلامة">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/883/883360.png">
+
+    <!-- Web App Manifest مدمج مباشرة -->
+    <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9%20%D8%B1%D8%AD%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%D8%A9%22%2C%22short_name%22%3A%22%D8%B1%D8%AD%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%D8%A9%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060913%22%2C%22theme_color%22%3A%22%23060913%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F883%2F883360.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -175,16 +179,15 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="playSoftClick(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
-                    <span>📦</span> <span class="hidden sm:inline">النواقص</span>
-                </button>
-
                 <button onclick="playSoftClick(); openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
                     <span class="text-sm">🛒</span>
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
+                    <button onclick="playSoftClick(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
+                        <span>📦</span> <span>المخزن</span>
+                    </button>
                     <button onclick="playSoftClick(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
                         <span>⚙️</span>
                     </button>
@@ -229,9 +232,11 @@
                     <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
 
-                <button onclick="playSoftClick(); closeDrawer(); openInventoryModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
-                    <span>📦</span> <span>سجل النواقص والمخزن</span>
-                </button>
+                <div id="drawerAdminInventoryItem" class="hidden">
+                    <button onclick="playSoftClick(); closeDrawer(); openInventoryModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-amber-950/30 border border-amber-800/40 text-amber-300 transition text-right">
+                        <span>📦</span> <span>سجل النواقص والمخزن</span>
+                    </button>
+                </div>
                 
                 <button onclick="playSoftClick(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>✨</span> <span>خدماتنا المميزة</span>
@@ -377,7 +382,7 @@
             <!-- 1:1 Aspect Ratio Square Frame -->
             <div class="w-full aspect-square max-w-[280px] mx-auto rounded-2xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden shrink-0 p-3">
                 <img id="modalProdImage" src="" class="object-contain w-full h-full block" alt="صورة المنتج">
-                <span id="modalProdStock" class="absolute bottom-2 right-2 bg-emerald-600/90 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow"></span>
+                <span id="modalProdStock" class="absolute bottom-2 right-2 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow hidden"></span>
             </div>
 
             <div class="space-y-1.5 text-right">
@@ -404,7 +409,7 @@
         </div>
     </div>
 
-    <!-- Admin Inventory & Shortages Modal (المخزن والنواقص) -->
+    <!-- Admin Inventory & Shortages Modal (المخزن والنواقص للمشرف) -->
     <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -425,7 +430,7 @@
                     <span id="invLowCount" class="text-xs font-black text-amber-400">0</span>
                 </div>
                 <div class="bg-slate-950 p-2 rounded-xl border border-rose-800/40">
-                    <span class="text-[9px] text-rose-400 block">نافد تماماً (0)</span>
+                    <span class="text-[9px] text-rose-400 block">حرج ونافذ (&le; 2)</span>
                     <span id="invOutCount" class="text-xs font-black text-rose-400">0</span>
                 </div>
             </div>
@@ -748,7 +753,7 @@
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
         // Categories
-        const categories = [
+        const baseCategories = [
             { name: "الكل", icon: "🌟" },
             { name: "العناية بالبشرة والوجه", icon: "🧴" },
             { name: "العناية بالجسم والترطيب", icon: "✨" },
@@ -760,8 +765,7 @@
             { name: "رعاية الطفل والأم", icon: "👶" },
             { name: "الفيتامينات والمكملات", icon: "💊" },
             { name: "الأغذية الصحية", icon: "🥑" },
-            { name: "المستلزمات الطبية", icon: "🩺" },
-            { name: "النواقص", icon: "🚨" }
+            { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
         let productsData = [];
@@ -770,6 +774,35 @@
         let currentFilter = 'الكل';
         let isWishlistMode = false;
         let sortableInstance = null;
+
+        // Helper: تدرج ألوان تنبيه المخزن للمشرف
+        function getStockBadgeStyle(stock) {
+            if (stock <= 2) {
+                // أحمر تحذيري قوي للمواد النافدة أو الحرجة جداً (0 أو 1 أو 2)
+                return {
+                    bg: 'bg-rose-600',
+                    border: 'border-rose-400',
+                    text: 'text-white font-black',
+                    label: stock === 0 ? 'نافد تماماً (0)' : `حرج جداً: ${stock}`
+                };
+            } else if (stock <= 5) {
+                // برتقالي/أصفر للمواد القليلة
+                return {
+                    bg: 'bg-amber-600',
+                    border: 'border-amber-400',
+                    text: 'text-white font-bold',
+                    label: `منخفض: ${stock}`
+                };
+            } else {
+                // أخضر زمردي عند وفرة المخزون
+                return {
+                    bg: 'bg-emerald-600',
+                    border: 'border-emerald-400',
+                    text: 'text-white font-bold',
+                    label: `المخزن: ${stock}`
+                };
+            }
+        }
 
         // Clinical Tips Database
         const clinicalTips = [
@@ -957,12 +990,12 @@
                         {
                             id: "prod_2",
                             category: "العناية بالبشرة والوجه",
-                            name: "CeraVe Foaming Facial Cleanser",
-                            usage: "غسول رغوي لطيف للبشرة العادية إلى الدهنية يحتوي على السيراميدات الأساسية وحمض الهيالورونيك للمحافظة على حاجز البشرة الطبيعي",
-                            size: "236ml",
-                            price: "16,000 د.ع",
-                            stock: 0,
-                            image: "https://www.cerave.com/-/media/project/loreal/brand-sites/cerave/master/us/skincare/cleansers/foaming-facial-cleanser/700x700/cerave_foaming_facial_cleanser_front_700x700.png"
+                            name: "Dermedic Hialuro Hydrain Creamy Cleansing Gel",
+                            usage: "جل منظف كريمي يرطب البشرة بعمق مناسب للبشرة الجافة والحساسة",
+                            size: "200ml",
+                            price: "10,000 د.ع",
+                            stock: 3,
+                            image: "https://dermedic.pl/wp-content/uploads/2021/05/HYDRAIN3-HIALURO-Kremowy-zel-do-mycia-200ml.png"
                         }
                     ];
                     productsRef.set(productsData);
@@ -1078,7 +1111,17 @@
 
             document.getElementById('modalProdCategory').innerText = prod.category;
             document.getElementById('modalProdImage').src = prod.image;
-            document.getElementById('modalProdStock').innerText = `المخزن: ${prod.stock}`;
+            
+            const stockBadge = document.getElementById('modalProdStock');
+            if (isAdmin) {
+                const info = getStockBadgeStyle(prod.stock);
+                stockBadge.className = `absolute bottom-2 right-2 text-[9px] px-2 py-0.5 rounded-md shadow border ${info.bg} ${info.border} ${info.text}`;
+                stockBadge.innerText = info.label;
+                stockBadge.classList.remove('hidden');
+            } else {
+                stockBadge.classList.add('hidden');
+            }
+
             document.getElementById('modalProdName').innerText = prod.name;
             document.getElementById('modalProdSize').innerText = prod.size;
             document.getElementById('modalProdPrice').innerText = prod.price;
@@ -1126,19 +1169,20 @@
 
             let total = productsData.length;
             let low = 0;
-            let out = 0;
+            let outOrCritical = 0;
 
             productsData.forEach(p => {
-                if (p.stock === 0) out++;
+                if (p.stock <= 2) outOrCritical++;
                 else if (p.stock <= 5) low++;
             });
 
             list.forEach(p => {
-                const isOut = p.stock === 0;
-                const isLow = p.stock > 0 && p.stock <= 5;
+                const isCrit = p.stock <= 2;
+                const isLow = p.stock > 2 && p.stock <= 5;
+                const info = getStockBadgeStyle(p.stock);
 
                 listEl.innerHTML += `
-                    <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border ${isOut ? 'border-rose-900/80 bg-rose-950/20' : isLow ? 'border-amber-900/60 bg-amber-950/20' : 'border-slate-800'}">
+                    <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border ${isCrit ? 'border-rose-700 bg-rose-950/30' : isLow ? 'border-amber-700/70 bg-amber-950/20' : 'border-slate-800'}">
                         <div class="flex items-center gap-2 min-w-0">
                             <div class="w-10 h-10 rounded-lg bg-white med-img-frame flex items-center justify-center p-1 shrink-0 overflow-hidden">
                                 <img src="${p.image}" class="max-w-full max-h-full object-contain">
@@ -1150,7 +1194,7 @@
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">
                             <button onclick="quickUpdateStock('${p.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700 active:scale-95">-</button>
-                            <span class="text-xs font-black min-w-[32px] text-center ${isOut ? 'text-rose-400' : isLow ? 'text-amber-400' : 'text-emerald-400'}">
+                            <span class="text-xs px-2 py-0.5 rounded-md border text-center ${info.bg} ${info.border} ${info.text}">
                                 ${p.stock}
                             </span>
                             <button onclick="quickUpdateStock('${p.id}', 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700 active:scale-95">+</button>
@@ -1162,7 +1206,7 @@
 
             document.getElementById('invTotalCount').innerText = total;
             document.getElementById('invLowCount').innerText = low;
-            document.getElementById('invOutCount').innerText = out;
+            document.getElementById('invOutCount').innerText = outOrCritical;
         }
 
         function filterInventoryList(query) {
@@ -1360,7 +1404,12 @@
             const container = document.getElementById('circleCategories');
             let html = '';
 
-            categories.forEach(cat => {
+            let displayCats = [...baseCategories];
+            if (isAdmin) {
+                displayCats.push({ name: "النواقص", icon: "🚨" });
+            }
+
+            displayCats.forEach(cat => {
                 const isActive = !isWishlistMode && currentFilter === cat.name;
                 html += `
                     <button onclick="playSoftClick(); filterByCategory('${cat.name}')" 
@@ -1429,9 +1478,8 @@
             }
 
             displayList.forEach((prod) => {
-                const isOut = prod.stock === 0;
-                const isLow = prod.stock > 0 && prod.stock <= 5;
                 const isFav = wishlist.includes(String(prod.id));
+                const badgeInfo = getStockBadgeStyle(prod.stock);
 
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-2.5 w-full flex flex-col justify-between gap-2 shadow-sm relative" data-id="${prod.id}">
@@ -1442,12 +1490,15 @@
                         </button>
 
                         <div class="flex flex-col gap-2">
-                            <!-- Clickable Product Image (Enhanced 1:1 Clean Aspect) -->
+                            <!-- Clickable Product Image (Enhanced 1:1 Aspect) -->
                             <div onclick="openProductDetailModal('${prod.id}')" class="w-full h-32 sm:h-36 rounded-xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition p-2">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full block" loading="lazy">
-                                <span class="absolute bottom-1 right-1 ${isOut ? 'bg-rose-600/90' : isLow ? 'bg-amber-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
-                                    ${isOut ? 'نفد المخزون' : `المخزن: ${prod.stock}`}
+                                
+                                ${isAdmin ? `
+                                <span class="absolute bottom-1 right-1 text-[8px] px-1.5 py-0.5 rounded-md shadow border ${badgeInfo.bg} ${badgeInfo.border} ${badgeInfo.text}">
+                                    ${badgeInfo.label}
                                 </span>
+                                ` : ''}
                             </div>
 
                             <!-- Clickable Product Info -->
@@ -1738,13 +1789,18 @@
 
         function updateAdminUI() {
             const headerBtn = document.getElementById('adminActionHeader');
+            const drawerInv = document.getElementById('drawerAdminInventoryItem');
+            
             if (isAdmin) {
                 headerBtn.classList.remove('hidden');
                 headerBtn.classList.add('flex');
+                if (drawerInv) drawerInv.classList.remove('hidden');
             } else {
                 headerBtn.classList.add('hidden');
                 headerBtn.classList.remove('flex');
+                if (drawerInv) drawerInv.classList.add('hidden');
             }
+            renderCircleCategories();
             renderProducts();
         }
 
