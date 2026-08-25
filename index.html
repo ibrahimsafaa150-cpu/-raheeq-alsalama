@@ -146,7 +146,7 @@
         <div class="flex items-center justify-between gap-2 w-full">
             
             <div class="flex items-center gap-2 min-w-0">
-                <button onclick="playSoftClick(); openDrawer()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white active:scale-90 transition" title="القائمة الرئيسية">
+                <button onclick="playPopSound(); openDrawer()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white active:scale-90 transition" title="القائمة الرئيسية">
                     <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
@@ -165,7 +165,7 @@
                     </svg>
                 </div>
 
-                <div class="flex flex-col min-w-0 cursor-pointer" onclick="playSoftClick(); resetView()">
+                <div class="flex flex-col min-w-0 cursor-pointer" onclick="playPopSound(); resetView()">
                     <h1 class="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-teal-300 to-cyan-400 truncate">
                         صيدلية رَحِيْقُ السَّلَامَة
                     </h1>
@@ -174,22 +174,22 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="playSoftClick(); openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
+                <button onclick="playPopSound(); openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
                     <span class="text-sm">🛒</span>
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
-                    <button onclick="playSoftClick(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
+                    <button onclick="playPopSound(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
                         <span>📦</span> <span>المخزن</span>
                     </button>
-                    <button onclick="playSoftClick(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
+                    <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
                         <span>⚙️</span>
                     </button>
-                    <button onclick="playSoftClick(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="إضافة منتج">
+                    <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="إضافة منتج">
                         <span>➕</span>
                     </button>
-                    <button onclick="playSoftClick(); logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="قفل المشرف">
+                    <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="قفل المشرف">
                         <span>🔒</span>
                     </button>
                 </div>
@@ -212,30 +212,30 @@
                     <div class="w-8 h-8 rounded-lg bg-slate-950 p-1 border border-amber-500/30 flex items-center justify-center">🌿</div>
                     <h3 class="text-xs font-black text-white">صيدلية رَحِيْقُ السَّلَامَة</h3>
                 </div>
-                <button onclick="playSoftClick(); closeDrawer()" class="text-slate-400 hover:text-white font-bold text-sm p-1">✕</button>
+                <button onclick="playPopSound(); closeDrawer()" class="text-slate-400 hover:text-white font-bold text-sm p-1">✕</button>
             </div>
 
             <!-- Drawer Links -->
             <div class="space-y-1 text-xs">
                 <div class="text-[10px] font-bold text-amber-400/80 uppercase px-2 mb-1">الرئيسية والخدمات</div>
                 
-                <button onclick="playSoftClick(); closeDrawer(); filterByCategory('الكل')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-200 transition text-right">
+                <button onclick="playPopSound(); closeDrawer(); filterByCategory('الكل')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-200 transition text-right">
                     <span>🗂️</span> <span>جميع الأقسام</span>
                 </button>
 
-                <button onclick="playSoftClick(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                <button onclick="playPopSound(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
                 
-                <button onclick="playSoftClick(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>✨</span> <span>خدماتنا المميزة</span>
                 </button>
                 
-                <button onclick="playSoftClick(); openStaticModal('mapModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('mapModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>📍</span> <span>موقع الصيدلية على الخريطة</span>
                 </button>
                 
-                <button onclick="playSoftClick(); openStaticModal('contactModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('contactModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>🎧</span> <span>تواصل مع الصيدلية</span>
                 </button>
             </div>
@@ -243,19 +243,19 @@
             <div class="space-y-1 text-xs pt-2 border-t border-slate-800">
                 <div class="text-[10px] font-bold text-slate-400 uppercase px-2 mb-1">المعلومات والسياسات</div>
                 
-                <button onclick="playSoftClick(); openStaticModal('guideModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('guideModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>📖</span> <span>دليل الاستخدام والحجز</span>
                 </button>
                 
-                <button onclick="playSoftClick(); openStaticModal('privacyModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('privacyModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>🛡️</span> <span>سياسة الخصوصية</span>
                 </button>
                 
-                <button onclick="playSoftClick(); openStaticModal('termsModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('termsModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>🔄</span> <span>الأحكام والشروط</span>
                 </button>
                 
-                <button onclick="playSoftClick(); openStaticModal('aboutModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
+                <button onclick="playPopSound(); openStaticModal('aboutModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>ℹ️</span> <span>من نحن</span>
                 </button>
             </div>
@@ -298,7 +298,7 @@
             <h3 id="currentSectionTitle" class="text-xs font-black text-white flex items-center gap-1.5">
                 <span class="text-amber-400">●</span> المنتجات ومستحضرات العناية
             </h3>
-            <select id="sortSelect" onchange="playSoftClick(); sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] rounded-lg px-2 py-1 focus:outline-none">
+            <select id="sortSelect" onchange="playPopSound(); sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] rounded-lg px-2 py-1 focus:outline-none">
                 <option value="default">الترتيب الافتراضي</option>
                 <option value="price-low">الأقل سعراً</option>
                 <option value="price-high">الأعلى سعراً</option>
@@ -346,15 +346,15 @@
 
     <!-- Bottom Navigation Bar -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#090d1a]/95 backdrop-blur-md border-t border-slate-800 z-40 py-2.5 px-6 flex justify-around items-center">
-        <button onclick="playSoftClick(); resetView()" class="flex flex-col items-center text-amber-400 text-[10px] font-bold active:scale-95 transition">
+        <button onclick="playPopSound(); resetView()" class="flex flex-col items-center text-amber-400 text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🏠</span>
             <span>الرئيسية</span>
         </button>
-        <button onclick="playSoftClick(); openDrawer()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition">
+        <button onclick="playPopSound(); openDrawer()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🗂️</span>
             <span>الأقسام</span>
         </button>
-        <button onclick="playSoftClick(); openCartModal()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition relative">
+        <button onclick="playPopSound(); openCartModal()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition relative">
             <span class="text-lg">🛒</span>
             <span>الطلبية</span>
         </button>
@@ -365,7 +365,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative border-2 border-cyan-500/30 flex flex-col gap-3 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <span class="text-[10px] font-black text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-lg border border-cyan-800" id="modalProdCategory">القسم</span>
-                <button onclick="playSoftClick(); closeProductDetailModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeProductDetailModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
             <div class="w-full aspect-square max-w-[280px] mx-auto rounded-2xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden shrink-0 p-3">
@@ -397,14 +397,14 @@
         </div>
     </div>
 
-    <!-- Admin Inventory & Shortages Modal (تصميم ذكي وواضح بدون تقطيع) -->
+    <!-- Admin Inventory & Shortages Modal (مخزن عملي وسهل الإدارة) -->
     <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white flex items-center gap-1.5">
                     <span class="text-amber-400">📦</span> جرد المخزن ونواقص الصيدلية
                 </h3>
-                <button onclick="playSoftClick(); closeInventoryModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeInventoryModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
             <!-- Stats Header -->
@@ -427,7 +427,7 @@
                 <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع بالاسم أو القسم..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             </div>
 
-            <!-- قائمة المنتجات المحسنة بالكامل -->
+            <!-- قائمة المواد في المخزن -->
             <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
 
             <div class="border-t border-slate-800 pt-2 flex gap-2">
@@ -446,7 +446,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">✨ خدماتنا المميزة</h3>
-                <button onclick="playSoftClick(); closeStaticModal('servicesModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('servicesModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <div class="space-y-2 text-xs text-slate-300">
                 <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
@@ -465,7 +465,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative text-center space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">📍 موقع الصيدلية على الخريطة</h3>
-                <button onclick="playSoftClick(); closeStaticModal('mapModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('mapModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-xs text-slate-300 font-bold">صيدلية رَحِيْقُ السَّلَامَة</p>
             <p class="text-[10px] text-slate-400">اضغط على الزر أدناه للانتقال مباشرة إلى موقع الصيدلية الدقيق في خرائط Google</p>
@@ -479,7 +479,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">🎧 تواصل معنا</h3>
-                <button onclick="playSoftClick(); closeStaticModal('contactModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('contactModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <div class="space-y-2 text-xs">
                 <a href="https://wa.me/9647726053522" target="_blank" class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800 p-2.5 rounded-xl text-emerald-300 font-bold">
@@ -496,7 +496,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">📖 دليل الاستخدام والحجز</h3>
-                <button onclick="playSoftClick(); closeStaticModal('guideModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('guideModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
                 1 تصفح الأقسام بالسحب يميناً ويساراً<br>
@@ -511,7 +511,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">🛡️ سياسة الخصوصية</h3>
-                <button onclick="playSoftClick(); closeStaticModal('privacyModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('privacyModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
                 نلتزم في صيدلية رحيق السلامة بحماية خصوصية جميع العملاء، ولا تُستخدم بيانات الاسم أو الهاتف إلا لغرض تأكيد وتجهيز الطلبيات بدقة
@@ -523,7 +523,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">🔄 الأحكام والشروط</h3>
-                <button onclick="playSoftClick(); closeStaticModal('termsModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('termsModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
                 جميع المعروضات هي مستحضرات عناية وتجميل ومستلزمات طبية وتغذوية معتمدة ومصرحة، صرف الأدوية الوصفية يتم وفق اللوائح النقابية المباشرة داخل الصيدلية
@@ -535,7 +535,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white">ℹ️ من نحن</h3>
-                <button onclick="playSoftClick(); closeStaticModal('aboutModal')" class="text-slate-400 font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeStaticModal('aboutModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
                 صيدلية رَحِيْقُ السَّلَامَة • وجهتكم الموثوقة للعناية، الجمال، والمستلزمات الطبية بأعلى معايير الجودة الصيدلانية
@@ -548,7 +548,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white flex items-center gap-1"><span>🛒</span> كشف مشتريات العناية</h3>
-                <button onclick="playSoftClick(); closeCartModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeCartModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
             <div id="cartItemsList" class="overflow-y-auto space-y-2 flex-grow my-2 pr-0.5 no-scrollbar"></div>
@@ -560,7 +560,7 @@
                 </div>
 
                 <div id="checkoutActionContainer">
-                    <button onclick="playSoftClick(); openCustomerDetailsModal()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
+                    <button onclick="playPopSound(); openCustomerDetailsModal()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
                         <span>📝</span> <span>تأكيد الحجز وإرسال الطلبية</span>
                     </button>
                 </div>
@@ -573,7 +573,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white flex items-center gap-1"><span>📋</span> بيانات تأكيد الحجز</h3>
-                <button onclick="playSoftClick(); closeCustomerModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeCustomerModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
             <form onsubmit="processOrderAndSend(event)" class="space-y-2.5">
@@ -609,8 +609,8 @@
             <p class="text-[10px] text-slate-400">أدخل رمز المشرف للمتابعة</p>
             <input type="password" id="adminPinInput" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
             <div class="flex gap-2 pt-1">
-                <button onclick="playSoftClick(); closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
-                <button onclick="playSoftClick(); verifyAdminPin()" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-1.5 rounded-xl text-xs font-bold shadow">دخول</button>
+                <button onclick="playPopSound(); closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
+                <button onclick="playPopSound(); verifyAdminPin()" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-1.5 rounded-xl text-xs font-bold shadow">دخول</button>
             </div>
         </div>
     </div>
@@ -620,7 +620,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white flex items-center gap-1"><span>⚙️</span> إعدادات الطلبات والمستلم</h3>
-                <button onclick="playSoftClick(); closeSettingsModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeSettingsModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
             <div class="space-y-3">
@@ -641,8 +641,8 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="playSoftClick(); closeSettingsModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
-                    <button type="button" onclick="playSoftClick(); saveSettings()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ</button>
+                    <button type="button" onclick="playPopSound(); closeSettingsModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
+                    <button type="button" onclick="playPopSound(); saveSettings()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ</button>
                 </div>
             </div>
         </div>
@@ -653,7 +653,7 @@
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
                 <h3 id="adminModalTitle" class="text-xs font-black text-white flex items-center gap-1"><span>✨</span> إضافة منتج جديد</h3>
-                <button onclick="playSoftClick(); closeAdminModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeAdminModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
             
             <form id="productForm" onsubmit="saveProduct(event)" class="space-y-2.5">
@@ -711,14 +711,14 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="playSoftClick(); closeAdminModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
+                    <button type="button" onclick="playPopSound(); closeAdminModal()" class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs">إلغاء</button>
                     <button type="submit" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-1.5 rounded-lg text-xs font-bold shadow">حفظ المنتج</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Core App Logic -->
+    <!-- Core App Logic & Modern Audio Synth -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
@@ -759,6 +759,85 @@
         let currentFilter = 'الكل';
         let isWishlistMode = false;
         let sortableInstance = null;
+
+        // Modern Interactive Sound Engine
+        let audioCtx = null;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // 1. صوت نقر عام وعصري (Pop / Tap)
+        function playPopSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.04);
+
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.04);
+            } catch (e) {}
+        }
+
+        // 2. صوت إضافة إلى السلة المتصاعد (Chime)
+        function playAddToCartSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                osc.frequency.setValueAtTime(660, ctx.currentTime + 0.06);
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.22);
+            } catch(e) {}
+        }
+
+        // 3. صوت المفضلة والقلب (Sweet Pop)
+        function playHeartSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(520, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+
+                gain.gain.setValueAtTime(0.09, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.08);
+            } catch(e) {}
+        }
 
         function getStockBadgeStyle(stock) {
             if (stock <= 2) {
@@ -822,27 +901,6 @@
         ];
         let currentGlowIndex = 0;
 
-        function playSoftClick() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.035);
-
-                gain.gain.setValueAtTime(0.04, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035);
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.start(ctx.currentTime);
-                osc.stop(ctx.currentTime + 0.035);
-            } catch(e) {}
-        }
-
         function triggerSingleEmoji(e, customEmoji) {
             const emojis = ['✨', '💖', '🌸', '💧', '🌿', '⭐'];
             const chosenEmoji = customEmoji || emojis[Math.floor(Math.random() * emojis.length)];
@@ -861,7 +919,7 @@
         }
 
         function nextGlowChallenge(event) {
-            playSoftClick();
+            playPopSound();
             currentGlowIndex = (currentGlowIndex + 1) % glowChallenges.length;
             const item = glowChallenges[currentGlowIndex];
 
@@ -889,7 +947,7 @@
         function handleOutsideModalClick(event, modalId) {
             const modal = document.getElementById(modalId);
             if (event.target === modal) {
-                playSoftClick();
+                playPopSound();
                 closeAnyModal(modalId);
             }
         }
@@ -992,7 +1050,7 @@
 
         function toggleWishlist(id, event) {
             if (event) event.stopPropagation();
-            playSoftClick();
+            playHeartSound();
 
             const idx = wishlist.indexOf(String(id));
             if (idx > -1) {
@@ -1056,7 +1114,7 @@
         }
 
         function openProductDetailModal(id) {
-            playSoftClick();
+            playPopSound();
             const prod = productsData.find(p => String(p.id) === String(id));
             if (!prod) return;
 
@@ -1129,13 +1187,13 @@
                 listEl.innerHTML += `
                     <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
                         
-                        <!-- السطر الأول: تفاصيل المنتج كاملة والاسم بسطرين واضحين -->
-                        <div onclick="openProductDetailModal('${p.id}')" class="flex items-start gap-3 cursor-pointer active:scale-98 transition">
+                        <!-- تفاصيل المادة واضحة دون تقطيع وبدون فتح نافذة خارجية -->
+                        <div class="flex items-start gap-3">
                             <div class="w-14 h-14 rounded-xl bg-white med-img-frame flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
                                 <img src="${p.image}" class="max-w-full max-h-full object-contain">
                             </div>
                             <div class="flex-1 min-w-0 text-right">
-                                <h5 class="text-xs font-black text-white leading-snug break-words hover:text-cyan-300 transition">${p.name}</h5>
+                                <h5 class="text-xs font-black text-white leading-snug break-words">${p.name}</h5>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${p.size}</span>
                                     <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
@@ -1144,7 +1202,7 @@
                             </div>
                         </div>
 
-                        <!-- السطر الثاني: شريط التحكم المستقل بالكمية -->
+                        <!-- شريط تعديل الكمية المريح والواضح -->
                         <div class="flex items-center justify-between pt-2 border-t border-slate-900">
                             <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">
                                 ${info.label}
@@ -1181,6 +1239,7 @@
         }
 
         function quickUpdateStock(id, changeQty) {
+            playPopSound();
             const prod = productsData.find(p => String(p.id) === String(id));
             if (prod) {
                 prod.stock = Math.max(0, prod.stock + changeQty);
@@ -1205,6 +1264,7 @@
         }
 
         function copyShortagesToClipboard() {
+            playPopSound();
             const text = getShortagesText();
             if (!text) {
                 showToast('لا توجد أي نواقص بالمخزن حالياً', '✨');
@@ -1216,6 +1276,7 @@
         }
 
         function sendShortagesToWhatsApp() {
+            playPopSound();
             const text = getShortagesText();
             if (!text) {
                 showToast('المخزن مكتمل ولا توجد نواقص', '✨');
@@ -1288,7 +1349,7 @@
         if (logoBtn) {
             logoBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                playSoftClick();
+                playPopSound();
                 tapCount++;
                 clearTimeout(tapTimer);
 
@@ -1365,7 +1426,7 @@
             displayCats.forEach(cat => {
                 const isActive = !isWishlistMode && currentFilter === cat.name;
                 html += `
-                    <button onclick="playSoftClick(); filterByCategory('${cat.name}')" 
+                    <button onclick="playPopSound(); filterByCategory('${cat.name}')" 
                             class="px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition shrink-0 text-[11px] font-bold border ${
                                 isActive 
                                 ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow' 
@@ -1472,14 +1533,14 @@
 
                         <!-- Action Buttons -->
                         <div class="flex flex-col gap-1.5 pt-1 border-t border-slate-800/70">
-                            <button onclick="playSoftClick(); addToCart('${prod.id}')" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-1.5 rounded-xl text-[10.5px] transition flex items-center justify-center gap-1 shadow active:scale-95">
+                            <button onclick="addToCart('${prod.id}')" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-1.5 rounded-xl text-[10.5px] transition flex items-center justify-center gap-1 shadow active:scale-95">
                                 <span>🛒</span> <span>إضافة</span>
                             </button>
                             ${isAdmin ? `
                             <div class="flex items-center justify-between gap-1 pt-0.5">
                                 <button class="drag-handle flex-1 bg-slate-800 text-amber-400 py-1 rounded-lg text-xs font-bold border border-slate-700 select-none">☰</button>
-                                <button onclick="playSoftClick(); openEditModal('${prod.id}')" class="flex-1 bg-slate-800 text-slate-200 py-1 rounded-lg text-xs border border-slate-700 active:scale-95">✏️</button>
-                                <button onclick="playSoftClick(); deleteProduct('${prod.id}')" class="flex-1 bg-rose-950/60 text-rose-400 py-1 rounded-lg text-xs border border-rose-900 active:scale-95">🗑️</button>
+                                <button onclick="playPopSound(); openEditModal('${prod.id}')" class="flex-1 bg-slate-800 text-slate-200 py-1 rounded-lg text-xs border border-slate-700 active:scale-95">✏️</button>
+                                <button onclick="playPopSound(); deleteProduct('${prod.id}')" class="flex-1 bg-rose-950/60 text-rose-400 py-1 rounded-lg text-xs border border-rose-900 active:scale-95">🗑️</button>
                             </div>
                             ` : ''}
                         </div>
@@ -1539,6 +1600,7 @@
 
         function addToCart(id) {
             if (!isOrderingActive) {
+                playPopSound();
                 showToast('خدمة الحجز متوقفة حالياً', '⚠️');
                 return;
             }
@@ -1547,6 +1609,7 @@
             if (!prod) return;
 
             if (prod.stock <= 0) {
+                playPopSound();
                 showToast('هذا المنتج غير متوفر حالياً بالمخزن', '⚠️');
                 return;
             }
@@ -1554,6 +1617,7 @@
             const existing = cart.find(item => String(item.id) === String(id));
             if (existing) {
                 if (existing.qty >= prod.stock) {
+                    playPopSound();
                     showToast('بلغت الحد الأقصى المتوفر بالمخزن', '⚠️');
                     return;
                 }
@@ -1562,6 +1626,7 @@
                 cart.push({ ...prod, qty: 1 });
             }
             
+            playAddToCartSound();
             saveCartToStorage();
             showToast(`تمت إضافة "${prod.name}" للسلة`, '🛒');
         }
@@ -1585,7 +1650,7 @@
                 `;
             } else {
                 actionContainer.innerHTML = `
-                    <button onclick="playSoftClick(); openCustomerDetailsModal()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
+                    <button onclick="playPopSound(); openCustomerDetailsModal()" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1.5 active:scale-95 transition">
                         <span>📝</span> <span>تأكيد الحجز وإرسال الطلبية</span>
                     </button>
                 `;
@@ -1613,10 +1678,10 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1">
-                                <button type="button" onclick="playSoftClick(); changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">-</button>
+                                <button type="button" onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">-</button>
                                 <span class="text-xs font-bold text-cyan-400 px-2">${item.qty}</span>
-                                <button type="button" onclick="playSoftClick(); changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">+</button>
-                                <button type="button" onclick="playSoftClick(); removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5 active:scale-90">🗑️</button>
+                                <button type="button" onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">+</button>
+                                <button type="button" onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5 active:scale-90">🗑️</button>
                             </div>
                         </div>
                     `;
@@ -1658,6 +1723,7 @@
         }
 
         function changeQty(index, delta) {
+            playPopSound();
             const item = cart[index];
             if (!item) return;
 
@@ -1676,6 +1742,7 @@
         }
 
         function removeFromCart(index) {
+            playPopSound();
             cart.splice(index, 1);
             saveCartToStorage();
             renderCartContent();
@@ -1684,7 +1751,7 @@
 
         function processOrderAndSend(event) {
             event.preventDefault();
-            playSoftClick();
+            playPopSound();
 
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
@@ -1831,7 +1898,7 @@
 
         function saveProduct(event) {
             event.preventDefault();
-            playSoftClick();
+            playPopSound();
             const editId = document.getElementById('editIndex').value;
 
             let rawPrice = document.getElementById('prodPrice').value.trim();
@@ -1873,6 +1940,7 @@
         }
 
         function deleteProduct(id) {
+            playPopSound();
             productsData = productsData.filter(p => String(p.id) !== String(id));
             saveProductsToCloud();
             showToast('تم حذف المنتج سحابياً', '🗑️');
