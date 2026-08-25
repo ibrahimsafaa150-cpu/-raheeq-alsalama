@@ -760,7 +760,6 @@
         let isWishlistMode = false;
         let sortableInstance = null;
 
-        // Modern Interactive Sound Engine
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) {
@@ -772,7 +771,6 @@
             return audioCtx;
         }
 
-        // 1. صوت نقر عام وعصري (Pop / Tap)
         function playPopSound() {
             try {
                 const ctx = getAudioContext();
@@ -794,7 +792,6 @@
             } catch (e) {}
         }
 
-        // 2. صوت إضافة إلى السلة المتصاعد (Chime)
         function playAddToCartSound() {
             try {
                 const ctx = getAudioContext();
@@ -817,7 +814,6 @@
             } catch(e) {}
         }
 
-        // 3. صوت المفضلة والقلب (Sweet Pop)
         function playHeartSound() {
             try {
                 const ctx = getAudioContext();
@@ -1187,7 +1183,6 @@
                 listEl.innerHTML += `
                     <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
                         
-                        <!-- تفاصيل المادة واضحة دون تقطيع وبدون فتح نافذة خارجية -->
                         <div class="flex items-start gap-3">
                             <div class="w-14 h-14 rounded-xl bg-white med-img-frame flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
                                 <img src="${p.image}" class="max-w-full max-h-full object-contain">
@@ -1202,7 +1197,6 @@
                             </div>
                         </div>
 
-                        <!-- شريط تعديل الكمية المريح والواضح -->
                         <div class="flex items-center justify-between pt-2 border-t border-slate-900">
                             <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">
                                 ${info.label}
@@ -1513,20 +1507,20 @@
                                 </span>
                             </div>
 
-                            <!-- Clickable Product Info -->
-                            <div onclick="openProductDetailModal('${prod.id}')" class="space-y-1 text-right cursor-pointer">
-                                <div class="flex items-start justify-between gap-1">
-                                    <h4 class="text-[11px] sm:text-xs font-black text-white leading-tight break-words">${prod.name}</h4>
+                            <!-- Clickable Product Info (محاذاة هندسية موحدة ودقيقة) -->
+                            <div onclick="openProductDetailModal('${prod.id}')" class="flex flex-col justify-between flex-grow space-y-1.5 text-right cursor-pointer">
+                                <div class="h-8 flex items-center">
+                                    <h4 class="text-[11px] font-black text-white leading-snug line-clamp-2 w-full">${prod.name}</h4>
                                 </div>
 
-                                <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800/80">
+                                <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800/80 h-11 flex flex-col justify-center">
                                     <span class="text-[7.5px] text-amber-400 font-bold block leading-none mb-0.5">الاستخدام:</span>
-                                    <span class="text-[9.5px] text-slate-200 font-semibold line-clamp-2 leading-tight">${prod.usage}</span>
+                                    <span class="text-[9px] text-slate-200 font-semibold line-clamp-2 leading-tight">${prod.usage}</span>
                                 </div>
 
-                                <div class="flex items-center justify-between pt-0.5">
-                                    <span class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60">${prod.size}</span>
+                                <div class="flex items-center justify-between pt-1 border-t border-slate-800/40">
                                     <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
+                                    <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${prod.size}</span>
                                 </div>
                             </div>
                         </div>
