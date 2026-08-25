@@ -5,21 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>صيدلية رَحِيْقُ السَّلَامَة</title>
     
-    <!-- إعدادات تطبيق الويب PWA لتثبيته كتطبيق مستقل -->
     <meta name="theme-color" content="#060913">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="رحيق السلامة">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/883/883360.png">
 
-    <!-- Web App Manifest مدمج مباشرة -->
-    <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9%20%D8%B1%D8%AD%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%D8%A9%22%2C%22short_name%22%3A%22%D8%B1%D8%AD%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%D8%A9%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060913%22%2C%22theme_color%22%3A%22%23060913%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F883%2F883360.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22%D8%B5%D9%8A%D8%AF%D9%84%D9%8A%D8%A9%20%D8%B1%D8%AD%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%D8%A9%22%2C%22short_name%22%3A%22%D8%B1%D8%AD%D9%8A%D9%82%20%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%D8%A9%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060913%22%2C%22theme_color%22%3A%22%23060913%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F883%2F883360.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -94,7 +91,6 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .modal-active { display: flex !important; }
 
-        /* Drawer Transition */
         #sideDrawer {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -106,7 +102,6 @@
             transition: opacity 0.35s ease-in-out;
         }
 
-        /* Single Floating Emoji */
         .single-celebration-emoji {
             position: fixed;
             pointer-events: none;
@@ -231,12 +226,6 @@
                 <button onclick="playSoftClick(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
-
-                <div id="drawerAdminInventoryItem" class="hidden">
-                    <button onclick="playSoftClick(); closeDrawer(); openInventoryModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-amber-950/30 border border-amber-800/40 text-amber-300 transition text-right">
-                        <span>📦</span> <span>سجل النواقص والمخزن</span>
-                    </button>
-                </div>
                 
                 <button onclick="playSoftClick(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>✨</span> <span>خدماتنا المميزة</span>
@@ -277,7 +266,7 @@
         </div>
     </div>
 
-    <!-- Category Filter Bar (Smooth Horizontal Scroll Left/Right) -->
+    <!-- Category Filter Bar -->
     <nav class="bg-slate-950/80 border-b border-slate-800/80 py-2.5 px-2">
         <div class="flex gap-2 overflow-x-auto no-scrollbar w-full scroll-smooth" id="circleCategories"></div>
     </nav>
@@ -285,7 +274,7 @@
     <!-- Main Content Area -->
     <main class="flex-grow w-full px-3 py-3 space-y-4 max-w-xl mx-auto">
         
-        <!-- 1. Full-Box Daily Glow Booster (Top Header Card) -->
+        <!-- Daily Glow Booster -->
         <div class="glass-panel rounded-2xl p-4 border border-pink-500/35 bg-gradient-to-r from-slate-950 via-pink-950/25 to-slate-950 space-y-2.5 shadow-md">
             <div class="flex items-center justify-between border-b border-pink-900/40 pb-2">
                 <div class="flex items-center gap-2">
@@ -317,7 +306,7 @@
             </select>
         </div>
 
-        <!-- Products Container: 2-Column Responsive Grid -->
+        <!-- Products Grid -->
         <div id="productsGrid" class="grid grid-cols-2 gap-2.5 w-full"></div>
 
         <div id="noResults" class="hidden text-center py-12 text-slate-400 glass-panel rounded-2xl">
@@ -325,7 +314,7 @@
             <h4 class="text-xs font-bold text-white">لم يتم العثور على أي منتج مطابق</h4>
         </div>
 
-        <!-- 2. Smart Clinical Knowledge Pill -->
+        <!-- Smart Clinical Knowledge Pill -->
         <div class="relative w-full rounded-2xl p-3.5 glass-panel border border-amber-500/30 overflow-hidden shadow-lg">
             <div class="flex items-start gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-base">💡</div>
@@ -355,7 +344,7 @@
 
     </main>
 
-    <!-- Bottom App Navigation Bar (Clean 3-Button Layout) -->
+    <!-- Bottom Navigation Bar -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#090d1a]/95 backdrop-blur-md border-t border-slate-800 z-40 py-2.5 px-6 flex justify-around items-center">
         <button onclick="playSoftClick(); resetView()" class="flex flex-col items-center text-amber-400 text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🏠</span>
@@ -371,7 +360,7 @@
         </button>
     </div>
 
-    <!-- Product Details Modal (Updated 1:1 Square Frame) -->
+    <!-- Product Details Modal -->
     <div id="productDetailModal" onclick="handleOutsideModalClick(event, 'productDetailModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative border-2 border-cyan-500/30 flex flex-col gap-3 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -379,10 +368,9 @@
                 <button onclick="playSoftClick(); closeProductDetailModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
-            <!-- 1:1 Aspect Ratio Square Frame -->
             <div class="w-full aspect-square max-w-[280px] mx-auto rounded-2xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden shrink-0 p-3">
                 <img id="modalProdImage" src="" class="object-contain w-full h-full block" alt="صورة المنتج">
-                <span id="modalProdStock" class="absolute bottom-2 right-2 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow hidden"></span>
+                <span id="modalProdStock" class="absolute bottom-2 right-2 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow border"></span>
             </div>
 
             <div class="space-y-1.5 text-right">
@@ -409,7 +397,7 @@
         </div>
     </div>
 
-    <!-- Admin Inventory & Shortages Modal (المخزن والنواقص للمشرف) -->
+    <!-- Admin Inventory & Shortages Modal -->
     <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -426,21 +414,19 @@
                     <span id="invTotalCount" class="text-xs font-black text-cyan-400">0</span>
                 </div>
                 <div class="bg-slate-950 p-2 rounded-xl border border-amber-800/40">
-                    <span class="text-[9px] text-amber-400 block">قارب على النفاد (&le; 5)</span>
+                    <span class="text-[9px] text-amber-400 block">منخفض (&le; 5)</span>
                     <span id="invLowCount" class="text-xs font-black text-amber-400">0</span>
                 </div>
                 <div class="bg-slate-950 p-2 rounded-xl border border-rose-800/40">
-                    <span class="text-[9px] text-rose-400 block">حرج ونافذ (&le; 2)</span>
+                    <span class="text-[9px] text-rose-400 block">حرج ونافد (&le; 2)</span>
                     <span id="invOutCount" class="text-xs font-black text-rose-400">0</span>
                 </div>
             </div>
 
-            <!-- Quick Search inside inventory -->
             <div class="my-1.5">
                 <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع في النواقص والمخزن..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             </div>
 
-            <!-- Shortages List -->
             <div class="flex-grow overflow-y-auto space-y-2 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
 
             <div class="border-t border-slate-800 pt-2 flex gap-2">
@@ -733,7 +719,6 @@
 
     <!-- Core App Logic -->
     <script>
-        // Firebase Cloud Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
             authDomain: "raheeq-pharmacy.firebaseapp.com",
@@ -752,7 +737,6 @@
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
-        // Categories
         const baseCategories = [
             { name: "الكل", icon: "🌟" },
             { name: "العناية بالبشرة والوجه", icon: "🧴" },
@@ -775,26 +759,23 @@
         let isWishlistMode = false;
         let sortableInstance = null;
 
-        // Helper: تدرج ألوان تنبيه المخزن للمشرف
+        // دالة تلوين المخزن للجميع (أحمر، برتقالي، أخضر)
         function getStockBadgeStyle(stock) {
             if (stock <= 2) {
-                // أحمر تحذيري قوي للمواد النافدة أو الحرجة جداً (0 أو 1 أو 2)
                 return {
                     bg: 'bg-rose-600',
                     border: 'border-rose-400',
                     text: 'text-white font-black',
-                    label: stock === 0 ? 'نافد تماماً (0)' : `حرج جداً: ${stock}`
+                    label: stock === 0 ? 'نفد المخزون' : `المخزن: ${stock}`
                 };
             } else if (stock <= 5) {
-                // برتقالي/أصفر للمواد القليلة
                 return {
                     bg: 'bg-amber-600',
                     border: 'border-amber-400',
                     text: 'text-white font-bold',
-                    label: `منخفض: ${stock}`
+                    label: `المخزن: ${stock}`
                 };
             } else {
-                // أخضر زمردي عند وفرة المخزون
                 return {
                     bg: 'bg-emerald-600',
                     border: 'border-emerald-400',
@@ -804,7 +785,6 @@
             }
         }
 
-        // Clinical Tips Database
         const clinicalTips = [
             "أحماض التقشير (AHA/BHA) تُطبق ليلاً فقط، مع الالتزام التام بواقي الشمس صباحاً لحماية البشرة",
             "الترتيب الصحيح للعناية: الغسول أولاً، ثم التونر، يليه السيروم العلاجي، وتُختتم بالمرطب لحبس الرطوبة",
@@ -813,7 +793,6 @@
         ];
         let currentTipIndex = 0;
 
-        // Glow Challenges Database
         const glowChallenges = [
             {
                 title: "الارتواء والترطيب الداخلي",
@@ -843,7 +822,6 @@
         ];
         let currentGlowIndex = 0;
 
-        // Soft Click Sound Synthesizer
         function playSoftClick() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -865,7 +843,6 @@
             } catch(e) {}
         }
 
-        // Single Floating Emoji Spawner
         function triggerSingleEmoji(e, customEmoji) {
             const emojis = ['✨', '💖', '🌸', '💧', '🌿', '⭐'];
             const chosenEmoji = customEmoji || emojis[Math.floor(Math.random() * emojis.length)];
@@ -905,7 +882,6 @@
             showToast('تحفيز عناية متجدد 💖', item.icon);
         }
 
-        // History Management & Double Back to Exit
         let backPressCount = 0;
         let backPressTimer = null;
 
@@ -967,7 +943,6 @@
             }
         });
 
-        // Initialize state
         history.pushState(null, "", window.location.href);
 
         async function startSystem() {
@@ -1077,7 +1052,6 @@
             }, 2000);
         }
 
-        // Drawer Controls
         function openDrawer() {
             document.getElementById('sideDrawer').classList.remove('drawer-closed');
             document.getElementById('drawerBackdrop').classList.remove('hidden');
@@ -1103,7 +1077,6 @@
             modal.classList.add('hidden');
         }
 
-        // Product Detail Modal
         function openProductDetailModal(id) {
             playSoftClick();
             const prod = productsData.find(p => String(p.id) === String(id));
@@ -1113,14 +1086,9 @@
             document.getElementById('modalProdImage').src = prod.image;
             
             const stockBadge = document.getElementById('modalProdStock');
-            if (isAdmin) {
-                const info = getStockBadgeStyle(prod.stock);
-                stockBadge.className = `absolute bottom-2 right-2 text-[9px] px-2 py-0.5 rounded-md shadow border ${info.bg} ${info.border} ${info.text}`;
-                stockBadge.innerText = info.label;
-                stockBadge.classList.remove('hidden');
-            } else {
-                stockBadge.classList.add('hidden');
-            }
+            const info = getStockBadgeStyle(prod.stock);
+            stockBadge.className = `absolute bottom-2 right-2 text-[9px] px-2 py-0.5 rounded-md shadow border ${info.bg} ${info.border} ${info.text}`;
+            stockBadge.innerText = info.label;
 
             document.getElementById('modalProdName').innerText = prod.name;
             document.getElementById('modalProdSize').innerText = prod.size;
@@ -1153,7 +1121,6 @@
             modal.classList.add('hidden');
         }
 
-        // Inventory & Shortages Management
         function openInventoryModal() {
             renderInventoryListItems(productsData);
 
@@ -1269,7 +1236,6 @@
             window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
         }
 
-        // Image Processing to 1080p
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1312,7 +1278,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Knowledge Carousel Functionality
         function startSmartPillCarousel() {
             setInterval(() => {
                 const textEl = document.getElementById('smartPillText');
@@ -1328,7 +1293,6 @@
             }, 5500);
         }
 
-        // Secret Admin Authentication (5 Taps on Logo)
         let tapCount = 0;
         let tapTimer = null;
         const logoBtn = document.getElementById('secretLogoTrigger');
@@ -1490,15 +1454,13 @@
                         </button>
 
                         <div class="flex flex-col gap-2">
-                            <!-- Clickable Product Image (Enhanced 1:1 Aspect) -->
+                            <!-- Clickable Product Image -->
                             <div onclick="openProductDetailModal('${prod.id}')" class="w-full h-32 sm:h-36 rounded-xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition p-2">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full block" loading="lazy">
                                 
-                                ${isAdmin ? `
                                 <span class="absolute bottom-1 right-1 text-[8px] px-1.5 py-0.5 rounded-md shadow border ${badgeInfo.bg} ${badgeInfo.border} ${badgeInfo.text}">
                                     ${badgeInfo.label}
                                 </span>
-                                ` : ''}
                             </div>
 
                             <!-- Clickable Product Info -->
@@ -1789,16 +1751,13 @@
 
         function updateAdminUI() {
             const headerBtn = document.getElementById('adminActionHeader');
-            const drawerInv = document.getElementById('drawerAdminInventoryItem');
             
             if (isAdmin) {
                 headerBtn.classList.remove('hidden');
                 headerBtn.classList.add('flex');
-                if (drawerInv) drawerInv.classList.remove('hidden');
             } else {
                 headerBtn.classList.add('hidden');
                 headerBtn.classList.remove('flex');
-                if (drawerInv) drawerInv.classList.add('hidden');
             }
             renderCircleCategories();
             renderProducts();
