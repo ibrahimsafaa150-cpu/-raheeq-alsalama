@@ -89,7 +89,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .modal-active { display: flex !important; }
 
-        /* Side Drawer Styling */
+        /* Drawer Transition */
         #sideDrawer {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -99,6 +99,31 @@
 
         .fade-transition {
             transition: opacity 0.4s ease-in-out;
+        }
+
+        /* Floating Confetti Elements */
+        .celebration-emoji {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            font-size: 24px;
+            user-select: none;
+            animation: floatUpAndFade 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes floatUpAndFade {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.6) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(var(--tw-tx), -80px) scale(1.3) rotate(var(--tw-rot));
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tw-tx), -180px) scale(0.9) rotate(var(--tw-rot));
+            }
         }
     </style>
 </head>
@@ -275,16 +300,16 @@
             </div>
         </div>
 
-        <!-- 2. Interactive Daily Glow Booster -->
-        <div class="glass-panel rounded-2xl p-3 border border-pink-500/25 flex items-center justify-between gap-2.5 bg-gradient-to-r from-slate-950 via-pink-950/20 to-slate-950">
+        <!-- 2. Interactive Daily Glow Booster with Full Pop-up & Sound -->
+        <div onclick="openGlowModal(event)" class="glass-panel rounded-2xl p-3 border border-pink-500/30 flex items-center justify-between gap-2.5 bg-gradient-to-r from-slate-950 via-pink-950/20 to-slate-950 cursor-pointer active:scale-[0.98] transition shadow-md">
             <div class="flex items-center gap-2 min-w-0">
-                <span class="text-lg">💖</span>
+                <span class="text-xl animate-bounce">💖</span>
                 <div class="min-w-0">
-                    <span class="text-[9px] font-black text-pink-400 block uppercase tracking-wider">تحفيز الإشراقة اليومي</span>
-                    <p id="glowChallengeText" class="text-[10.5px] font-bold text-slate-200 truncate">تذكري شرب 2 لتر ماء وتجديد واقي الشمس اليوم!</p>
+                    <span class="text-[9px] font-black text-pink-400 block uppercase tracking-wider">تحفيز الإشراقة اليومي • اضغط هنا ✨</span>
+                    <p id="glowChallengeBarText" class="text-[10.5px] font-bold text-slate-200 truncate">تذكري شرب 2 لتر ماء وتجديد واقي الشمس اليوم!</p>
                 </div>
             </div>
-            <button onclick="nextGlowChallenge()" class="bg-pink-950/80 hover:bg-pink-900 border border-pink-700/60 text-pink-300 text-[9.5px] font-extrabold px-2.5 py-1.5 rounded-xl shrink-0 active:scale-90 transition shadow">
+            <button onclick="event.stopPropagation(); nextGlowChallenge(event)" class="bg-pink-950/90 hover:bg-pink-900 border border-pink-700/70 text-pink-300 text-[9.5px] font-extrabold px-2.5 py-1.5 rounded-xl shrink-0 active:scale-90 transition shadow">
                 تحفيز جديد ✨
             </button>
         </div>
@@ -354,6 +379,34 @@
             <span class="text-lg">🛒</span>
             <span>الطلبية</span>
         </button>
+    </div>
+
+    <!-- Full Glow Challenge & Advice Modal -->
+    <div id="glowModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-5 w-full max-w-sm shadow-[0_0_50px_rgba(236,72,153,0.3)] border-2 border-pink-500/40 relative text-center space-y-4 animate-scaleUp">
+            
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-600 to-amber-400 flex items-center justify-center text-3xl mx-auto shadow-lg shadow-pink-500/30">
+                <span id="glowModalIcon">🌸</span>
+            </div>
+
+            <div class="space-y-1">
+                <span class="text-[10px] font-black text-pink-400 uppercase tracking-widest bg-pink-950/80 px-3 py-1 rounded-full border border-pink-800/80">نصيحة الإشراقة اليومية</span>
+                <h3 id="glowModalTitle" class="text-sm font-black text-white pt-2">سر الإشراقة والنضارة</h3>
+            </div>
+
+            <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 text-slate-200 text-xs font-semibold leading-relaxed text-right">
+                <p id="glowModalBody">النصيحة الكاملة ستظهر هنا بالتفصيل.</p>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+                <button onclick="nextGlowChallenge(event)" class="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 hover:opacity-95 text-white py-2.5 rounded-xl text-xs font-black shadow-lg shadow-pink-900/40 active:scale-95 transition flex items-center justify-center gap-1.5">
+                    <span>✨</span> <span>نصيحة أخرى</span>
+                </button>
+                <button onclick="closeGlowModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl text-xs font-bold active:scale-95 transition">
+                    إغلاق
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Modals for Drawer Links -->
@@ -682,24 +735,121 @@
         ];
         let currentTipIndex = 0;
 
-        // Glow Challenges Database
+        // Comprehensive Glow Challenges Database
         const glowChallenges = [
-            "تذكري شرب 2 لتر ماء وتجديد واقي الشمس اليوم! 💧",
-            "لا تلمسي الحبوب بيدك أبداً، اتركي السيروم العلاجي يقوم بعمله ✨",
-            "دلكي بشرتك بلطف بحركات دائرية لأعلى عند وضع المرطب 🌸",
-            "النوم الكافي 7-8 ساعات هو أساس نضارة البشرة وتجديد خلاياها 😴",
-            "استخدمي وسادة حريرية أو ساتان لتقليل احتكاك الشعر وتقصفه 🌿"
+            {
+                title: "💧 الارتواء والترطيب الداخلي",
+                icon: "💧",
+                barText: "تذكري شرب 2 لتر ماء وتجديد واقي الشمس اليوم!",
+                fullText: "الترطيب يبدأ من الداخل! شرب 2 إلى 3 لترات من الماء يومياً يحافظ على مرونة وحيوية خلايا البشرة ويمنع بهتانها وجفافها. ضعي منبهك الآن لشرب كوب ماء كل ساعة ✨"
+            },
+            {
+                title: "🛡️ القاعدة الذهبية لحماية البشرة",
+                icon: "☀️",
+                barText: "واقي الشمس هو الدرع الأول ضد التجاعيد والتصبغات!",
+                fullText: "80% من علامات الشيخوخة المبكرة والتصبغات سببها أشعة الشمس. لا تنسي وضع واقي الشمس بمعامل SPF 50+ وتجديده كل ساعتين إذا كنتِ خارج المنزل أو متعرضة لضوء ساطع."
+            },
+            {
+                title: "🚫 توقفي عن لمس الحبوب باليد",
+                icon: "🛑",
+                barText: "اتركي السيروم العلاجي يقوم بعمله ولا تعبثي بالبشرة!",
+                fullText: "لمس الحبوب ينقل البكتيريا ويزيد الالتهاب ويسبب تصبغات وندبات صعبة الزوال. استخدمي لصقات الحبوب أو سيروم النياسيناميد وحمض الساليسيليك بهدوء."
+            },
+            {
+                title: "🌿 سر النعومة والوقاية من التقصف",
+                icon: "💆‍♀️",
+                barText: "طبقي الزيوت والبلسم على أطراف الشعر فقط!",
+                fullText: "فروة الرأس تفرز زيوتها الطبيعية، لذا تركيز البلسم والسيرومات المرطبة على الأطراف يحميها من التقصف والجفاف دون التسبب بانسداد مسام الفروة وقشرة الرأس."
+            },
+            {
+                title: "😴 نوم الجمال وتجديد الخلايا",
+                icon: "🌙",
+                barText: "النوم الكافي 7-8 ساعات هو أساس نضارة الوجه!",
+                fullText: "أثناء النوم العميق يفرز الجسم هرمون النمو المسؤول عن تجديد خلايا الجلد وإصلاح التلف الناتج عن التلوث والإجهاد. اجعلي نومك أولوية لنضارة طبيعية بدون مكياج."
+            }
         ];
         let currentGlowIndex = 0;
 
-        function nextGlowChallenge() {
+        // Sound Synthesizer (Celebration Sound)
+        function playCelebrationSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (Triumphant Chime)
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + (i * 0.08));
+                    
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime + (i * 0.08));
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (i * 0.08) + 0.35);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.start(ctx.currentTime + (i * 0.08));
+                    osc.stop(ctx.currentTime + (i * 0.08) + 0.35);
+                });
+            } catch(e) {}
+        }
+
+        // Confetti / Emoji Explosion Effect
+        function triggerEmojiCelebration(e) {
+            const emojis = ['✨', '💖', '🌸', '🎉', '💧', '🌿', '⭐', '💄'];
+            const originX = e && e.clientX ? e.clientX : window.innerWidth / 2;
+            const originY = e && e.clientY ? e.clientY : window.innerHeight / 2;
+
+            for (let i = 0; i < 14; i++) {
+                const el = document.createElement('div');
+                el.className = 'celebration-emoji';
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                const tx = (Math.random() - 0.5) * 220 + 'px';
+                const rot = (Math.random() - 0.5) * 120 + 'deg';
+                
+                el.style.left = (originX - 12) + 'px';
+                el.style.top = (originY - 12) + 'px';
+                el.style.setProperty('--tw-tx', tx);
+                el.style.setProperty('--tw-rot', rot);
+                
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 1600);
+            }
+        }
+
+        function openGlowModal(event) {
+            const item = glowChallenges[currentGlowIndex];
+            document.getElementById('glowModalIcon').innerText = item.icon;
+            document.getElementById('glowModalTitle').innerText = item.title;
+            document.getElementById('glowModalBody').innerText = item.fullText;
+            
+            const modal = document.getElementById('glowModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            
+            playCelebrationSound();
+            triggerEmojiCelebration(event);
+            if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+        }
+
+        function closeGlowModal() {
+            const modal = document.getElementById('glowModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        function nextGlowChallenge(event) {
             currentGlowIndex = (currentGlowIndex + 1) % glowChallenges.length;
-            const textEl = document.getElementById('glowChallengeText');
-            textEl.style.opacity = '0';
-            setTimeout(() => {
-                textEl.innerText = glowChallenges[currentGlowIndex];
-                textEl.style.opacity = '1';
-            }, 200);
+            const item = glowChallenges[currentGlowIndex];
+            
+            document.getElementById('glowChallengeBarText').innerText = item.barText;
+            document.getElementById('glowModalIcon').innerText = item.icon;
+            document.getElementById('glowModalTitle').innerText = item.title;
+            document.getElementById('glowModalBody').innerText = item.fullText;
+
+            playCelebrationSound();
+            triggerEmojiCelebration(event);
+            if (navigator.vibrate) navigator.vibrate([30, 30, 30]);
             showToast('تحفيز عناية متجدد! 💖', '✨');
         }
 
