@@ -144,13 +144,13 @@
         <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح</span>
     </div>
 
-    <!-- PWA Install Prompt Banner -->
+    <!-- PWA Install Prompt Banner (معدل بالنص الجديد) -->
     <div id="installAppPrompt" class="hidden fixed bottom-16 left-3 right-3 z-40 bg-slate-900/95 backdrop-blur-md border border-cyan-500/40 p-3 rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.25)] flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
             <div class="w-9 h-9 rounded-xl bg-slate-950 p-1 border border-amber-500/40 flex items-center justify-center shrink-0">🌿</div>
             <div class="min-w-0 text-right">
-                <h4 class="text-xs font-black text-white truncate">تثبيت تطبيق رحيق السلامة</h4>
-                <p class="text-[9.5px] text-slate-400 truncate">لوصول فوري وتصفح سريع من الشاشة الرئيسية</p>
+                <h4 class="text-xs font-black text-white truncate">تثبيت تطبيق على شاشة لوصول أسهل</h4>
+                <p class="text-[9px] text-slate-400 truncate">تصفح أسرع وحجز فوري بدون متصفح</p>
             </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
@@ -176,6 +176,7 @@
                     <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
+                <!-- Secret Logo Trigger (5 Taps for Admin Panel) -->
                 <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
@@ -221,14 +222,14 @@
             </div>
         </div>
 
-        <!-- Search Bar with Barcode Scanner Icon -->
+        <!-- Search Bar with Seamlessly Integrated Barcode Icon -->
         <div class="mt-2 relative w-full flex items-center">
+            <span class="absolute right-3 top-2.5 text-slate-500 text-xs pointer-events-none">🔍</span>
             <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
-                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-10 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
-            <span class="absolute right-3 top-2 text-slate-500 text-xs">🔍</span>
+                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-9 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             
-            <!-- Barcode Scanner Trigger Button -->
-            <button onclick="startBarcodeScanner('search')" class="absolute left-2 top-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 p-1.5 rounded-lg text-xs active:scale-90 transition border border-slate-700" title="مسح باركود المنتج">
+            <!-- زر الباركود المدمج بشكل هندسي أنيق ومتطابق -->
+            <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-sm active:scale-90 transition" title="مسح باركود المنتج">
                 📷
             </button>
         </div>
@@ -246,6 +247,7 @@
                 <button onclick="playPopSound(); closeDrawer()" class="text-slate-400 hover:text-white font-bold text-sm p-1">✕</button>
             </div>
 
+            <!-- Drawer Links (تثبيت التطبيق جوة موقع الصيدلية وبنفس اللون) -->
             <div class="space-y-1 text-xs">
                 <div class="text-[10px] font-bold text-amber-400/80 uppercase px-2 mb-1">الرئيسية والخدمات</div>
                 
@@ -256,10 +258,6 @@
                 <button onclick="playPopSound(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
-
-                <button onclick="playPopSound(); closeDrawer(); triggerAppInstall()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-950/40 text-cyan-300 border border-cyan-800/50 hover:bg-cyan-900/40 transition text-right">
-                    <span>📲</span> <span>تثبيت التطبيق على الموبايل</span>
-                </button>
                 
                 <button onclick="playPopSound(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>✨</span> <span>خدماتنا المميزة</span>
@@ -267,6 +265,11 @@
                 
                 <button onclick="playPopSound(); openStaticModal('mapModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>📍</span> <span>موقع الصيدلية على الخريطة</span>
+                </button>
+
+                <!-- زر التثبيت في مكانه الجديد وبنفس التنسيق الأنيق -->
+                <button onclick="playPopSound(); closeDrawer(); triggerAppInstall()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                    <span>📲</span> <span>تثبيت التطبيق على الموبايل</span>
                 </button>
                 
                 <button onclick="playPopSound(); openStaticModal('contactModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
@@ -394,7 +397,7 @@
         </button>
     </div>
 
-    <!-- Barcode Scanner Modal (كاميرا مسح الباركود) -->
+    <!-- Barcode Scanner Modal -->
     <div id="barcodeModal" onclick="handleOutsideModalClick(event, 'barcodeModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative flex flex-col gap-3 text-center border border-cyan-500/30">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -726,7 +729,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal (مضاف لها حقل ومسح الباركود) -->
+    <!-- Admin Add/Edit Modal -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -806,7 +809,7 @@
         </div>
     </div>
 
-    <!-- Core App Logic, Modern Audio & Scanner Integration -->
+    <!-- Core App Logic -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
@@ -848,7 +851,7 @@
         let isWishlistMode = false;
         let sortableInstance = null;
 
-        // PWA Install Prompt Logic
+        // PWA Prompt
         let deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -887,7 +890,7 @@
 
         // Barcode Scanner Engine
         let html5QrCode = null;
-        let scannerTarget = 'search'; // 'search', 'form', 'inventory'
+        let scannerTarget = 'search';
 
         function startBarcodeScanner(targetMode) {
             playPopSound();
@@ -940,7 +943,7 @@
             }
         }
 
-        // Modern Audio Engine
+        // Audio Engine
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) {
