@@ -133,6 +133,8 @@
         #scannerVideoContainer video {
             border-radius: 1rem;
             object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
         }
     </style>
 </head>
@@ -144,7 +146,7 @@
         <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح</span>
     </div>
 
-    <!-- PWA Install Prompt Banner (معدل بالنص الجديد) -->
+    <!-- PWA Install Prompt Banner -->
     <div id="installAppPrompt" class="hidden fixed bottom-16 left-3 right-3 z-40 bg-slate-900/95 backdrop-blur-md border border-cyan-500/40 p-3 rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.25)] flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
             <div class="w-9 h-9 rounded-xl bg-slate-950 p-1 border border-amber-500/40 flex items-center justify-center shrink-0">🌿</div>
@@ -228,7 +230,6 @@
             <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
                    class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-9 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             
-            <!-- زر الباركود المدمج بشكل هندسي أنيق ومتطابق -->
             <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-sm active:scale-90 transition" title="مسح باركود المنتج">
                 📷
             </button>
@@ -247,7 +248,6 @@
                 <button onclick="playPopSound(); closeDrawer()" class="text-slate-400 hover:text-white font-bold text-sm p-1">✕</button>
             </div>
 
-            <!-- Drawer Links (تثبيت التطبيق جوة موقع الصيدلية وبنفس اللون) -->
             <div class="space-y-1 text-xs">
                 <div class="text-[10px] font-bold text-amber-400/80 uppercase px-2 mb-1">الرئيسية والخدمات</div>
                 
@@ -267,7 +267,6 @@
                     <span>📍</span> <span>موقع الصيدلية على الخريطة</span>
                 </button>
 
-                <!-- زر التثبيت في مكانه الجديد وبنفس التنسيق الأنيق -->
                 <button onclick="playPopSound(); closeDrawer(); triggerAppInstall()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>📲</span> <span>تثبيت التطبيق على الموبايل</span>
                 </button>
@@ -397,8 +396,8 @@
         </button>
     </div>
 
-    <!-- Barcode Scanner Modal -->
-    <div id="barcodeModal" onclick="handleOutsideModalClick(event, 'barcodeModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+    <!-- Barcode Scanner Modal (طبقة فوقية مستقلة z-[60]) -->
+    <div id="barcodeModal" onclick="handleOutsideModalClick(event, 'barcodeModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[60] hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative flex flex-col gap-3 text-center border border-cyan-500/30">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white flex items-center gap-1.5">
@@ -407,7 +406,7 @@
                 <button onclick="stopBarcodeScanner()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
             
-            <p class="text-[11px] text-slate-300">وجّه الكاميرا نحو باركود المنتج ليتم التعرف عليه تلقائياً</p>
+            <p class="text-[11px] text-slate-300">وجّه الكاميرا نحو باركود العلبة ليتم إدراجه فوراً</p>
             
             <div class="w-full aspect-square bg-black rounded-2xl overflow-hidden relative border-2 border-cyan-500/50 shadow-inner flex items-center justify-center">
                 <div id="scannerVideoContainer" class="w-full h-full"></div>
@@ -888,7 +887,7 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
-        // Barcode Scanner Engine
+        // Barcode Scanner Engine (تعديل دقيق لمنع اختفاء نافذة التعديل)
         let html5QrCode = null;
         let scannerTarget = 'search';
 
@@ -898,7 +897,6 @@
             const modal = document.getElementById('barcodeModal');
             modal.classList.remove('hidden');
             modal.classList.add('modal-active');
-            pushModalState('barcodeModal');
 
             if (!html5QrCode) {
                 html5QrCode = new Html5Qrcode("scannerVideoContainer");
@@ -922,8 +920,12 @@
                 handleSearch(decodedText);
                 showToast(`تم مسح الباركود: ${decodedText}`, '📷');
             } else if (scannerTarget === 'form') {
-                document.getElementById('prodBarcode').value = decodedText;
-                showToast(`تم إدراج الباركود: ${decodedText}`, '✅');
+                // إدراج الباركود مباشرة في الحقل مع إبقاء نافذة الإضافة/التعديل مفتوحة
+                const barcodeInput = document.getElementById('prodBarcode');
+                if (barcodeInput) {
+                    barcodeInput.value = decodedText;
+                }
+                showToast(`تم إدراج الباركود بنجاح: ${decodedText}`, '✅');
             } else if (scannerTarget === 'inventory') {
                 document.getElementById('invSearchInput').value = decodedText;
                 filterInventoryList(decodedText);
@@ -932,14 +934,14 @@
         }
 
         function stopBarcodeScanner() {
+            const modal = document.getElementById('barcodeModal');
+            if (modal) {
+                modal.classList.remove('modal-active');
+                modal.classList.add('hidden');
+            }
+
             if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().then(() => {
-                    closeAnyModal('barcodeModal');
-                }).catch(() => {
-                    closeAnyModal('barcodeModal');
-                });
-            } else {
-                closeAnyModal('barcodeModal');
+                html5QrCode.stop().catch(() => {});
             }
         }
 
@@ -1128,7 +1130,11 @@
             const modal = document.getElementById(modalId);
             if (event.target === modal) {
                 playPopSound();
-                closeAnyModal(modalId);
+                if (modalId === 'barcodeModal') {
+                    stopBarcodeScanner();
+                } else {
+                    closeAnyModal(modalId);
+                }
             }
         }
 
@@ -1144,7 +1150,7 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'barcodeModal', 'iosInstallModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'iosInstallModal'];
             
             allModals.forEach(id => {
                 const el = document.getElementById(id);
@@ -1154,9 +1160,7 @@
                 }
             });
 
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().catch(()=>{});
-            }
+            stopBarcodeScanner();
 
             const drawer = document.getElementById('sideDrawer');
             if (drawer && !drawer.classList.contains('drawer-closed')) {
