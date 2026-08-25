@@ -15,6 +15,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -102,17 +103,10 @@
             transition: opacity 0.35s ease-in-out;
         }
 
-        /* Continuous Smooth Text Slide Animation */
         @keyframes marqueePingPong {
-            0% {
-                transform: translateX(25px);
-            }
-            50% {
-                transform: translateX(-25px);
-            }
-            100% {
-                transform: translateX(25px);
-            }
+            0% { transform: translateX(25px); }
+            50% { transform: translateX(-25px); }
+            100% { transform: translateX(25px); }
         }
 
         .animate-smooth-banner {
@@ -131,18 +125,14 @@
         }
 
         @keyframes singleFloatUp {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, 0) scale(0.7);
-            }
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -60px) scale(1.3);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -130px) scale(1);
-            }
+            0% { opacity: 1; transform: translate(-50%, 0) scale(0.7); }
+            50% { opacity: 1; transform: translate(-50%, -60px) scale(1.3); }
+            100% { opacity: 0; transform: translate(-50%, -130px) scale(1); }
+        }
+
+        #scannerVideoContainer video {
+            border-radius: 1rem;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -154,7 +144,22 @@
         <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح</span>
     </div>
 
-    <!-- Animated Smooth Delivery Status Banner -->
+    <!-- PWA Install Prompt Banner -->
+    <div id="installAppPrompt" class="hidden fixed bottom-16 left-3 right-3 z-40 bg-slate-900/95 backdrop-blur-md border border-cyan-500/40 p-3 rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.25)] flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-slate-950 p-1 border border-amber-500/40 flex items-center justify-center shrink-0">🌿</div>
+            <div class="min-w-0 text-right">
+                <h4 class="text-xs font-black text-white truncate">تثبيت تطبيق رحيق السلامة</h4>
+                <p class="text-[9.5px] text-slate-400 truncate">لوصول فوري وتصفح سريع من الشاشة الرئيسية</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="triggerAppInstall()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-[11px] font-black px-3 py-1.5 rounded-xl shadow active:scale-95 transition">تثبيت</button>
+            <button onclick="dismissInstallPrompt()" class="text-slate-400 hover:text-white p-1 text-xs font-bold">✕</button>
+        </div>
+    </div>
+
+    <!-- Animated Delivery Status Banner -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-2 text-center text-amber-300 flex justify-center items-center overflow-hidden">
         <div class="animate-smooth-banner flex items-center gap-1.5">
             <span>🌿</span>
@@ -171,7 +176,6 @@
                     <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
-                <!-- Secret Logo Trigger (5 Taps for Admin Panel) -->
                 <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
@@ -217,10 +221,16 @@
             </div>
         </div>
 
-        <div class="mt-2 relative w-full">
+        <!-- Search Bar with Barcode Scanner Icon -->
+        <div class="mt-2 relative w-full flex items-center">
             <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
-                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 pr-9 border border-slate-800 focus:outline-none focus:border-cyan-400">
+                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-10 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             <span class="absolute right-3 top-2 text-slate-500 text-xs">🔍</span>
+            
+            <!-- Barcode Scanner Trigger Button -->
+            <button onclick="startBarcodeScanner('search')" class="absolute left-2 top-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 p-1.5 rounded-lg text-xs active:scale-90 transition border border-slate-700" title="مسح باركود المنتج">
+                📷
+            </button>
         </div>
     </header>
 
@@ -245,6 +255,10 @@
 
                 <button onclick="playPopSound(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>❤️</span> <span>قائمة المفضلة</span>
+                </button>
+
+                <button onclick="playPopSound(); closeDrawer(); triggerAppInstall()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-cyan-950/40 text-cyan-300 border border-cyan-800/50 hover:bg-cyan-900/40 transition text-right">
+                    <span>📲</span> <span>تثبيت التطبيق على الموبايل</span>
                 </button>
                 
                 <button onclick="playPopSound(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
@@ -380,6 +394,46 @@
         </button>
     </div>
 
+    <!-- Barcode Scanner Modal (كاميرا مسح الباركود) -->
+    <div id="barcodeModal" onclick="handleOutsideModalClick(event, 'barcodeModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative flex flex-col gap-3 text-center border border-cyan-500/30">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-cyan-400">📷</span> قارئ باركود المنتجات
+                </h3>
+                <button onclick="stopBarcodeScanner()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+            
+            <p class="text-[11px] text-slate-300">وجّه الكاميرا نحو باركود المنتج ليتم التعرف عليه تلقائياً</p>
+            
+            <div class="w-full aspect-square bg-black rounded-2xl overflow-hidden relative border-2 border-cyan-500/50 shadow-inner flex items-center justify-center">
+                <div id="scannerVideoContainer" class="w-full h-full"></div>
+            </div>
+
+            <button onclick="stopBarcodeScanner()" class="w-full bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-bold active:scale-95 transition">
+                إلغاء المسح
+            </button>
+        </div>
+    </div>
+
+    <!-- iOS App Install Guide Modal -->
+    <div id="iosInstallModal" onclick="handleOutsideModalClick(event, 'iosInstallModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-5 w-full max-w-sm shadow-2xl relative text-right space-y-3 border border-amber-500/30">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">📲 تثبيت التطبيق على iPhone</h3>
+                <button onclick="closeAnyModal('iosInstallModal')" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+            <div class="space-y-2 text-xs text-slate-300">
+                <p class="flex items-center gap-2"><span>1️⃣</span> اضغط على زر المشاركة <b>(Share ⎋)</b> أسفل المتصفح.</p>
+                <p class="flex items-center gap-2"><span>2️⃣</span> اسحب للأسفل واختر <b>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</b>.</p>
+                <p class="flex items-center gap-2"><span>3️⃣</span> اضغط <b>"إضافة" (Add)</b> في أعلى الشاشة ليصبح التطبيق على جهازك.</p>
+            </div>
+            <button onclick="closeAnyModal('iosInstallModal')" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-xl text-xs font-black shadow">
+                حسناً، فهمت
+            </button>
+        </div>
+    </div>
+
     <!-- Product Details Modal -->
     <div id="productDetailModal" onclick="handleOutsideModalClick(event, 'productDetailModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative border-2 border-cyan-500/30 flex flex-col gap-3 max-h-[90vh] overflow-y-auto">
@@ -398,7 +452,10 @@
                     <h3 id="modalProdName" class="text-sm font-black text-white leading-snug"></h3>
                     <span id="modalProdSize" class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-black px-2 py-0.5 rounded shrink-0"></span>
                 </div>
-                <div class="text-sm font-black text-amber-400" id="modalProdPrice"></div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm font-black text-amber-400" id="modalProdPrice"></div>
+                    <span id="modalProdBarcode" class="text-[9px] text-slate-400 font-mono"></span>
+                </div>
             </div>
 
             <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-right space-y-1">
@@ -442,8 +499,11 @@
                 </div>
             </div>
 
-            <div class="my-1.5">
-                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع بالاسم أو القسم..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
+            <div class="my-1.5 flex gap-2">
+                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع بالاسم، القسم، أو الباركود..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
+                <button onclick="startBarcodeScanner('inventory')" class="bg-cyan-950 border border-cyan-800 text-cyan-300 px-3 py-2 rounded-xl text-xs font-bold active:scale-95 shrink-0 flex items-center gap-1" title="مسح باركود للجرد">
+                    <span>📷</span> <span>مسح</span>
+                </button>
             </div>
 
             <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
@@ -517,7 +577,7 @@
                 <button onclick="playPopSound(); closeStaticModal('guideModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                1 تصفح الأقسام بالسحب يميناً ويساراً<br>
+                1 تصفح الأقسام بالسحب يميناً ويساراً أو امسح باركود المنتج بالكاميرا 📷<br>
                 2 اضغط على أي منتج لمعاينة تفاصيله كاملة<br>
                 3 أضف المنتجات للمفضلة (❤️) أو لسلة الحجز<br>
                 4 اضغط على تأكيد الطلب لتجهيز مشترياتك وإرسالها فوراً للصيدلية عبر WhatsApp
@@ -561,7 +621,7 @@
         </div>
     </div>
 
-    <!-- Cart Modal (معدل ومطور بزر حذف متناسق) -->
+    <!-- Cart Modal -->
     <div id="cartModal" onclick="handleOutsideModalClick(event, 'cartModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -666,7 +726,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal -->
+    <!-- Admin Add/Edit Modal (مضاف لها حقل ومسح الباركود) -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -696,6 +756,16 @@
                 <div>
                     <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم المنتج والماركة:</label>
                     <input type="text" id="prodName" required placeholder="مثال: The Ordinary Glycolic Acid 7%" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">رقم الباركود (اختياري):</label>
+                    <div class="flex gap-1.5">
+                        <input type="text" id="prodBarcode" placeholder="امسح أو اكتب الباركود..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                        <button type="button" onclick="startBarcodeScanner('form')" class="bg-cyan-950 border border-cyan-800 text-cyan-300 px-3 py-1.5 rounded-lg text-xs font-bold active:scale-95 shrink-0 flex items-center gap-1">
+                            <span>📷</span> <span>مسح</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div>
@@ -736,7 +806,7 @@
         </div>
     </div>
 
-    <!-- Core App Logic & Modern Audio Synth -->
+    <!-- Core App Logic, Modern Audio & Scanner Integration -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
@@ -778,6 +848,99 @@
         let isWishlistMode = false;
         let sortableInstance = null;
 
+        // PWA Install Prompt Logic
+        let deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!localStorage.getItem('pwa_prompt_dismissed')) {
+                document.getElementById('installAppPrompt').classList.remove('hidden');
+            }
+        });
+
+        function triggerAppInstall() {
+            playPopSound();
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isIOS) {
+                const modal = document.getElementById('iosInstallModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('modal-active');
+                pushModalState('iosInstallModal');
+            } else if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showToast('جاري تثبيت تطبيق رحيق السلامة... 🚀', '📲');
+                    }
+                    deferredPrompt = null;
+                    dismissInstallPrompt();
+                });
+            } else {
+                showToast('التطبيق مثبت بالفعل أو يمكنك إضافته من خيارات المتصفح', 'ℹ️');
+            }
+        }
+
+        function dismissInstallPrompt() {
+            document.getElementById('installAppPrompt').classList.add('hidden');
+            localStorage.setItem('pwa_prompt_dismissed', 'true');
+        }
+
+        // Barcode Scanner Engine
+        let html5QrCode = null;
+        let scannerTarget = 'search'; // 'search', 'form', 'inventory'
+
+        function startBarcodeScanner(targetMode) {
+            playPopSound();
+            scannerTarget = targetMode;
+            const modal = document.getElementById('barcodeModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            pushModalState('barcodeModal');
+
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("scannerVideoContainer");
+            }
+
+            const config = { fps: 10, qrbox: { width: 220, height: 220 } };
+            html5QrCode.start({ facingMode: "environment" }, config, onBarcodeScanSuccess)
+            .catch(err => {
+                showToast('تعذر فتح الكاميرا، يرجى منح الإذن', '⚠️');
+                stopBarcodeScanner();
+            });
+        }
+
+        function onBarcodeScanSuccess(decodedText) {
+            playPopSound();
+            if (navigator.vibrate) navigator.vibrate(50);
+            stopBarcodeScanner();
+
+            if (scannerTarget === 'search') {
+                document.getElementById('headerSearch').value = decodedText;
+                handleSearch(decodedText);
+                showToast(`تم مسح الباركود: ${decodedText}`, '📷');
+            } else if (scannerTarget === 'form') {
+                document.getElementById('prodBarcode').value = decodedText;
+                showToast(`تم إدراج الباركود: ${decodedText}`, '✅');
+            } else if (scannerTarget === 'inventory') {
+                document.getElementById('invSearchInput').value = decodedText;
+                filterInventoryList(decodedText);
+                showToast(`تم جلب المادة بالمخزن: ${decodedText}`, '📦');
+            }
+        }
+
+        function stopBarcodeScanner() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    closeAnyModal('barcodeModal');
+                }).catch(() => {
+                    closeAnyModal('barcodeModal');
+                });
+            } else {
+                closeAnyModal('barcodeModal');
+            }
+        }
+
+        // Modern Audio Engine
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) {
@@ -978,7 +1141,7 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'barcodeModal', 'iosInstallModal'];
             
             allModals.forEach(id => {
                 const el = document.getElementById(id);
@@ -987,6 +1150,10 @@
                     el.classList.add('hidden');
                 }
             });
+
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().catch(()=>{});
+            }
 
             const drawer = document.getElementById('sideDrawer');
             if (drawer && !drawer.classList.contains('drawer-closed')) {
@@ -1006,21 +1173,12 @@
                             id: "prod_1",
                             category: "العناية بالبشرة والوجه",
                             name: "Neutrogena Hydro Boost Water Gel Cleanser",
+                            barcode: "3574661333687",
                             usage: "جل مائي منظف غني بحمض الهيالورونيك ينظف البشرة بلطف من المكياج والشوائب ويزيد من ترطيبها مناسب لجميع أنواع البشرة وخاصة الجافة والعادية",
                             size: "200ml",
                             price: "12,000 د.ع",
                             stock: 3,
                             image: "https://images.ctfassets.net/g92z96kt77im/52k8Oa8x3yCei4UqC2aM0g/780c7d5402633dfd59013c9e6bb07b89/hydro-boost-water-gel-cleanser.png"
-                        },
-                        {
-                            id: "prod_2",
-                            category: "العناية بالبشرة والوجه",
-                            name: "Dermedic Hialuro Hydrain Creamy Cleansing Gel",
-                            usage: "جل منظف كريمي يرطب البشرة بعمق مناسب للبشرة الجافة والحساسة",
-                            size: "200ml",
-                            price: "10,000 د.ع",
-                            stock: 3,
-                            image: "https://dermedic.pl/wp-content/uploads/2021/05/HYDRAIN3-HIALURO-Kremowy-zel-do-mycia-200ml.png"
                         }
                     ];
                     productsRef.set(productsData);
@@ -1144,6 +1302,7 @@
             document.getElementById('modalProdSize').innerText = prod.size;
             document.getElementById('modalProdPrice').innerText = prod.price;
             document.getElementById('modalProdUsage').innerText = prod.usage;
+            document.getElementById('modalProdBarcode').innerText = prod.barcode ? `باركود: ${prod.barcode}` : '';
 
             const favBtn = document.getElementById('modalFavBtn');
             const isFav = wishlist.includes(String(prod.id));
@@ -1207,10 +1366,11 @@
                             </div>
                             <div class="flex-1 min-w-0 text-right">
                                 <h5 class="text-xs font-black text-white leading-snug break-words">${p.name}</h5>
-                                <div class="flex items-center gap-2 mt-1">
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
                                     <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${p.size}</span>
                                     <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
                                     <span class="text-[8.5px] text-slate-400 truncate">• ${p.category}</span>
+                                    ${p.barcode ? `<span class="text-[8px] font-mono text-cyan-400/80 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">📷 ${p.barcode}</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -1239,7 +1399,8 @@
             const q = query.trim().toLowerCase();
             const filtered = productsData.filter(p => 
                 p.name.toLowerCase().includes(q) || 
-                p.category.toLowerCase().includes(q)
+                p.category.toLowerCase().includes(q) ||
+                (p.barcode && p.barcode.toLowerCase().includes(q))
             );
             renderInventoryListItems(filtered);
         }
@@ -1510,13 +1671,11 @@
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-2.5 w-full flex flex-col justify-between gap-2 shadow-sm relative" data-id="${prod.id}">
                         
-                        <!-- Wishlist Heart Button -->
                         <button onclick="toggleWishlist('${prod.id}', event)" class="absolute top-3.5 left-3.5 z-10 w-7 h-7 rounded-full bg-slate-950/80 border border-slate-800 flex items-center justify-center text-xs active:scale-90 transition shadow">
                             ${isFav ? '❤️' : '🤍'}
                         </button>
 
                         <div class="flex flex-col gap-2">
-                            <!-- Clickable Product Image -->
                             <div onclick="openProductDetailModal('${prod.id}')" class="w-full h-32 sm:h-36 rounded-xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition p-2">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full block" loading="lazy">
                                 
@@ -1525,7 +1684,6 @@
                                 </span>
                             </div>
 
-                            <!-- Clickable Product Info (محاذاة هندسية موحدة ودقيقة) -->
                             <div onclick="openProductDetailModal('${prod.id}')" class="flex flex-col justify-between flex-grow space-y-1.5 text-right cursor-pointer">
                                 <div class="h-8 flex items-center">
                                     <h4 class="text-[11px] font-black text-white leading-snug line-clamp-2 w-full">${prod.name}</h4>
@@ -1543,7 +1701,6 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div class="flex flex-col gap-1.5 pt-1 border-t border-slate-800/70">
                             <button onclick="addToCart('${prod.id}')" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-1.5 rounded-xl text-[10.5px] transition flex items-center justify-center gap-1 shadow active:scale-95">
                                 <span>🛒</span> <span>إضافة</span>
@@ -1588,7 +1745,8 @@
                 p.name.toLowerCase().includes(q) || 
                 p.usage.toLowerCase().includes(q) || 
                 p.size.toLowerCase().includes(q) || 
-                p.category.toLowerCase().includes(q)
+                p.category.toLowerCase().includes(q) ||
+                (p.barcode && p.barcode.toLowerCase().includes(q))
             );
             renderProducts(filtered);
         }
@@ -1648,7 +1806,6 @@
             document.getElementById('cartBadge').innerText = totalCount;
         }
 
-        // Render Cart with Matching Red Delete Button
         function renderCartContent() {
             const list = document.getElementById('cartItemsList');
             const totalPriceEl = document.getElementById('cartTotalPrice');
@@ -1695,7 +1852,6 @@
                                 <span class="text-xs font-bold text-cyan-400 px-1.5">${item.qty}</span>
                                 <button type="button" onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">+</button>
                                 
-                                <!-- زر الحذف الأحمر المطابق لتصميم الموقع -->
                                 <button type="button" onclick="removeFromCart(${index})" class="w-7 h-7 rounded-lg bg-rose-950/70 hover:bg-rose-900 border border-rose-900 text-rose-400 text-xs font-bold flex items-center justify-center active:scale-90 transition shadow">
                                     🗑️
                                 </button>
@@ -1873,6 +2029,7 @@
             document.getElementById('editIndex').value = '';
             document.getElementById('prodCategory').value = 'العناية بالبشرة والوجه';
             document.getElementById('prodName').value = '';
+            document.getElementById('prodBarcode').value = '';
             document.getElementById('prodUsage').value = '';
             document.getElementById('prodSize').value = '';
             document.getElementById('prodPrice').value = '';
@@ -1894,6 +2051,7 @@
             document.getElementById('editIndex').value = prod.id;
             document.getElementById('prodCategory').value = prod.category;
             document.getElementById('prodName').value = prod.name;
+            document.getElementById('prodBarcode').value = prod.barcode || '';
             document.getElementById('prodUsage').value = prod.usage;
             document.getElementById('prodSize').value = prod.size;
             document.getElementById('prodPrice').value = prod.price.replace(/[^0-9]/g, '');
@@ -1931,6 +2089,7 @@
                 if (index !== -1) {
                     productsData[index].category = document.getElementById('prodCategory').value;
                     productsData[index].name = document.getElementById('prodName').value.trim();
+                    productsData[index].barcode = document.getElementById('prodBarcode').value.trim();
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
                     productsData[index].size = document.getElementById('prodSize').value.trim();
                     productsData[index].price = formattedPrice;
@@ -1942,6 +2101,7 @@
                     id: 'prod_' + Date.now(),
                     category: document.getElementById('prodCategory').value,
                     name: document.getElementById('prodName').value.trim(),
+                    barcode: document.getElementById('prodBarcode').value.trim(),
                     usage: document.getElementById('prodUsage').value.trim(),
                     size: document.getElementById('prodSize').value.trim(),
                     price: formattedPrice,
