@@ -183,7 +183,7 @@
                     <button onclick="playSoftClick(); openInventoryModal()" class="bg-amber-950/80 border border-amber-700 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
                         <span>📦</span> <span>المخزن</span>
                     </button>
-                    <button onclick="playSoftClick(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
+                    <button onclick="playSoftClick(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
                         <span>⚙️</span>
                     </button>
                     <button onclick="playSoftClick(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95">
@@ -203,7 +203,7 @@
         </div>
     </header>
 
-    <!-- Side Drawer Menu (With Wishlist Link) -->
+    <!-- Side Drawer Menu -->
     <div id="drawerBackdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity"></div>
     <div id="sideDrawer" class="fixed top-0 right-0 h-full w-72 bg-[#090d1a] border-l border-slate-800 z-50 p-4 flex flex-col justify-between overflow-y-auto drawer-closed">
         <div class="space-y-4">
@@ -223,7 +223,7 @@
                     <span>🗂️</span> <span>جميع الأقسام</span>
                 </button>
 
-                <button onclick="playSoftClick(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-rose-950/40 border border-rose-800/40 hover:bg-rose-900/50 text-rose-300 transition text-right font-bold">
+                <button onclick="playSoftClick(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
                 
@@ -437,7 +437,7 @@
         </div>
     </div>
 
-    <!-- Static Drawer Modals -->
+    <!-- Static Drawer Modals (With Exact Pharmacy Google Maps Location) -->
     <div id="servicesModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -460,12 +460,13 @@
     <div id="mapModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative text-center space-y-3">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white">📍 موقع الصيدلية</h3>
+                <h3 class="text-xs font-black text-white">📍 موقع الصيدلية على الخريطة</h3>
                 <button onclick="playSoftClick(); closeStaticModal('mapModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
-            <p class="text-xs text-slate-300">صيدلية رَحِيْقُ السَّلَامَة - بغداد، العراق</p>
-            <a href="https://maps.google.com" target="_blank" class="block w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold py-2 rounded-xl text-xs shadow">
-                فتح الموقع على خرائط Google 🗺️
+            <p class="text-xs text-slate-300 font-bold">صيدلية رَحِيْقُ السَّلَامَة</p>
+            <p class="text-[10px] text-slate-400">اضغط على الزر أدناه للانتقال مباشرة إلى موقع الصيدلية الدقيق في خرائط Google</p>
+            <a href="https://maps.app.goo.gl/h2v2B7SLH3rAAEJDA?g_st=ac" target="_blank" class="block w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg active:scale-95 transition">
+                فتح الموقع في خرائط Google 🗺️
             </a>
         </div>
     </div>
