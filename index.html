@@ -102,6 +102,25 @@
             transition: opacity 0.35s ease-in-out;
         }
 
+        /* Continuous Smooth Text Slide Animation */
+        @keyframes marqueePingPong {
+            0% {
+                transform: translateX(25px);
+            }
+            50% {
+                transform: translateX(-25px);
+            }
+            100% {
+                transform: translateX(25px);
+            }
+        }
+
+        .animate-smooth-banner {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marqueePingPong 5s ease-in-out infinite;
+        }
+
         .single-celebration-emoji {
             position: fixed;
             pointer-events: none;
@@ -135,10 +154,12 @@
         <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح</span>
     </div>
 
-    <!-- Delivery Status Banner -->
-    <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2">
-        <span>🌿</span>
-        <span id="deliveryBannerText" class="font-bold">صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية</span>
+    <!-- Animated Smooth Delivery Status Banner -->
+    <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-2 text-center text-amber-300 flex justify-center items-center overflow-hidden">
+        <div class="animate-smooth-banner flex items-center gap-1.5">
+            <span>🌿</span>
+            <span id="deliveryBannerText" class="font-bold">صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية</span>
+        </div>
     </div>
 
     <!-- App Header -->
@@ -215,7 +236,6 @@
                 <button onclick="playPopSound(); closeDrawer()" class="text-slate-400 hover:text-white font-bold text-sm p-1">✕</button>
             </div>
 
-            <!-- Drawer Links -->
             <div class="space-y-1 text-xs">
                 <div class="text-[10px] font-bold text-amber-400/80 uppercase px-2 mb-1">الرئيسية والخدمات</div>
                 
@@ -397,7 +417,7 @@
         </div>
     </div>
 
-    <!-- Admin Inventory & Shortages Modal (مخزن عملي وسهل الإدارة) -->
+    <!-- Admin Inventory & Shortages Modal -->
     <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -407,7 +427,6 @@
                 <button onclick="playPopSound(); closeInventoryModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
-            <!-- Stats Header -->
             <div class="grid grid-cols-3 gap-2 my-2 text-center">
                 <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
                     <span class="text-[9px] text-slate-400 block">إجمالي المواد</span>
@@ -427,7 +446,6 @@
                 <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع بالاسم أو القسم..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             </div>
 
-            <!-- قائمة المواد في المخزن -->
             <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
 
             <div class="border-t border-slate-800 pt-2 flex gap-2">
@@ -543,7 +561,7 @@
         </div>
     </div>
 
-    <!-- Cart Modal -->
+    <!-- Cart Modal (معدل ومطور بزر حذف متناسق) -->
     <div id="cartModal" onclick="handleOutsideModalClick(event, 'cartModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -551,7 +569,7 @@
                 <button onclick="playPopSound(); closeCartModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
-            <div id="cartItemsList" class="overflow-y-auto space-y-2 flex-grow my-2 pr-0.5 no-scrollbar"></div>
+            <div id="cartItemsList" class="overflow-y-auto space-y-2.5 flex-grow my-2 pr-0.5 no-scrollbar"></div>
 
             <div class="border-t border-slate-800 pt-2.5 space-y-2">
                 <div class="flex justify-between items-center text-xs font-bold text-white">
@@ -607,7 +625,7 @@
             <div class="text-2xl">🔐</div>
             <h3 class="text-xs font-black text-white">تسجيل الدخول للإدارة</h3>
             <p class="text-[10px] text-slate-400">أدخل رمز المشرف للمتابعة</p>
-            <input type="password" id="adminPinInput" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
+            <input type="password" id="adminPinInput" autocomplete="new-password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
             <div class="flex gap-2 pt-1">
                 <button onclick="playPopSound(); closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
                 <button onclick="playPopSound(); verifyAdminPin()" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-1.5 rounded-xl text-xs font-bold shadow">دخول</button>
@@ -1401,10 +1419,10 @@
 
             if (isOrderingActive) {
                 bannerText.innerText = "صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية";
-                banner.className = "w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-3 text-center text-amber-300 flex justify-center items-center gap-2";
+                banner.className = "w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-2 text-center text-amber-300 flex justify-center items-center overflow-hidden";
             } else {
                 bannerText.innerText = "⚠️ خدمة حجز وتوصيل الطلبيات متوقفة مؤقتاً • المعاينة والاستشارة فقط";
-                banner.className = "w-full bg-rose-950/80 border-b border-rose-800 text-[10px] py-1.5 px-3 text-center text-rose-200 flex justify-center items-center gap-2";
+                banner.className = "w-full bg-rose-950/80 border-b border-rose-800 text-[10px] py-1.5 px-2 text-center text-rose-200 flex justify-center items-center overflow-hidden";
             }
         }
 
@@ -1630,6 +1648,7 @@
             document.getElementById('cartBadge').innerText = totalCount;
         }
 
+        // Render Cart with Matching Red Delete Button
         function renderCartContent() {
             const list = document.getElementById('cartItemsList');
             const totalPriceEl = document.getElementById('cartTotalPrice');
@@ -1661,21 +1680,25 @@
                     total += itemTotal;
 
                     list.innerHTML += `
-                        <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-slate-800">
-                            <div class="flex items-center gap-2">
-                                <div class="w-10 h-10 rounded-lg bg-white med-img-frame flex items-center justify-center p-1 shrink-0 overflow-hidden">
+                        <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-2xl border border-slate-800 shadow-sm">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-12 h-12 rounded-xl bg-white med-img-frame flex items-center justify-center p-1 shrink-0 overflow-hidden">
                                     <img src="${item.image}" class="max-w-full max-h-full object-contain">
                                 </div>
-                                <div>
-                                    <h5 class="text-[11px] font-black text-white">${item.name} <span class="text-cyan-400 text-[9px]">(${item.size})</span></h5>
-                                    <span class="text-[10px] text-amber-400 font-bold">${item.price}</span>
+                                <div class="min-w-0 text-right">
+                                    <h5 class="text-[11px] font-black text-white leading-snug break-words">${item.name} <span class="text-cyan-400 text-[9px] font-bold">(${item.size})</span></h5>
+                                    <span class="text-[10px] text-amber-400 font-bold block mt-0.5">${item.price}</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1">
+                            <div class="flex items-center gap-1.5 shrink-0">
                                 <button type="button" onclick="changeQty(${index}, -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">-</button>
-                                <span class="text-xs font-bold text-cyan-400 px-2">${item.qty}</span>
+                                <span class="text-xs font-bold text-cyan-400 px-1.5">${item.qty}</span>
                                 <button type="button" onclick="changeQty(${index}, 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-bold active:scale-90 flex items-center justify-center text-white select-none">+</button>
-                                <button type="button" onclick="removeFromCart(${index})" class="text-rose-400 text-xs font-bold px-1.5 active:scale-90">🗑️</button>
+                                
+                                <!-- زر الحذف الأحمر المطابق لتصميم الموقع -->
+                                <button type="button" onclick="removeFromCart(${index})" class="w-7 h-7 rounded-lg bg-rose-950/70 hover:bg-rose-900 border border-rose-900 text-rose-400 text-xs font-bold flex items-center justify-center active:scale-90 transition shadow">
+                                    🗑️
+                                </button>
                             </div>
                         </div>
                     `;
