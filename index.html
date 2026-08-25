@@ -101,7 +101,7 @@
             transition: opacity 0.35s ease-in-out;
         }
 
-        /* Single Floating Emoji Effect */
+        /* Single Floating Emoji */
         .single-celebration-emoji {
             position: fixed;
             pointer-events: none;
@@ -300,7 +300,7 @@
             </div>
         </div>
 
-        <!-- 2. Full-Box Daily Glow Booster (Complete Text Visible & Single Emoji) -->
+        <!-- 2. Full-Box Daily Glow Booster -->
         <div class="glass-panel rounded-2xl p-4 border border-pink-500/35 bg-gradient-to-r from-slate-950 via-pink-950/25 to-slate-950 space-y-2.5 shadow-md">
             <div class="flex items-center justify-between border-b border-pink-900/40 pb-2">
                 <div class="flex items-center gap-2">
@@ -332,7 +332,7 @@
             </select>
         </div>
 
-        <!-- Products Grid Container (One Below Another in a Column) -->
+        <!-- Products Grid Container -->
         <div id="productsGrid" class="flex flex-col gap-3 w-full"></div>
 
         <div id="noResults" class="hidden text-center py-12 text-slate-400 glass-panel rounded-2xl">
@@ -384,6 +384,40 @@
             <span class="text-lg">🛒</span>
             <span>الطلبية</span>
         </button>
+    </div>
+
+    <!-- Product Details Modal (Full View on Click) -->
+    <div id="productDetailModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative border-2 border-cyan-500/30 flex flex-col gap-3 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <span class="text-[10px] font-black text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-lg border border-cyan-800" id="modalProdCategory">القسم</span>
+                <button onclick="playSoftClick(); closeProductDetailModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <div class="w-full h-52 rounded-2xl bg-slate-950 med-img-frame flex items-center justify-center relative overflow-hidden shrink-0">
+                <img id="modalProdImage" src="" class="object-cover w-full h-full block">
+                <span id="modalProdStock" class="absolute bottom-2 right-2 bg-emerald-600/90 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow"></span>
+            </div>
+
+            <div class="space-y-1.5 text-right">
+                <div class="flex items-start justify-between gap-2">
+                    <h3 id="modalProdName" class="text-sm font-black text-white leading-snug"></h3>
+                    <span id="modalProdSize" class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-black px-2 py-0.5 rounded shrink-0"></span>
+                </div>
+                <div class="text-sm font-black text-amber-400" id="modalProdPrice"></div>
+            </div>
+
+            <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-right space-y-1">
+                <span class="text-[9px] font-bold text-amber-400 block">الفوائد والاستخدام الكامل:</span>
+                <p id="modalProdUsage" class="text-xs text-slate-200 leading-relaxed font-semibold"></p>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800">
+                <button id="modalAddToCartBtn" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-lg active:scale-95">
+                    <span>🛒</span> <span>إضافة إلى الطلبية</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Modals for Drawer Links -->
@@ -444,8 +478,9 @@
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
                 1. تصفح الأقسام بالسحب يميناً ويساراً.<br>
-                2. أضف المنتجات المطلوبة إلى سلة الحجز.<br>
-                3. اضغط على تأكيد الطلب لتجهيز مشترياتك وإرسالها فوراً للصيدلية عبر WhatsApp.
+                2. اضغط على أي منتج لمعاينة تفاصيله كاملة بدقة عالية.<br>
+                3. أضف المنتجات المطلوبة إلى سلة الحجز.<br>
+                4. اضغط على تأكيد الطلب لتجهيز مشترياتك وإرسالها فوراً للصيدلية عبر WhatsApp.
             </p>
         </div>
     </div>
@@ -753,7 +788,7 @@
                 osc.frequency.setValueAtTime(800, ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.035);
 
-                gain.gain.setValueAtTime(0.04, ctx.currentTime); // خافت ولطيف جداً
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035);
 
                 osc.connect(gain);
@@ -887,6 +922,37 @@
 
         function closeStaticModal(id) {
             const modal = document.getElementById(id);
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        // Product Detail Modal
+        function openProductDetailModal(id) {
+            playSoftClick();
+            const prod = productsData.find(p => String(p.id) === String(id));
+            if (!prod) return;
+
+            document.getElementById('modalProdCategory').innerText = prod.category;
+            document.getElementById('modalProdImage').src = prod.image;
+            document.getElementById('modalProdStock').innerText = `المخزن: ${prod.stock}`;
+            document.getElementById('modalProdName').innerText = prod.name;
+            document.getElementById('modalProdSize').innerText = prod.size;
+            document.getElementById('modalProdPrice').innerText = prod.price;
+            document.getElementById('modalProdUsage').innerText = prod.usage;
+
+            const btn = document.getElementById('modalAddToCartBtn');
+            btn.onclick = function() {
+                addToCart(prod.id);
+                closeProductDetailModal();
+            };
+
+            const modal = document.getElementById('productDetailModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+        }
+
+        function closeProductDetailModal() {
+            const modal = document.getElementById('productDetailModal');
             modal.classList.remove('modal-active');
             modal.classList.add('hidden');
         }
@@ -1091,39 +1157,37 @@
 
             displayList.forEach((prod) => {
                 const isLow = prod.stock <= 5;
-                
-                // Smart Usage Duration Estimator
-                let estText = "تكفي قرابة 1-2 شهر";
-                if (prod.size.toLowerCase().includes('l') || parseInt(prod.size) >= 400) {
-                    estText = "عبوة اقتصادية تكفي 3-4 أشهر";
-                }
 
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-3 w-full flex flex-col gap-2.5 shadow-sm" data-id="${prod.id}">
                         <div class="flex gap-2.5 items-start">
                             
-                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden">
+                            <!-- Clickable Product Image -->
+                            <div onclick="openProductDetailModal('${prod.id}')" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy">
                                 <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
                                     المخزن: ${prod.stock}
                                 </span>
                             </div>
 
-                            <div class="flex-1 min-w-0 space-y-1">
-                                <div class="flex items-center justify-between gap-1">
-                                    <h4 class="text-xs sm:text-sm font-black text-white truncate">${prod.name}</h4>
-                                    <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[9px] font-black px-1.5 py-0.5 rounded shrink-0">
-                                        ${prod.size}
-                                    </span>
+                            <!-- Clickable Product Info -->
+                            <div class="flex-1 min-w-0 space-y-1.5">
+                                <div onclick="openProductDetailModal('${prod.id}')" class="cursor-pointer">
+                                    <div class="flex items-start justify-between gap-1">
+                                        <h4 class="text-xs sm:text-sm font-black text-white leading-tight break-words">${prod.name}</h4>
+                                        <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[9px] font-black px-1.5 py-0.5 rounded shrink-0">
+                                            ${prod.size}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800/80">
-                                    <span class="text-[8px] text-amber-400 font-bold block leading-none mb-0.5">الفوائد والاستخدام:</span>
-                                    <span class="text-[10px] text-slate-200 font-semibold line-clamp-2">${prod.usage}</span>
+                                <div onclick="openProductDetailModal('${prod.id}')" class="bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
+                                    <span class="text-[8px] text-amber-400 font-bold block leading-none mb-1">الفوائد والاستخدام:</span>
+                                    <span class="text-[10.5px] text-slate-200 font-semibold leading-relaxed block break-words">${prod.usage}</span>
                                 </div>
 
                                 <div class="flex items-center justify-between pt-0.5">
-                                    <span class="text-[8.5px] text-slate-400 truncate">⏳ ${estText}</span>
+                                    <span class="text-[9px] text-slate-400">${prod.category}</span>
                                     <span class="text-xs font-black text-amber-400">${prod.price}</span>
                                 </div>
                             </div>
