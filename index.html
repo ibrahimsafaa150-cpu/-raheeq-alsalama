@@ -178,7 +178,6 @@
                     <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
-                <!-- Secret Logo Trigger (5 Taps for Admin Panel) -->
                 <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
@@ -208,6 +207,12 @@
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
+                    <!-- Notifications & Sales Order Queue Button -->
+                    <button onclick="playPopSound(); openOrdersQueueModal()" class="relative bg-teal-950/80 border border-teal-600/60 text-teal-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="الطلبيات والمبيعات الواردة">
+                        <span>🔔</span> <span>المبيعات</span>
+                        <span id="pendingOrdersBadge" class="hidden absolute -top-1.5 -left-1.5 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">0</span>
+                    </button>
+
                     <button onclick="playPopSound(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
                         <span>📦</span> <span>المخزن</span>
                     </button>
@@ -396,7 +401,37 @@
         </button>
     </div>
 
-    <!-- Barcode Scanner Modal (طبقة فوقية مستقلة z-[60]) -->
+    <!-- Admin Orders & Sales Queue Modal (نافذة المبيعات وتأكيد البيع لحماية المخزن) -->
+    <div id="ordersQueueModal" onclick="handleOutsideModalClick(event, 'ordersQueueModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col border border-teal-500/30">
+            <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-teal-400">🔔</span> سجل الطلبيات الواردة وإدارة البيع
+                </h3>
+                <button onclick="playPopSound(); closeOrdersQueueModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 gap-2 my-2 text-center text-xs">
+                <div class="bg-slate-950 p-2 rounded-xl border border-teal-800/40">
+                    <span class="text-[9px] text-teal-400 block">طلبيات جديدة بانتظار التأكيد</span>
+                    <span id="pendingCountEl" class="text-xs font-black text-white">0</span>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-xl border border-emerald-800/40">
+                    <span class="text-[9px] text-emerald-400 block">مبيعات مكتملة الخصم</span>
+                    <span id="completedCountEl" class="text-xs font-black text-emerald-400">0</span>
+                </div>
+            </div>
+
+            <div class="flex-grow overflow-y-auto space-y-3 pr-0.5 no-scrollbar my-2" id="ordersQueueList"></div>
+
+            <div class="border-t border-slate-800 pt-2 flex justify-between items-center text-[10px] text-slate-400">
+                <span>💡 تأكيد البيع يخصم المخزن تلقائياً، والراجع/الملغي لا يلمس المخزن</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcode Scanner Modal -->
     <div id="barcodeModal" onclick="handleOutsideModalClick(event, 'barcodeModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[60] hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative flex flex-col gap-3 text-center border border-cyan-500/30">
             <div class="flex justify-between items-center border-b border-slate-800 pb-2">
@@ -823,6 +858,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const productsRef = db.ref('cosmetics_and_care');
+        const ordersRef = db.ref('customer_orders_queue');
 
         let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
@@ -844,6 +880,7 @@
         ];
 
         let productsData = [];
+        let ordersData = [];
         let cart = [];
         let wishlist = [];
         let currentFilter = 'الكل';
@@ -887,7 +924,7 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
-        // Barcode Scanner Engine (تعديل دقيق لمنع اختفاء نافذة التعديل)
+        // Barcode Scanner Engine
         let html5QrCode = null;
         let scannerTarget = 'search';
 
@@ -920,7 +957,6 @@
                 handleSearch(decodedText);
                 showToast(`تم مسح الباركود: ${decodedText}`, '📷');
             } else if (scannerTarget === 'form') {
-                // إدراج الباركود مباشرة في الحقل مع إبقاء نافذة الإضافة/التعديل مفتوحة
                 const barcodeInput = document.getElementById('prodBarcode');
                 if (barcodeInput) {
                     barcodeInput.value = decodedText;
@@ -1150,7 +1186,7 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'iosInstallModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'iosInstallModal', 'ordersQueueModal'];
             
             allModals.forEach(id => {
                 const el = document.getElementById(id);
@@ -1191,6 +1227,23 @@
                     productsRef.set(productsData);
                 }
                 renderProducts();
+            });
+
+            // Listen to Orders Queue in Realtime
+            ordersRef.on('value', (snapshot) => {
+                const ordersObj = snapshot.val();
+                if (ordersObj) {
+                    ordersData = Object.keys(ordersObj).map(key => ({
+                        keyId: key,
+                        ...ordersObj[key]
+                    })).reverse();
+                } else {
+                    ordersData = [];
+                }
+                updateOrdersBadge();
+                if (document.getElementById('ordersQueueModal').classList.contains('modal-active')) {
+                    renderOrdersQueue();
+                }
             });
 
             try {
@@ -1929,6 +1982,7 @@
             showToast('تم حذف المنتج من السلة', '🗑️');
         }
 
+        // Process Order & Send (بدون خصم المخزن إلا بعد موافقة المشرف)
         function processOrderAndSend(event) {
             event.preventDefault();
             playPopSound();
@@ -1942,6 +1996,9 @@
                 return;
             }
 
+            let total = 0;
+            let orderItems = [];
+
             let message = `🌸 *طلب مشتريات عناية - صيدلية رَحِيْقُ السَّلَامَة*\n`;
             message += `━━━━━━━━━━━━━━━━━━━━\n`;
             message += `👤 *اسم الزبون:* ${name}\n`;
@@ -1950,11 +2007,18 @@
             message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
             message += `📦 *تفاصيل المنتجات المحجوزة:*\n`;
 
-            let total = 0;
             cart.forEach((item, idx) => {
                 let itemPriceNum = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
                 let subTotal = itemPriceNum * item.qty;
                 total += subTotal;
+
+                orderItems.push({
+                    id: item.id,
+                    name: item.name,
+                    size: item.size,
+                    price: item.price,
+                    qty: item.qty
+                });
 
                 message += `*${idx + 1}. المنتج:* ${item.name} (${item.size})\n`;
                 message += `▫️ *الفوائد:* ${item.usage}\n`;
@@ -1966,23 +2030,188 @@
             message += `\n💰 *المجموع الكلي:* ${total.toLocaleString()} د.ع\n`;
             message += `⏰ *وقت الحجز:* ${new Date().toLocaleDateString('ar-IQ')} - ${new Date().toLocaleTimeString('ar-IQ')}`;
 
-            cart.forEach(cItem => {
-                const prod = productsData.find(p => String(p.id) === String(cItem.id));
-                if (prod) {
-                    prod.stock = Math.max(0, prod.stock - cItem.qty);
-                }
-            });
+            // Save order to cloud queue without modifying stock
+            const orderRecord = {
+                customerName: name,
+                customerPhone: phone,
+                customerAddress: address,
+                items: orderItems,
+                totalPrice: total.toLocaleString() + ' د.ع',
+                timestamp: Date.now(),
+                dateStr: `${new Date().toLocaleDateString('ar-IQ')} ${new Date().toLocaleTimeString('ar-IQ')}`,
+                status: 'pending' // pending, completed, cancelled
+            };
 
-            saveProductsToCloud();
+            ordersRef.push(orderRecord);
+
             cart = [];
             saveCartToStorage();
             closeCustomerModal();
-            renderProducts();
 
             let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
             
             window.location.href = whatsappUrl;
+        }
+
+        // Orders Queue Logic (سجل المبيعات والطلبات)
+        function openOrdersQueueModal() {
+            renderOrdersQueue();
+            const modal = document.getElementById('ordersQueueModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            pushModalState('ordersQueueModal');
+        }
+
+        function closeOrdersQueueModal() {
+            const modal = document.getElementById('ordersQueueModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        function updateOrdersBadge() {
+            const pendingCount = ordersData.filter(o => o.status === 'pending').length;
+            const badge = document.getElementById('pendingOrdersBadge');
+            if (pendingCount > 0 && isAdmin) {
+                badge.innerText = pendingCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderOrdersQueue() {
+            const container = document.getElementById('ordersQueueList');
+            container.innerHTML = '';
+
+            let pendingCount = 0;
+            let completedCount = 0;
+
+            ordersData.forEach(order => {
+                if (order.status === 'pending') pendingCount++;
+                if (order.status === 'completed') completedCount++;
+            });
+
+            document.getElementById('pendingCountEl').innerText = pendingCount;
+            document.getElementById('completedCountEl').innerText = completedCount;
+
+            if (ordersData.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">لا توجد طلبيات مسجلة حالياً</div>`;
+                return;
+            }
+
+            ordersData.forEach((order) => {
+                let statusBadge = '';
+                let actionButtons = '';
+
+                if (order.status === 'pending') {
+                    statusBadge = `<span class="bg-amber-950/80 text-amber-300 border border-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-lg animate-pulse">⏳ طلب جديد (معلق)</span>`;
+                    actionButtons = `
+                        <div class="flex gap-2 pt-2 border-t border-slate-900">
+                            <button onclick="confirmAndDeductStock('${order.keyId}')" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[11px] font-black py-1.5 rounded-xl shadow active:scale-95 transition">
+                                تم البيع (خصم من المخزن ✅)
+                            </button>
+                            <button onclick="cancelOrderWithoutDeduct('${order.keyId}')" class="bg-rose-950/70 hover:bg-rose-900 border border-rose-800 text-rose-300 text-[11px] font-bold px-3 py-1.5 rounded-xl active:scale-95 transition">
+                                راجع / طلب وهمي ❌
+                            </button>
+                        </div>
+                    `;
+                } else if (order.status === 'completed') {
+                    statusBadge = `<span class="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-lg">✅ تم البيع والتجهيز</span>`;
+                    actionButtons = `
+                        <div class="flex justify-between items-center pt-2 border-t border-slate-900">
+                            <span class="text-[9.5px] text-emerald-400 font-bold">تم خصم الكميات من المخزن بنجاح</span>
+                            <button onclick="deleteOrderRecord('${order.keyId}')" class="text-slate-500 hover:text-rose-400 text-xs font-bold p-1">حذف من السجل 🗑️</button>
+                        </div>
+                    `;
+                } else {
+                    statusBadge = `<span class="bg-rose-950 text-rose-300 border border-rose-800 text-[9px] font-bold px-2 py-0.5 rounded-lg">❌ ملغي / راجع</span>`;
+                    actionButtons = `
+                        <div class="flex justify-between items-center pt-2 border-t border-slate-900">
+                            <span class="text-[9.5px] text-slate-400">لم يتم خصم أي مادة من المخزن</span>
+                            <button onclick="deleteOrderRecord('${order.keyId}')" class="text-slate-500 hover:text-rose-400 text-xs font-bold p-1">حذف من السجل 🗑️</button>
+                        </div>
+                    `;
+                }
+
+                let itemsListHtml = '';
+                if (order.items && Array.isArray(order.items)) {
+                    order.items.forEach(item => {
+                        itemsListHtml += `
+                            <div class="flex justify-between items-center text-[10.5px] text-slate-300 bg-slate-900/60 px-2 py-1 rounded-lg">
+                                <span>• ${item.name} (${item.size})</span>
+                                <span class="font-bold text-amber-400">${item.qty} × ${item.price}</span>
+                            </div>
+                        `;
+                    });
+                }
+
+                container.innerHTML += `
+                    <div class="bg-slate-950 p-3 rounded-2xl border ${order.status === 'pending' ? 'border-teal-600/60 shadow-lg' : 'border-slate-800'} space-y-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h5 class="text-xs font-black text-white">${order.customerName}</h5>
+                                <a href="tel:${order.customerPhone}" class="text-[10px] text-cyan-400 font-mono block mt-0.5">📞 ${order.customerPhone}</a>
+                            </div>
+                            <div class="text-left space-y-0.5">
+                                ${statusBadge}
+                                <span class="text-[8px] text-slate-500 block font-mono">${order.dateStr}</span>
+                            </div>
+                        </div>
+
+                        ${order.customerAddress ? `<p class="text-[9.5px] text-slate-400">📍 العنوان: ${order.customerAddress}</p>` : ''}
+
+                        <div class="space-y-1">
+                            ${itemsListHtml}
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs font-black text-white pt-1">
+                            <span>الإجمالي:</span>
+                            <span class="text-amber-400 text-sm">${order.totalPrice}</span>
+                        </div>
+
+                        ${actionButtons}
+                    </div>
+                `;
+            });
+        }
+
+        // Confirm Sale -> Deduct Stock
+        function confirmAndDeductStock(orderKey) {
+            playPopSound();
+            const order = ordersData.find(o => o.keyId === orderKey);
+            if (!order || order.status !== 'pending') return;
+
+            let deductionErrors = [];
+            if (order.items && Array.isArray(order.items)) {
+                order.items.forEach(item => {
+                    const prod = productsData.find(p => String(p.id) === String(item.id));
+                    if (prod) {
+                        prod.stock = Math.max(0, prod.stock - item.qty);
+                    } else {
+                        deductionErrors.push(item.name);
+                    }
+                });
+            }
+
+            saveProductsToCloud();
+            ordersRef.child(orderKey).update({ status: 'completed' });
+            renderProducts();
+            showToast('تم تأكيد البيع وخصم المواد من المخزن بنجاح ✅', '📦');
+        }
+
+        // Cancel Order -> Do not touch stock
+        function cancelOrderWithoutDeduct(orderKey) {
+            playPopSound();
+            ordersRef.child(orderKey).update({ status: 'cancelled' });
+            showToast('تم إلغاء الطلب والمخزن لم يتأثر 🛡️', '❌');
+        }
+
+        // Delete Order Record
+        function deleteOrderRecord(orderKey) {
+            playPopSound();
+            ordersRef.child(orderKey).remove();
+            showToast('تم حذف الطلب من السجل', '🗑️');
         }
 
         function updateAdminUI() {
@@ -1995,6 +2224,7 @@
                 headerBtn.classList.add('hidden');
                 headerBtn.classList.remove('flex');
             }
+            updateOrdersBadge();
             renderCircleCategories();
             renderProducts();
         }
