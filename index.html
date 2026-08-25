@@ -180,11 +180,14 @@
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
-                    <button onclick="playSoftClick(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
+                    <button onclick="playSoftClick(); openInventoryModal()" class="bg-amber-950/80 border border-amber-700 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
+                        <span>📦</span> <span>المخزن</span>
+                    </button>
+                    <button onclick="playSoftClick(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
                         <span>⚙️</span>
                     </button>
                     <button onclick="playSoftClick(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95">
-                        <span>➕</span> <span>إضافة</span>
+                        <span>➕</span>
                     </button>
                     <button onclick="playSoftClick(); logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="قفل المشرف">
                         <span>🔒</span>
@@ -218,6 +221,10 @@
                 
                 <button onclick="playSoftClick(); closeDrawer(); filterByCategory('الكل')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-200 transition text-right">
                     <span>🗂️</span> <span>جميع الأقسام</span>
+                </button>
+
+                <button onclick="playSoftClick(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                    <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
                 
                 <button onclick="playSoftClick(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
@@ -264,43 +271,10 @@
         <div class="flex gap-2 overflow-x-auto no-scrollbar w-full scroll-smooth" id="circleCategories"></div>
     </nav>
 
-    <!-- Main Content Area (Vertical Smooth Scrolling) -->
+    <!-- Main Content Area -->
     <main class="flex-grow w-full px-3 py-3 space-y-4 max-w-xl mx-auto">
         
-        <!-- 1. Interactive Routine Finder -->
-        <div class="glass-panel rounded-2xl p-3.5 border border-cyan-500/30 space-y-2.5">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="text-base">🧬</span>
-                    <div>
-                        <h2 class="text-xs font-black text-white">مُرشد الروتين الذكي</h2>
-                        <p class="text-[9px] text-slate-400">اختر هدفك لنعرض لك المنتجات المطابقة فوراً</p>
-                    </div>
-                </div>
-                <button onclick="playSoftClick(); resetRoutineFilter()" id="resetRoutineBtn" class="hidden text-[9px] text-amber-400 bg-amber-950/50 border border-amber-800/60 px-2 py-0.5 rounded-lg">إلغاء الفرز</button>
-            </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                <button onclick="playSoftClick(); filterByTarget('ترطيب')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
-                    <span class="text-xs block">💧</span>
-                    <span class="text-[10px] font-bold text-slate-200">ترطيب ونضارة</span>
-                </button>
-                <button onclick="playSoftClick(); filterByTarget('علاج')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
-                    <span class="text-xs block">🛡️</span>
-                    <span class="text-[10px] font-bold text-slate-200">تصفية وحبوب</span>
-                </button>
-                <button onclick="playSoftClick(); filterByTarget('تفتيح')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
-                    <span class="text-xs block">✨</span>
-                    <span class="text-[10px] font-bold text-slate-200">تفتيح وتوحيد</span>
-                </button>
-                <button onclick="playSoftClick(); filterByTarget('شعر')" class="bg-slate-900/90 hover:bg-cyan-950/50 border border-slate-800 hover:border-cyan-500/50 p-2 rounded-xl text-center transition active:scale-95">
-                    <span class="text-xs block">🌿</span>
-                    <span class="text-[10px] font-bold text-slate-200">إنبات وتقوية</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- 2. Full-Box Daily Glow Booster -->
+        <!-- 1. Full-Box Daily Glow Booster (Top Header Card) -->
         <div class="glass-panel rounded-2xl p-4 border border-pink-500/35 bg-gradient-to-r from-slate-950 via-pink-950/25 to-slate-950 space-y-2.5 shadow-md">
             <div class="flex items-center justify-between border-b border-pink-900/40 pb-2">
                 <div class="flex items-center gap-2">
@@ -332,15 +306,15 @@
             </select>
         </div>
 
-        <!-- Products Grid Container -->
-        <div id="productsGrid" class="flex flex-col gap-3 w-full"></div>
+        <!-- Products Container: 2-Column Responsive Grid (One Below Another in Two Columns) -->
+        <div id="productsGrid" class="grid grid-cols-2 gap-2.5 w-full"></div>
 
         <div id="noResults" class="hidden text-center py-12 text-slate-400 glass-panel rounded-2xl">
             <div class="text-3xl mb-2">🔍</div>
             <h4 class="text-xs font-bold text-white">لم يتم العثور على أي منتج مطابق</h4>
         </div>
 
-        <!-- 3. Smart Clinical Knowledge Pill -->
+        <!-- 2. Smart Clinical Knowledge Pill -->
         <div class="relative w-full rounded-2xl p-3.5 glass-panel border border-amber-500/30 overflow-hidden shadow-lg">
             <div class="flex items-start gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-base">💡</div>
@@ -370,7 +344,7 @@
 
     </main>
 
-    <!-- Bottom App Navigation Bar -->
+    <!-- Bottom App Navigation Bar (With Favorites / Wishlist) -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#090d1a]/95 backdrop-blur-md border-t border-slate-800 z-40 py-2.5 px-6 flex justify-around items-center">
         <button onclick="playSoftClick(); resetView()" class="flex flex-col items-center text-amber-400 text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🏠</span>
@@ -379,6 +353,10 @@
         <button onclick="playSoftClick(); openDrawer()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🗂️</span>
             <span>الأقسام</span>
+        </button>
+        <button onclick="playSoftClick(); showWishlistOnly()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition relative">
+            <span class="text-lg">❤️</span>
+            <span>المفضلة</span>
         </button>
         <button onclick="playSoftClick(); openCartModal()" class="flex flex-col items-center text-slate-400 hover:text-white text-[10px] font-bold active:scale-95 transition relative">
             <span class="text-lg">🛒</span>
@@ -412,9 +390,52 @@
                 <p id="modalProdUsage" class="text-xs text-slate-200 leading-relaxed font-semibold"></p>
             </div>
 
-            <div class="pt-2 border-t border-slate-800">
-                <button id="modalAddToCartBtn" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-lg active:scale-95">
+            <div class="pt-2 border-t border-slate-800 flex gap-2">
+                <button id="modalFavBtn" class="bg-slate-800 border border-slate-700 text-rose-400 px-3.5 py-2.5 rounded-xl text-sm font-bold active:scale-95 transition">
+                    🤍
+                </button>
+                <button id="modalAddToCartBtn" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-lg active:scale-95">
                     <span>🛒</span> <span>إضافة إلى الطلبية</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Inventory & Shortages Modal (المخزن والنواقص للمشرف فقط) -->
+    <div id="inventoryModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
+            <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-amber-400">📦</span> جرد المخزن ونواقص الصيدلية
+                </h3>
+                <button onclick="playSoftClick(); closeInventoryModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <!-- Stats Header -->
+            <div class="grid grid-cols-3 gap-2 my-2 text-center">
+                <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                    <span class="text-[9px] text-slate-400 block">إجمالي المواد</span>
+                    <span id="invTotalCount" class="text-xs font-black text-cyan-400">0</span>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-xl border border-amber-800/40">
+                    <span class="text-[9px] text-amber-400 block">قارب على النفاد (&le; 5)</span>
+                    <span id="invLowCount" class="text-xs font-black text-amber-400">0</span>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-xl border border-rose-800/40">
+                    <span class="text-[9px] text-rose-400 block">نافد تماماً (0)</span>
+                    <span id="invOutCount" class="text-xs font-black text-rose-400">0</span>
+                </div>
+            </div>
+
+            <!-- Shortages List -->
+            <div class="flex-grow overflow-y-auto space-y-2 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
+
+            <div class="border-t border-slate-800 pt-2 flex gap-2">
+                <button onclick="copyShortagesToClipboard()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition border border-slate-700">
+                    <span>📋</span> <span>نسخ كشف النواقص</span>
+                </button>
+                <button onclick="sendShortagesToWhatsApp()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition shadow">
+                    <span>📲</span> <span>إرسال النواقص لمذخر</span>
                 </button>
             </div>
         </div>
@@ -478,8 +499,8 @@
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
                 1. تصفح الأقسام بالسحب يميناً ويساراً.<br>
-                2. اضغط على أي منتج لمعاينة تفاصيله كاملة بدقة عالية.<br>
-                3. أضف المنتجات المطلوبة إلى سلة الحجز.<br>
+                2. اضغط على أي منتج لمعاينة تفاصيله كاملة.<br>
+                3. أضف المنتجات للمفضلة (❤️) أو لسلة الحجز.<br>
                 4. اضغط على تأكيد الطلب لتجهيز مشترياتك وإرسالها فوراً للصيدلية عبر WhatsApp.
             </p>
         </div>
@@ -717,7 +738,7 @@
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
-        // Simplified Categories Architecture
+        // Categories
         const categories = [
             { name: "الكل", icon: "🌟" },
             { name: "العناية بالبشرة والوجه", icon: "🧴" },
@@ -735,7 +756,9 @@
 
         let productsData = [];
         let cart = [];
+        let wishlist = [];
         let currentFilter = 'الكل';
+        let isWishlistMode = false;
         let sortableInstance = null;
 
         // Clinical Tips Database
@@ -777,7 +800,7 @@
         ];
         let currentGlowIndex = 0;
 
-        // Ultra-Soft Click Sound Synthesizer
+        // Soft Click Sound Synthesizer
         function playSoftClick() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -868,6 +891,11 @@
                 cart = savedCart ? JSON.parse(savedCart) : [];
             } catch(e) { cart = []; }
 
+            try {
+                const savedFav = localStorage.getItem('raheeq_wishlist');
+                wishlist = savedFav ? JSON.parse(savedFav) : [];
+            } catch(e) { wishlist = []; }
+
             renderCircleCategories();
             updateAdminUI();
             updateDeliveryStatusUI();
@@ -884,6 +912,36 @@
                 localStorage.setItem('raheeq_active_cart', JSON.stringify(cart));
             } catch(e) {}
             updateCartBadge();
+        }
+
+        function saveWishlistToStorage() {
+            try {
+                localStorage.setItem('raheeq_wishlist', JSON.stringify(wishlist));
+            } catch(e) {}
+        }
+
+        function toggleWishlist(id, event) {
+            if (event) event.stopPropagation();
+            playSoftClick();
+
+            const idx = wishlist.indexOf(String(id));
+            if (idx > -1) {
+                wishlist.splice(idx, 1);
+                showToast('تمت الإزالة من المفضلة 🤍', '🤍');
+            } else {
+                wishlist.push(String(id));
+                triggerSingleEmoji(event, '❤️');
+                showToast('تمت الإضافة للمفضلة ❤️', '❤️');
+            }
+            saveWishlistToStorage();
+            renderProducts();
+        }
+
+        function showWishlistOnly() {
+            isWishlistMode = true;
+            document.getElementById('currentSectionTitle').innerHTML = `<span class="text-rose-400">●</span> المنتجات المفضلة لديك (❤️)`;
+            const favProducts = productsData.filter(p => wishlist.includes(String(p.id)));
+            renderProducts(favProducts);
         }
 
         let toastTimer = null;
@@ -940,6 +998,14 @@
             document.getElementById('modalProdPrice').innerText = prod.price;
             document.getElementById('modalProdUsage').innerText = prod.usage;
 
+            const favBtn = document.getElementById('modalFavBtn');
+            const isFav = wishlist.includes(String(prod.id));
+            favBtn.innerText = isFav ? '❤️' : '🤍';
+            favBtn.onclick = function(e) {
+                toggleWishlist(prod.id, e);
+                favBtn.innerText = wishlist.includes(String(prod.id)) ? '❤️' : '🤍';
+            };
+
             const btn = document.getElementById('modalAddToCartBtn');
             btn.onclick = function() {
                 addToCart(prod.id);
@@ -955,6 +1021,101 @@
             const modal = document.getElementById('productDetailModal');
             modal.classList.remove('modal-active');
             modal.classList.add('hidden');
+        }
+
+        // Inventory & Shortages Management (للمشرف فقط)
+        function openInventoryModal() {
+            const listEl = document.getElementById('inventoryItemsList');
+            listEl.innerHTML = '';
+
+            let total = productsData.length;
+            let low = 0;
+            let out = 0;
+
+            productsData.forEach(p => {
+                if (p.stock === 0) out++;
+                else if (p.stock <= 5) low++;
+
+                const isOut = p.stock === 0;
+                const isLow = p.stock > 0 && p.stock <= 5;
+
+                listEl.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border ${isOut ? 'border-rose-900/80 bg-rose-950/20' : isLow ? 'border-amber-900/60 bg-amber-950/20' : 'border-slate-800'}">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-900 shrink-0 med-img-frame">
+                            <div class="min-w-0">
+                                <h5 class="text-[11px] font-black text-white truncate">${p.name}</h5>
+                                <span class="text-[9px] text-slate-400 block">${p.category} • ${p.size}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-xs font-black ${isOut ? 'text-rose-400' : isLow ? 'text-amber-400' : 'text-emerald-400'}">
+                                ${p.stock} قطعة
+                            </span>
+                            <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 text-[10px] font-bold px-2 py-1 rounded-lg border border-slate-700 active:scale-95" title="إضافة 10 قطع">+10</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('invTotalCount').innerText = total;
+            document.getElementById('invLowCount').innerText = low;
+            document.getElementById('invOutCount').innerText = out;
+
+            const modal = document.getElementById('inventoryModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+        }
+
+        function closeInventoryModal() {
+            const modal = document.getElementById('inventoryModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        function quickUpdateStock(id, addedQty) {
+            const prod = productsData.find(p => String(p.id) === String(id));
+            if (prod) {
+                prod.stock += addedQty;
+                saveProductsToCloud();
+                openInventoryModal();
+                renderProducts();
+                showToast(`تم تحديث رصيد "${prod.name}" بمقدار +${addedQty}`, '📦');
+            }
+        }
+
+        function getShortagesText() {
+            const shortages = productsData.filter(p => p.stock <= 5);
+            if (shortages.length === 0) return null;
+
+            let text = `📋 *كشف نواقص ومشتريات صيدلية رَحِيْقُ السَّلَامَة:*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            shortages.forEach((p, i) => {
+                text += `${i + 1}. *${p.name}* (${p.size})\n   - المتبقي بالمخزن: ${p.stock} قطعة\n   - القسم: ${p.category}\n`;
+            });
+            text += `━━━━━━━━━━━━━━━━━━━━\n⏰ التاريخ: ${new Date().toLocaleDateString('ar-IQ')}`;
+            return text;
+        }
+
+        function copyShortagesToClipboard() {
+            const text = getShortagesText();
+            if (!text) {
+                showToast('لا توجد أي نواقص بالمخزن حالياً!', '✨');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('تم نسخ كشف النواقص بنجاح! 📋');
+            });
+        }
+
+        function sendShortagesToWhatsApp() {
+            const text = getShortagesText();
+            if (!text) {
+                showToast('المخزن مكتمل ولا توجد نواقص!', '✨');
+                return;
+            }
+            let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
+            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
         }
 
         // Image Processing to 1080p
@@ -1092,7 +1253,7 @@
             let html = '';
 
             categories.forEach(cat => {
-                const isActive = currentFilter === cat.name;
+                const isActive = !isWishlistMode && currentFilter === cat.name;
                 html += `
                     <button onclick="playSoftClick(); filterByCategory('${cat.name}')" 
                             class="px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition shrink-0 text-[11px] font-bold border ${
@@ -1116,7 +1277,7 @@
                 sortableInstance = null;
             }
 
-            if (isAdmin && currentFilter === 'الكل') {
+            if (isAdmin && currentFilter === 'الكل' && !isWishlistMode) {
                 sortableInstance = new Sortable(grid, {
                     animation: 200,
                     handle: '.drag-handle',
@@ -1144,7 +1305,7 @@
             grid.innerHTML = '';
 
             let displayList = list;
-            if (currentFilter !== 'الكل' && list === productsData) {
+            if (!isWishlistMode && currentFilter !== 'الكل' && list === productsData) {
                 displayList = productsData.filter(p => p.category === currentFilter);
             }
 
@@ -1157,13 +1318,19 @@
 
             displayList.forEach((prod) => {
                 const isLow = prod.stock <= 5;
+                const isFav = wishlist.includes(String(prod.id));
 
                 grid.innerHTML += `
-                    <div class="glass-panel rounded-2xl p-3 w-full flex flex-col gap-2.5 shadow-sm" data-id="${prod.id}">
-                        <div class="flex gap-2.5 items-start">
-                            
+                    <div class="glass-panel rounded-2xl p-2.5 w-full flex flex-col justify-between gap-2 shadow-sm relative" data-id="${prod.id}">
+                        
+                        <!-- Wishlist Heart Button -->
+                        <button onclick="toggleWishlist('${prod.id}', event)" class="absolute top-3.5 left-3.5 z-10 w-7 h-7 rounded-full bg-slate-950/80 border border-slate-800 flex items-center justify-center text-xs active:scale-90 transition shadow">
+                            ${isFav ? '❤️' : '🤍'}
+                        </button>
+
+                        <div class="flex flex-col gap-2">
                             <!-- Clickable Product Image -->
-                            <div onclick="openProductDetailModal('${prod.id}')" class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-950 med-img-frame shrink-0 flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition">
+                            <div onclick="openProductDetailModal('${prod.id}')" class="w-full h-32 sm:h-36 rounded-xl bg-slate-950 med-img-frame flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-cover w-full h-full block" loading="lazy">
                                 <span class="absolute bottom-1 right-1 ${isLow ? 'bg-rose-600/90' : 'bg-emerald-600/90'} text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow">
                                     المخزن: ${prod.stock}
@@ -1171,41 +1338,37 @@
                             </div>
 
                             <!-- Clickable Product Info -->
-                            <div class="flex-1 min-w-0 space-y-1.5">
-                                <div onclick="openProductDetailModal('${prod.id}')" class="cursor-pointer">
-                                    <div class="flex items-start justify-between gap-1">
-                                        <h4 class="text-xs sm:text-sm font-black text-white leading-tight break-words">${prod.name}</h4>
-                                        <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[9px] font-black px-1.5 py-0.5 rounded shrink-0">
-                                            ${prod.size}
-                                        </span>
-                                    </div>
+                            <div onclick="openProductDetailModal('${prod.id}')" class="space-y-1 text-right cursor-pointer">
+                                <div class="flex items-start justify-between gap-1">
+                                    <h4 class="text-[11px] sm:text-xs font-black text-white leading-tight break-words">${prod.name}</h4>
                                 </div>
 
-                                <div onclick="openProductDetailModal('${prod.id}')" class="bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
-                                    <span class="text-[8px] text-amber-400 font-bold block leading-none mb-1">الفوائد والاستخدام:</span>
-                                    <span class="text-[10.5px] text-slate-200 font-semibold leading-relaxed block break-words">${prod.usage}</span>
+                                <div class="bg-slate-950/70 p-1.5 rounded-lg border border-slate-800/80">
+                                    <span class="text-[7.5px] text-amber-400 font-bold block leading-none mb-0.5">الاستخدام:</span>
+                                    <span class="text-[9.5px] text-slate-200 font-semibold line-clamp-2 leading-tight">${prod.usage}</span>
                                 </div>
 
                                 <div class="flex items-center justify-between pt-0.5">
-                                    <span class="text-[9px] text-slate-400">${prod.category}</span>
-                                    <span class="text-xs font-black text-amber-400">${prod.price}</span>
+                                    <span class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60">${prod.size}</span>
+                                    <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
                                 </div>
                             </div>
-
                         </div>
 
-                        <div class="flex items-center gap-1.5 pt-1.5 border-t border-slate-800/70">
-                            <button onclick="playSoftClick(); addToCart('${prod.id}')" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-bold py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1 shadow active:scale-95">
-                                <span>🛒</span> <span>إضافة للطلبية</span>
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col gap-1.5 pt-1 border-t border-slate-800/70">
+                            <button onclick="playSoftClick(); addToCart('${prod.id}')" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-1.5 rounded-xl text-[10.5px] transition flex items-center justify-center gap-1 shadow active:scale-95">
+                                <span>🛒</span> <span>إضافة</span>
                             </button>
                             ${isAdmin ? `
-                            <div class="flex items-center gap-1">
-                                <button class="drag-handle bg-slate-800 hover:bg-slate-700 text-amber-400 px-2.5 py-1.5 rounded-lg text-xs border border-slate-700 font-bold select-none" title="اسحب لتحريك المنتج">☰</button>
-                                <button onclick="playSoftClick(); openEditModal('${prod.id}')" class="bg-slate-800 text-slate-200 px-2 py-1.5 rounded-lg text-xs border border-slate-700 active:scale-95" title="تعديل">✏️</button>
-                                <button onclick="playSoftClick(); deleteProduct('${prod.id}')" class="bg-rose-950/60 text-rose-400 px-2 py-1.5 rounded-lg text-xs border border-rose-900 active:scale-95" title="حذف">🗑️</button>
+                            <div class="flex items-center justify-between gap-1 pt-0.5">
+                                <button class="drag-handle flex-1 bg-slate-800 text-amber-400 py-1 rounded-lg text-xs font-bold border border-slate-700 select-none">☰</button>
+                                <button onclick="playSoftClick(); openEditModal('${prod.id}')" class="flex-1 bg-slate-800 text-slate-200 py-1 rounded-lg text-xs border border-slate-700 active:scale-95">✏️</button>
+                                <button onclick="playSoftClick(); deleteProduct('${prod.id}')" class="flex-1 bg-rose-950/60 text-rose-400 py-1 rounded-lg text-xs border border-rose-900 active:scale-95">🗑️</button>
                             </div>
                             ` : ''}
                         </div>
+
                     </div>
                 `;
             });
@@ -1214,27 +1377,11 @@
         }
 
         function filterByCategory(cat) {
+            isWishlistMode = false;
             currentFilter = cat;
             document.getElementById('currentSectionTitle').innerHTML = cat === 'الكل' ? '<span class="text-amber-400">●</span> المنتجات ومستحضرات العناية' : `<span class="text-teal-400">●</span> قسم: ${cat}`;
-            document.getElementById('resetRoutineBtn').classList.add('hidden');
             renderCircleCategories();
             renderProducts();
-        }
-
-        function filterByTarget(keyword) {
-            const filtered = productsData.filter(p => 
-                p.usage.toLowerCase().includes(keyword.toLowerCase()) || 
-                p.name.toLowerCase().includes(keyword.toLowerCase()) ||
-                p.category.toLowerCase().includes(keyword.toLowerCase())
-            );
-            document.getElementById('currentSectionTitle').innerHTML = `<span class="text-cyan-400">●</span> نتائج مرشد الروتين: (${keyword})`;
-            document.getElementById('resetRoutineBtn').classList.remove('hidden');
-            renderProducts(filtered);
-        }
-
-        function resetRoutineFilter() {
-            document.getElementById('resetRoutineBtn').classList.add('hidden');
-            filterByCategory('الكل');
         }
 
         function handleSearch(query) {
@@ -1254,7 +1401,7 @@
 
         function resetView() {
             document.getElementById('headerSearch').value = '';
-            resetRoutineFilter();
+            filterByCategory('الكل');
         }
 
         function sortProducts(criteria) {
