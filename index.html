@@ -397,7 +397,7 @@
         </div>
     </div>
 
-    <!-- Admin Inventory & Shortages Modal -->
+    <!-- Admin Inventory & Shortages Modal (تصميم ذكي وواضح بدون تقطيع) -->
     <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -424,10 +424,11 @@
             </div>
 
             <div class="my-1.5">
-                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع في النواقص والمخزن..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
+                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع بالاسم أو القسم..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             </div>
 
-            <div class="flex-grow overflow-y-auto space-y-2 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
+            <!-- قائمة المنتجات المحسنة بالكامل -->
+            <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
 
             <div class="border-t border-slate-800 pt-2 flex gap-2">
                 <button onclick="copyShortagesToClipboard()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition border border-slate-700">
@@ -1126,25 +1127,35 @@
                 const info = getStockBadgeStyle(p.stock);
 
                 listEl.innerHTML += `
-                    <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border ${isCrit ? 'border-rose-700 bg-rose-950/30' : isLow ? 'border-amber-700/70 bg-amber-950/20' : 'border-slate-800'}">
-                        <!-- تم إضافة النقر هنا لمعاينة تفاصيل المنتج كاملة -->
-                        <div onclick="openProductDetailModal('${p.id}')" class="flex items-center gap-2 min-w-0 cursor-pointer active:scale-95 transition">
-                            <div class="w-10 h-10 rounded-lg bg-white med-img-frame flex items-center justify-center p-1 shrink-0 overflow-hidden">
+                    <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
+                        
+                        <!-- السطر الأول: تفاصيل المنتج كاملة والاسم بسطرين واضحين -->
+                        <div onclick="openProductDetailModal('${p.id}')" class="flex items-start gap-3 cursor-pointer active:scale-98 transition">
+                            <div class="w-14 h-14 rounded-xl bg-white med-img-frame flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
                                 <img src="${p.image}" class="max-w-full max-h-full object-contain">
                             </div>
-                            <div class="min-w-0">
-                                <h5 class="text-[11px] font-black text-white truncate hover:text-cyan-300 transition">${p.name} 🔍</h5>
-                                <span class="text-[9px] text-slate-400 block">${p.category} • ${p.size}</span>
+                            <div class="flex-1 min-w-0 text-right">
+                                <h5 class="text-xs font-black text-white leading-snug break-words hover:text-cyan-300 transition">${p.name}</h5>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${p.size}</span>
+                                    <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
+                                    <span class="text-[8.5px] text-slate-400 truncate">• ${p.category}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <button onclick="quickUpdateStock('${p.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700 active:scale-95">-</button>
-                            <span class="text-xs px-2 py-0.5 rounded-md border text-center ${info.bg} ${info.border} ${info.text}">
-                                ${p.stock}
+
+                        <!-- السطر الثاني: شريط التحكم المستقل بالكمية -->
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-900">
+                            <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">
+                                ${info.label}
                             </span>
-                            <button onclick="quickUpdateStock('${p.id}', 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black border border-slate-700 active:scale-95">+</button>
-                            <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-teal-950 text-teal-300 border border-teal-800 text-[10px] font-bold px-2 py-1 rounded-lg active:scale-95" title="إضافة 10 قطع">+10</button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="quickUpdateStock('${p.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">-</button>
+                                <button onclick="quickUpdateStock('${p.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">+</button>
+                                <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-800 text-[10px] font-black px-2.5 py-1.5 rounded-lg active:scale-90" title="إضافة 10 قطع">+10</button>
+                            </div>
                         </div>
+
                     </div>
                 `;
             });
