@@ -202,10 +202,10 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-                <!-- زر السلة النظيف والأنيق بدون إطار بني داكن -->
-                <button onclick="playPopSound(); openCartModal()" class="relative p-1.5 flex items-center justify-center text-slate-300 hover:text-amber-400 active:scale-90 transition" title="السلة">
-                    <span class="text-xl">🛒</span>
-                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
+                <!-- زر السلة المربع الأصلي الأنيق -->
+                <button onclick="playPopSound(); openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
+                    <span class="text-sm">🛒</span>
+                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
@@ -1515,7 +1515,7 @@
                 return;
             }
             let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
-            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
+            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
         }
 
         function handleImageUpload(event) {
