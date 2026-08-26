@@ -202,7 +202,6 @@
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-                <!-- زر السلة المربع الأصلي الأنيق -->
                 <button onclick="playPopSound(); openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
                     <span class="text-sm">🛒</span>
                     <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
@@ -230,10 +229,10 @@
             </div>
         </div>
 
-        <!-- Search Bar with Seamlessly Integrated Barcode Icon -->
+        <!-- Search Bar with Autocomplete Protection & Seamless Barcode Scanner -->
         <div class="mt-2 relative w-full flex items-center">
             <span class="absolute right-3 top-2.5 text-slate-500 text-xs pointer-events-none">🔍</span>
-            <input type="text" id="headerSearch" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
+            <input type="search" id="headerSearch" name="pharmacy_search_query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
                    class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-9 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             
             <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-sm active:scale-90 transition" title="مسح باركود المنتج">
@@ -316,7 +315,7 @@
     <!-- Main Content Area -->
     <main class="flex-grow w-full px-3 py-3 space-y-4 max-w-xl mx-auto">
         
-        <!-- Daily Glow Booster (لون متناسق وفخم بنفس هوية التطبيق) -->
+        <!-- Daily Glow Booster -->
         <div class="glass-panel rounded-2xl p-4 border border-cyan-500/30 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 space-y-2.5 shadow-md">
             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                 <div class="flex items-center gap-2">
@@ -1515,7 +1514,7 @@
                 return;
             }
             let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
-            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(message)}`;
+            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
         }
 
         function handleImageUpload(event) {
@@ -1613,11 +1612,17 @@
             modal.classList.add('hidden');
         }
 
+        // تفريغ مربع البحث تلقائياً عند تسجيل الدخول لمنع بقاء أي رقم باركود
         function verifyAdminPin() {
             const pin = document.getElementById('adminPinInput').value.trim();
             if (pin === 'google@199920012005') {
                 isAdmin = true;
                 localStorage.setItem('sidalihet_admin', 'true');
+                
+                const searchInput = document.getElementById('headerSearch');
+                if (searchInput) searchInput.value = '';
+                renderProducts();
+
                 closePinModal();
                 updateAdminUI();
                 showToast('تم الدخول بنجاح 🚀', '🛡️');
