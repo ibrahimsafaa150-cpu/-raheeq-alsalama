@@ -45,10 +45,10 @@
         }
 
         .logo-box {
-            width: 42px;
-            height: 42px;
-            min-width: 42px;
-            min-height: 42px;
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            min-height: 38px;
         }
 
         .med-img-frame {
@@ -171,13 +171,13 @@
         </div>
     </div>
 
-    <!-- App Header -->
-    <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2.5 w-full">
+    <!-- App Header (مرتب بسطرين لتجنب تداخل السلة واللوجو نهائياً) -->
+    <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2 w-full">
+        <!-- السطر الأول: القائمة، الشعار والاسم، والسلة -->
         <div class="flex items-center justify-between gap-2 w-full">
-            
             <div class="flex items-center gap-2 min-w-0">
-                <button onclick="playPopSound(); openDrawer()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white active:scale-90 transition" title="القائمة الرئيسية">
-                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <button onclick="playPopSound(); openDrawer()" class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white active:scale-90 transition shrink-0" title="القائمة الرئيسية">
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
                 <!-- Secret Logo Trigger (5 Taps for Admin Panel) -->
@@ -196,50 +196,51 @@
                 </div>
 
                 <div class="flex flex-col min-w-0 cursor-pointer" onclick="playPopSound(); resetView()">
-                    <h1 class="text-xs sm:text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-teal-300 to-cyan-400 truncate">
+                    <h1 class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-teal-300 to-cyan-400 truncate">
                         صيدلية رَحِيْقُ السَّلَامَة
                     </h1>
-                    <span class="text-[8px] text-slate-400 font-bold tracking-tight uppercase truncate">RAHEEQ PHARMACY</span>
+                    <span class="text-[7.5px] text-slate-400 font-bold tracking-tight uppercase truncate">RAHEEQ PHARMACY</span>
                 </div>
             </div>
 
             <div class="flex items-center gap-1.5 shrink-0">
-                <button onclick="playPopSound(); openCartModal()" class="relative w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
-                    <span class="text-sm">🛒</span>
-                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow">0</span>
+                <button onclick="playPopSound(); openCartModal()" class="relative w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center active:scale-90 transition" title="السلة">
+                    <span class="text-xs">🛒</span>
+                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-teal-500 text-slate-950 text-[8px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center shadow">0</span>
                 </button>
-
-                <div id="adminActionHeader" class="hidden items-center gap-1.5">
-                    <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/80 border border-indigo-600/60 text-indigo-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="تقارير المبيعات">
-                        <span>📊</span> <span class="hidden sm:inline">التقارير</span>
-                    </button>
-                    <button onclick="playPopSound(); openOrdersQueueModal()" class="relative bg-teal-950/80 border border-teal-600/60 text-teal-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="الطلبيات الواردة">
-                        <span>🔔</span> <span class="hidden sm:inline">المبيعات</span>
-                        <span id="pendingOrdersBadge" class="hidden absolute -top-1.5 -left-1.5 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">0</span>
-                    </button>
-                    <button onclick="playPopSound(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن">
-                        <span>📦</span> <span class="hidden sm:inline">المخزن</span>
-                    </button>
-                    <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="الإعدادات">
-                        <span>⚙️</span>
-                    </button>
-                    <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="إضافة منتج">
-                        <span>➕</span>
-                    </button>
-                    <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="تسجيل الخروج">
-                        <span>🔒</span>
-                    </button>
-                </div>
             </div>
+        </div>
+
+        <!-- شريط أدوات المشرف (يظهر بسطر مستقل منظم عند الدخول) -->
+        <div id="adminActionHeader" class="hidden items-center gap-1.5 pt-2 overflow-x-auto no-scrollbar w-full border-t border-slate-800/80 mt-1.5">
+            <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/90 border border-indigo-600/60 text-indigo-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="تقارير المبيعات">
+                <span>📊</span> <span>التقارير</span>
+            </button>
+            <button onclick="playPopSound(); openOrdersQueueModal()" class="relative bg-teal-950/90 border border-teal-600/60 text-teal-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="الطلبيات الواردة">
+                <span>🔔</span> <span>المبيعات</span>
+                <span id="pendingOrdersBadge" class="hidden absolute -top-1 -left-1 bg-rose-600 text-white text-[7.5px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center animate-pulse">0</span>
+            </button>
+            <button onclick="playPopSound(); openInventoryModal()" class="bg-amber-950/90 border border-amber-600/60 text-amber-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="المخزن">
+                <span>📦</span> <span>المخزن</span>
+            </button>
+            <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 border border-slate-700 shrink-0 shadow active:scale-95" title="الإعدادات">
+                <span>⚙️</span>
+            </button>
+            <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج">
+                <span>➕</span> <span>إضافة</span>
+            </button>
+            <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/90 border border-rose-800 text-rose-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg shrink-0 active:scale-95" title="تسجيل الخروج">
+                <span>🔒</span> <span>قفل</span>
+            </button>
         </div>
 
         <!-- Search Bar -->
         <div class="mt-2 relative w-full flex items-center">
             <span class="absolute right-3 top-2.5 text-slate-500 text-xs pointer-events-none">🔍</span>
             <input type="search" id="headerSearch" name="pharmacy_search_query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة، باركود..." 
-                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-9 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
+                   class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-9 pr-9 py-1.5 border border-slate-800 focus:outline-none focus:border-cyan-400">
             
-            <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-sm active:scale-90 transition" title="مسح باركود">
+            <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-xs active:scale-90 transition" title="مسح باركود">
                 📷
             </button>
         </div>
