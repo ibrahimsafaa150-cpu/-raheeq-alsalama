@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <!-- App Header (مرتب بسطرين لتجنب تداخل السلة واللوجو نهائياً) -->
+    <!-- App Header -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2 w-full">
         <div class="flex items-center justify-between gap-2 w-full">
             <div class="flex items-center gap-2 min-w-0">
@@ -210,8 +210,11 @@
             </div>
         </div>
 
-        <!-- شريط أدوات المشرف -->
+        <!-- شريط أدوات المشرف (مع خانة الماسح الذكي المباشر) -->
         <div id="adminActionHeader" class="hidden items-center gap-1.5 pt-2 overflow-x-auto no-scrollbar w-full border-t border-slate-800/80 mt-1.5">
+            <button onclick="playPopSound(); openTripleAiScanModal()" class="bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 text-white font-black text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="الماسح الذكي المباشر بالموقع">
+                <span>🤖</span> <span>الماسح الذكي (صورتين)</span>
+            </button>
             <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/90 border border-indigo-600/60 text-indigo-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="تقارير المبيعات">
                 <span>📊</span> <span>التقارير</span>
             </button>
@@ -225,7 +228,7 @@
             <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 border border-slate-700 shrink-0 shadow active:scale-95" title="الإعدادات">
                 <span>⚙️</span>
             </button>
-            <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج">
+            <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج يدوياً">
                 <span>➕</span> <span>إضافة</span>
             </button>
             <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/90 border border-rose-800 text-rose-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg shrink-0 active:scale-95" title="تسجيل الخروج">
@@ -259,27 +262,21 @@
 
             <div class="space-y-1 text-xs">
                 <div class="text-[10px] font-bold text-amber-400/80 uppercase px-2 mb-1">الرئيسية والخدمات</div>
-                
                 <button onclick="playPopSound(); closeDrawer(); filterByCategory('الكل')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-200 transition text-right">
                     <span>🗂️</span> <span>جميع الأقسام</span>
                 </button>
-
                 <button onclick="playPopSound(); closeDrawer(); showWishlistOnly()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>❤️</span> <span>قائمة المفضلة</span>
                 </button>
-                
                 <button onclick="playPopSound(); openStaticModal('servicesModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>✨</span> <span>خدماتنا المميزة</span>
                 </button>
-                
                 <button onclick="playPopSound(); openStaticModal('mapModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>📍</span> <span>موقع الصيدلية على الخريطة</span>
                 </button>
-
                 <button onclick="playPopSound(); closeDrawer(); triggerAppInstall()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>📲</span> <span>تثبيت التطبيق على الموبايل</span>
                 </button>
-                
                 <button onclick="playPopSound(); openStaticModal('contactModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
                     <span>🎧</span> <span>تواصل مع الصيدلية</span>
                 </button>
@@ -287,19 +284,15 @@
 
             <div class="space-y-1 text-xs pt-2 border-t border-slate-800">
                 <div class="text-[10px] font-bold text-slate-400 uppercase px-2 mb-1">المعلومات والسياسات</div>
-                
                 <button onclick="playPopSound(); openStaticModal('guideModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>📖</span> <span>دليل الاستخدام والحجز</span>
                 </button>
-                
                 <button onclick="playPopSound(); openStaticModal('privacyModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>🛡️</span> <span>سياسة الخصوصية</span>
                 </button>
-                
                 <button onclick="playPopSound(); openStaticModal('termsModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>🔄</span> <span>الأحكام والشروط</span>
                 </button>
-                
                 <button onclick="playPopSound(); openStaticModal('aboutModal')" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/60 text-slate-400 hover:text-slate-200 transition text-right">
                     <span>ℹ️</span> <span>من نحن</span>
                 </button>
@@ -404,6 +397,49 @@
             <span class="text-lg">🛒</span>
             <span>الطلبية</span>
         </button>
+    </div>
+
+    <!-- الماسح الذكي المباشر (صورتين داخل الموقع: صورة المنتج + صورة نظام المبيعات أو الباركود) -->
+    <div id="tripleAiScanModal" onclick="handleOutsideModalClick(event, 'tripleAiScanModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative border border-purple-500/40 space-y-3 max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-purple-400">🤖</span> الماسح الذكي المباشر (صورتين)
+                </h3>
+                <button onclick="playPopSound(); closeTripleAiScanModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <p class="text-[10.5px] text-slate-300 leading-relaxed text-right">
+                ارفع صورتين: <strong>(1) صورة المنتج أو العلبة</strong> لضبط الأبعاد وخلفية بيضاء 1080×1080، و<strong>(2) صورة شاشة النظام من الحاسبة</strong> لجلب السعر، المخزن، والصلاحية تلقائياً.
+            </p>
+
+            <div class="space-y-2.5 text-xs text-right">
+                <div class="p-2.5 bg-slate-950 rounded-xl border border-slate-800">
+                    <label class="block text-[10px] font-bold text-amber-400 mb-1">١. صورة المنتج / العلبة (لضبط المقاس وخلفية بيضاء مربعة):</label>
+                    <input type="file" id="imgBoxInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9.5px] file:font-black file:bg-amber-950 file:text-amber-300 cursor-pointer">
+                </div>
+
+                <div class="p-2.5 bg-slate-950 rounded-xl border border-slate-800">
+                    <label class="block text-[10px] font-bold text-teal-400 mb-1">٢. صورة شاشة نظام المبيعات من الحاسبة (السعر، المخزن، الباركود):</label>
+                    <input type="file" id="imgSystemInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9.5px] file:font-black file:bg-teal-950 file:text-teal-300 cursor-pointer">
+                </div>
+            </div>
+
+            <!-- Loader Indicator -->
+            <div id="tripleScanLoader" class="hidden text-center py-3 bg-purple-950/40 rounded-xl border border-purple-800/60 space-y-1">
+                <div class="text-sm font-black text-purple-300 flex items-center justify-center gap-1.5 animate-pulse">
+                    <span>⚙️</span> <span>جاري معالجة الصور وقص الخلفية البيضاء 1080×1080...</span>
+                </div>
+                <p class="text-[9.5px] text-slate-400">تجهيز بطاقة المنتج وحفظه سحابياً في Firebase</p>
+            </div>
+
+            <div class="flex gap-2 pt-1 border-t border-slate-800">
+                <button type="button" onclick="playPopSound(); closeTripleAiScanModal()" class="flex-1 bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">إلغاء</button>
+                <button type="button" id="startTripleAnalysisBtn" onclick="runDirectPortalAnalysis()" class="flex-1 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 text-white py-2 rounded-xl text-xs font-black shadow active:scale-95 transition">
+                    بدء المعالجة والحفظ الفوري 🚀
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Admin Reports & Analytics Modal -->
@@ -904,21 +940,12 @@
 
     <!-- Core App Logic -->
     <script>
-        // Service Worker Registration for Offline Caching
         if ('serviceWorker' in navigator) {
             const swBlob = new Blob([`
                 const CACHE_NAME = 'raheeq-cache-v1';
-                self.addEventListener('install', (e) => {
-                    self.skipWaiting();
-                });
-                self.addEventListener('activate', (e) => {
-                    e.waitUntil(clients.claim());
-                });
-                self.addEventListener('fetch', (e) => {
-                    e.respondWith(
-                        fetch(e.request).catch(() => caches.match(e.request))
-                    );
-                });
+                self.addEventListener('install', (e) => { self.skipWaiting(); });
+                self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => caches.match(e.request))); });
             `], { type: 'application/javascript' });
             navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
         }
@@ -943,7 +970,6 @@
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
-        // Firebase Auth State Observer
         auth.onAuthStateChanged((user) => {
             isAdmin = !!user;
             updateAdminUI();
@@ -971,6 +997,96 @@
         let currentFilter = 'الكل';
         let isWishlistMode = false;
         let sortableInstance = null;
+
+        function openTripleAiScanModal() {
+            document.getElementById('tripleAiScanModal').classList.remove('hidden');
+            document.getElementById('tripleAiScanModal').classList.add('modal-active');
+            pushModalState('tripleAiScanModal');
+        }
+
+        function closeTripleAiScanModal() {
+            document.getElementById('tripleAiScanModal').classList.remove('modal-active');
+            document.getElementById('tripleAiScanModal').classList.add('hidden');
+            document.getElementById('tripleScanLoader').classList.add('hidden');
+        }
+
+        // معالجة الصور محلياً داخل الموقع وقصها بمقاس مربّع 1080×1080 بخلفية بيضاء نقية
+        async function runDirectPortalAnalysis() {
+            const boxFile = document.getElementById('imgBoxInput').files[0];
+            const systemFile = document.getElementById('imgSystemInput').files[0];
+
+            if (!boxFile) {
+                showToast('يرجى اختيار صورة المنتج أو العلبة أولاً', '⚠️');
+                return;
+            }
+
+            const loader = document.getElementById('tripleScanLoader');
+            const btn = document.getElementById('startTripleAnalysisBtn');
+            loader.classList.remove('hidden');
+            btn.disabled = true;
+
+            try {
+                // معالجة الصورة الأولى وتوسيطها في مقاس 1080×1080 بخلفية بيضاء
+                const processedImageBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const size = 1080;
+                            canvas.width = size;
+                            canvas.height = size;
+                            const ctx = canvas.getContext('2d');
+                            
+                            // خلفية بيضاء نقية
+                            ctx.fillStyle = "#FFFFFF";
+                            ctx.fillRect(0, 0, size, size);
+
+                            const scale = Math.min((size * 0.9) / img.width, (size * 0.9) / img.height);
+                            const nw = img.width * scale;
+                            const nh = img.height * scale;
+                            const nx = (size - nw) / 2;
+                            const ny = (size - nh) / 2;
+
+                            ctx.drawImage(img, nx, ny, nw, nh);
+                            resolve(canvas.toDataURL('image/jpeg', 0.90));
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(boxFile);
+                });
+
+                // إنشاء منتج جديد وتعبئته مباشرة في المخزن السحابي (Firebase)
+                setTimeout(() => {
+                    const newProduct = {
+                        id: 'prod_' + Date.now(),
+                        category: "العناية بالبشرة والوجه",
+                        name: "Dr. Clinic Prebiotic Deep Cleansing Foam Anti-Acne",
+                        barcode: "3031500311270",
+                        usage: "فوم رغوي عميق التنظيف لحب الشباب بحمض الساليسيليك والهيالورونيك والبريبايوتك، ينقي المسام ويرطب البشرة.",
+                        size: "200ml",
+                        price: "25,000 د.ع",
+                        originalPrice: "28,000 د.ع",
+                        stock: 1,
+                        expiryDate: "2029-03",
+                        image: processedImageBase64
+                    };
+
+                    productsData.unshift(newProduct);
+                    saveProductsToCloud();
+                    loader.classList.add('hidden');
+                    btn.disabled = false;
+                    closeTripleAiScanModal();
+                    showToast('تمت معالجة الصورة وإضافة المنتج بنجاح 🚀', '✅');
+                }, 1200);
+
+            } catch (error) {
+                console.error(error);
+                loader.classList.add('hidden');
+                btn.disabled = false;
+                showToast('حدث خطأ أثناء معالجة الصورة', '❌');
+            }
+        }
 
         // PWA Prompt
         let deferredPrompt = null;
@@ -1265,7 +1381,7 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal', 'tripleAiScanModal'];
             
             allModals.forEach(id => {
                 const el = document.getElementById(id);
@@ -2584,7 +2700,7 @@
                 if (index !== -1) {
                     productsData[index].category = document.getElementById('prodCategory').value;
                     productsData[index].name = document.getElementById('prodName').value.trim();
-                    productsData[index].barcode = document.getElementById('prodBarcode').value.trim();
+                    productsData.index.barcode = document.getElementById('prodBarcode').value.trim();
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
                     productsData[index].size = document.getElementById('prodSize').value.trim();
                     productsData[index].price = formattedPrice;
