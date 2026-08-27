@@ -18,7 +18,9 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDKs with Authentication Support -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
@@ -208,34 +210,36 @@
                 </button>
 
                 <div id="adminActionHeader" class="hidden items-center gap-1.5">
-                    <button onclick="playPopSound(); openOrdersQueueModal()" class="relative bg-teal-950/80 border border-teal-600/60 text-teal-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="الطلبيات والمبيعات الواردة">
-                        <span>🔔</span> <span>المبيعات</span>
+                    <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/80 border border-indigo-600/60 text-indigo-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="تقارير المبيعات">
+                        <span>📊</span> <span class="hidden sm:inline">التقارير</span>
+                    </button>
+                    <button onclick="playPopSound(); openOrdersQueueModal()" class="relative bg-teal-950/80 border border-teal-600/60 text-teal-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="الطلبيات الواردة">
+                        <span>🔔</span> <span class="hidden sm:inline">المبيعات</span>
                         <span id="pendingOrdersBadge" class="hidden absolute -top-1.5 -left-1.5 bg-rose-600 text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">0</span>
                     </button>
-
-                    <button onclick="playPopSound(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن والنواقص">
-                        <span>📦</span> <span>المخزن</span>
+                    <button onclick="playPopSound(); openInventoryModal()" class="bg-amber-950/80 border border-amber-600/60 text-amber-300 font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="المخزن">
+                        <span>📦</span> <span class="hidden sm:inline">المخزن</span>
                     </button>
-                    <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="إعدادات الحجز">
+                    <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[10px] px-2 py-2 rounded-xl transition flex items-center gap-1 border border-slate-700 shadow active:scale-95" title="الإعدادات">
                         <span>⚙️</span>
                     </button>
                     <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[10px] px-2.5 py-2 rounded-xl transition flex items-center gap-1 shadow active:scale-95" title="إضافة منتج">
                         <span>➕</span>
                     </button>
-                    <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="قفل المشرف">
+                    <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/80 border border-rose-800 text-rose-300 font-bold text-[10px] px-2 py-2 rounded-xl active:scale-95" title="تسجيل الخروج">
                         <span>🔒</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Search Bar with Autocomplete Protection & Seamless Barcode Scanner -->
+        <!-- Search Bar -->
         <div class="mt-2 relative w-full flex items-center">
             <span class="absolute right-3 top-2.5 text-slate-500 text-xs pointer-events-none">🔍</span>
-            <input type="search" id="headerSearch" name="pharmacy_search_query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة..." 
+            <input type="search" id="headerSearch" name="pharmacy_search_query" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="handleSearch(this.value)" placeholder="ابحث عن منتج، استخدام، سعة، ماركة، باركود..." 
                    class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl pl-9 pr-9 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
             
-            <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-sm active:scale-90 transition" title="مسح باركود المنتج">
+            <button onclick="startBarcodeScanner('search')" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 p-1 rounded-lg text-sm active:scale-90 transition" title="مسح باركود">
                 📷
             </button>
         </div>
@@ -341,6 +345,7 @@
             </h3>
             <select id="sortSelect" onchange="playPopSound(); sortProducts(this.value)" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] rounded-lg px-2 py-1 focus:outline-none">
                 <option value="default">الترتيب الافتراضي</option>
+                <option value="offers">العروض والتخفيضات 🏷️</option>
                 <option value="price-low">الأقل سعراً</option>
                 <option value="price-high">الأعلى سعراً</option>
                 <option value="stock-high">الكمية بالمخزن</option>
@@ -401,6 +406,49 @@
         </button>
     </div>
 
+    <!-- Admin Reports & Analytics Modal -->
+    <div id="reportsModal" onclick="handleOutsideModalClick(event, 'reportsModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[88vh] flex flex-col border border-indigo-500/30">
+            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-indigo-400">📊</span> تقرير المبيعات والأرباح
+                </h3>
+                <button onclick="playPopSound(); closeReportsModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <div class="space-y-3 overflow-y-auto no-scrollbar">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-950 p-3 rounded-xl border border-indigo-900/40 text-center">
+                        <span class="text-[9px] text-slate-400 block">إجمالي مبيعات اليوم</span>
+                        <span id="repTodaySales" class="text-sm font-black text-amber-400">0 د.ع</span>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-xl border border-indigo-900/40 text-center">
+                        <span class="text-[9px] text-slate-400 block">إجمالي مبيعات الشهر</span>
+                        <span id="repMonthSales" class="text-sm font-black text-emerald-400">0 د.ع</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-center">
+                        <span class="text-[9px] text-slate-400 block">الطلبات المكتملة</span>
+                        <span id="repCompletedOrders" class="text-xs font-black text-cyan-400">0</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-center">
+                        <span class="text-[9px] text-slate-400 block">قيمة المخزون الكلية</span>
+                        <span id="repTotalInventoryValue" class="text-xs font-black text-white">0 د.ع</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-right">
+                    <span class="text-[10px] font-bold text-indigo-300 block">المنتجات الأكثر مبيعاً ⭐</span>
+                    <div id="repTopSellingList" class="text-xs space-y-1 text-slate-300">
+                        <div class="text-slate-500 text-[10px]">لا توجد بيانات كافية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Admin Orders & Sales Queue Modal -->
     <div id="ordersQueueModal" onclick="handleOutsideModalClick(event, 'ordersQueueModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col border border-teal-500/30">
@@ -452,24 +500,6 @@
         </div>
     </div>
 
-    <!-- iOS App Install Guide Modal -->
-    <div id="iosInstallModal" onclick="handleOutsideModalClick(event, 'iosInstallModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-5 w-full max-w-sm shadow-2xl relative text-right space-y-3 border border-amber-500/30">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white">📲 تثبيت التطبيق على iPhone</h3>
-                <button onclick="closeAnyModal('iosInstallModal')" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
-            </div>
-            <div class="space-y-2 text-xs text-slate-300">
-                <p class="flex items-center gap-2"><span>1️⃣</span> اضغط على زر المشاركة <b>(Share ⎋)</b> أسفل المتصفح.</p>
-                <p class="flex items-center gap-2"><span>2️⃣</span> اسحب للأسفل واختر <b>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</b>.</p>
-                <p class="flex items-center gap-2"><span>3️⃣</span> اضغط <b>"إضافة" (Add)</b> في أعلى الشاشة ليصبح التطبيق على جهازك.</p>
-            </div>
-            <button onclick="closeAnyModal('iosInstallModal')" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-xl text-xs font-black shadow">
-                حسناً، فهمت
-            </button>
-        </div>
-    </div>
-
     <!-- Product Details Modal -->
     <div id="productDetailModal" onclick="handleOutsideModalClick(event, 'productDetailModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative border-2 border-cyan-500/30 flex flex-col gap-3 max-h-[90vh] overflow-y-auto">
@@ -481,6 +511,7 @@
             <div class="w-full aspect-square max-w-[280px] mx-auto rounded-2xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden shrink-0 p-3">
                 <img id="modalProdImage" src="" class="object-contain w-full h-full block" alt="صورة المنتج">
                 <span id="modalProdStock" class="absolute bottom-2 right-2 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow border"></span>
+                <span id="modalProdDiscount" class="hidden absolute top-2 right-2 bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow"></span>
             </div>
 
             <div class="space-y-1.5 text-right">
@@ -489,9 +520,13 @@
                     <span id="modalProdSize" class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-black px-2 py-0.5 rounded shrink-0"></span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <div class="text-sm font-black text-amber-400" id="modalProdPrice"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-black text-amber-400" id="modalProdPrice"></span>
+                        <span class="text-xs text-slate-500 line-through font-bold hidden" id="modalProdOldPrice"></span>
+                    </div>
                     <span id="modalProdBarcode" class="text-[9px] text-slate-400 font-mono"></span>
                 </div>
+                <div id="modalExpiryBadge" class="text-[9.5px] text-slate-400 font-semibold"></div>
             </div>
 
             <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-right space-y-1">
@@ -536,7 +571,7 @@
             </div>
 
             <div class="my-1.5 flex gap-2">
-                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث سريع بالاسم، القسم، أو الباركود..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
+                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث بالاسم، القسم، أو الباركود..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
                 <button onclick="startBarcodeScanner('inventory')" class="bg-cyan-950 border border-cyan-800 text-cyan-300 px-3 py-2 rounded-xl text-xs font-bold active:scale-95 shrink-0 flex items-center gap-1" title="مسح باركود للجرد">
                     <span>📷</span> <span>مسح</span>
                 </button>
@@ -544,13 +579,24 @@
 
             <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
 
-            <div class="border-t border-slate-800 pt-2 flex gap-2">
-                <button onclick="copyShortagesToClipboard()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition border border-slate-700">
-                    <span>📋</span> <span>نسخ كشف النواقص</span>
-                </button>
-                <button onclick="sendShortagesToWhatsApp()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95 transition shadow">
-                    <span>📲</span> <span>إرسال النواقص لمذخر</span>
-                </button>
+            <div class="border-t border-slate-800 pt-2 flex flex-col gap-2">
+                <div class="flex gap-2">
+                    <button onclick="exportToCSV()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 border border-indigo-900/60 active:scale-95 transition">
+                        <span>📥</span> <span>تصدير Excel (CSV)</span>
+                    </button>
+                    <label class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 border border-amber-900/60 active:scale-95 transition cursor-pointer text-center">
+                        <span>📤</span> <span>استيراد CSV</span>
+                        <input type="file" accept=".csv" class="hidden" onchange="importFromCSV(event)">
+                    </label>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="copyShortagesToClipboard()" class="flex-1 bg-slate-800 text-slate-200 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 active:scale-95 transition border border-slate-700">
+                        <span>📋</span> <span>نسخ كشف النواقص</span>
+                    </button>
+                    <button onclick="sendShortagesToWhatsApp()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1 active:scale-95 transition shadow">
+                        <span>📲</span> <span>إرسال النواقص لمذخر</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -628,7 +674,7 @@
                 <button onclick="playPopSound(); closeStaticModal('privacyModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                نلتزم في صيدلية رحيق السلامة بحماية خصوصية جميع العملاء، ولا تُستخدم بيانات الاسم أو الهاتف إلا لغرض تأكيد وتجهيز الطلبيات بدقة
+                نلتزم في صيدلية رحيق السلامة بحماية خصوصية جميع العملاء، ولا تُستخدم بيانات الاسم أو الهاتف إلا لغرض تأكيد وتجهيز الطلبيات بدقة.
             </p>
         </div>
     </div>
@@ -640,7 +686,7 @@
                 <button onclick="playPopSound(); closeStaticModal('termsModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                جميع المعروضات هي مستحضرات عناية وتجميل ومستلزمات طبية وتغذوية معتمدة ومصرحة، صرف الأدوية الوصفية يتم وفق اللوائح النقابية المباشرة داخل الصيدلية
+                جميع المعروضات هي مستحضرات عناية وتجميل ومستلزمات طبية وتغذوية معتمدة ومصرحة، صرف الأدوية الوصفية يتم وفق اللوائح النقابية المباشرة داخل الصيدلية.
             </p>
         </div>
     </div>
@@ -652,7 +698,7 @@
                 <button onclick="playPopSound(); closeStaticModal('aboutModal')" class="text-slate-400 font-bold p-1">✕</button>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-                صيدلية رَحِيْقُ السَّلَامَة • وجهتكم الموثوقة للعناية، الجمال، والمستلزمات الطبية بأعلى معايير الجودة الصيدلانية
+                صيدلية رَحِيْقُ السَّلَامَة • وجهتكم الموثوقة للعناية، الجمال، والمستلزمات الطبية بأعلى معايير الجودة الصيدلانية.
             </p>
         </div>
     </div>
@@ -715,17 +761,20 @@
         </div>
     </div>
 
-    <!-- Admin Pin Modal -->
+    <!-- Admin Authentication Modal (Secure Auth) -->
     <div id="adminPinModal" onclick="handleOutsideModalClick(event, 'adminPinModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
-            <h3 class="text-xs font-black text-white">تسجيل الدخول للإدارة</h3>
-            <p class="text-[10px] text-slate-400">أدخل رمز المشرف للمتابعة</p>
-            <input type="password" id="adminPinInput" autocomplete="new-password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-center text-xs text-white focus:outline-none focus:border-cyan-400">
-            <div class="flex gap-2 pt-1">
-                <button onclick="playPopSound(); closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
-                <button onclick="playPopSound(); verifyAdminPin()" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-1.5 rounded-xl text-xs font-bold shadow">دخول</button>
-            </div>
+            <h3 class="text-xs font-black text-white">تسجيل الدخول الآمن للمشرف</h3>
+            <p class="text-[10px] text-slate-400">أدخل بيانات الاعتماد الرسمية</p>
+            <form onsubmit="handleSecureLogin(event)" class="space-y-2">
+                <input type="email" id="adminEmailInput" required placeholder="البريد الإلكتروني" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+                <input type="password" id="adminPasswordInput" required placeholder="كلمة المرور" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="playPopSound(); closePinModal()" class="flex-1 bg-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold">إلغاء</button>
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-1.5 rounded-xl text-xs font-bold shadow">دخول</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -762,7 +811,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal -->
+    <!-- Admin Add/Edit Modal with Discounts & Expiry Date -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -809,23 +858,34 @@
                     <input type="text" id="prodUsage" required placeholder="مثال: تونر مقشر لعلاج التصبغات وتوحيد لون البشرة ونضارتها" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">السعر الحالي (د.ع):</label>
+                        <input type="text" id="prodPrice" required placeholder="15000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">السعر قبل الخصم (اختياري):</label>
+                        <input type="text" id="prodOriginalPrice" placeholder="18000" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-3 gap-2">
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">السعة / الحجم:</label>
-                        <input type="text" id="prodSize" required placeholder="مثال: 240ml أو 1L" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">السعر (د.ع):</label>
-                        <input type="text" id="prodPrice" required placeholder="17750" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
+                        <input type="text" id="prodSize" required placeholder="240ml" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الكمية بالمخزن:</label>
                         <input type="number" id="prodStock" required placeholder="15" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none">
                     </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">تاريخ الصلاحية:</label>
+                        <input type="month" id="prodExpiry" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-1.5 py-1.5 text-[11px] text-white focus:outline-none">
+                    </div>
                 </div>
 
                 <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 space-y-2">
-                    <label class="block text-[10px] font-bold text-amber-400">صورة المنتج بدقة 1080p:</label>
+                    <label class="block text-[10px] font-bold text-amber-400">صورة المنتج بدقة عالية:</label>
                     <div>
                         <input type="file" id="prodFileInput" accept="image/*" onchange="handleImageUpload(event)" class="w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cyan-950 file:text-cyan-300 hover:file:bg-cyan-900 cursor-pointer">
                     </div>
@@ -844,6 +904,25 @@
 
     <!-- Core App Logic -->
     <script>
+        // Service Worker Registration for Offline Caching
+        if ('serviceWorker' in navigator) {
+            const swBlob = new Blob([`
+                const CACHE_NAME = 'raheeq-cache-v1';
+                self.addEventListener('install', (e) => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', (e) => {
+                    e.waitUntil(clients.claim());
+                });
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        fetch(e.request).catch(() => caches.match(e.request))
+                    );
+                });
+            `], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyDa5uGAYQPOIL-5UQrSB-rGzWyizu5RH6o",
             authDomain: "raheeq-pharmacy.firebaseapp.com",
@@ -855,13 +934,20 @@
         };
 
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.database();
         const productsRef = db.ref('cosmetics_and_care');
         const ordersRef = db.ref('customer_orders_queue');
 
-        let isAdmin = localStorage.getItem('sidalihet_admin') === 'true';
+        let isAdmin = false;
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
+
+        // Firebase Auth State Observer
+        auth.onAuthStateChanged((user) => {
+            isAdmin = !!user;
+            updateAdminUI();
+        });
 
         const baseCategories = [
             { name: "الكل", icon: "🌟" },
@@ -898,13 +984,7 @@
 
         function triggerAppInstall() {
             playPopSound();
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIOS) {
-                const modal = document.getElementById('iosInstallModal');
-                modal.classList.remove('hidden');
-                modal.classList.add('modal-active');
-                pushModalState('iosInstallModal');
-            } else if (deferredPrompt) {
+            if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
@@ -960,7 +1040,7 @@
                 if (barcodeInput) {
                     barcodeInput.value = decodedText;
                 }
-                showToast(`تم إدراج الباركود بنجاح: ${decodedText}`, '✅');
+                showToast(`تم إدراج الباركود: ${decodedText}`, '✅');
             } else if (scannerTarget === 'inventory') {
                 document.getElementById('invSearchInput').value = decodedText;
                 filterInventoryList(decodedText);
@@ -980,7 +1060,7 @@
             }
         }
 
-        // Audio Engine
+        // Web Audio Effects
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) {
@@ -1185,7 +1265,7 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'iosInstallModal', 'ordersQueueModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal'];
             
             allModals.forEach(id => {
                 const el = document.getElementById(id);
@@ -1219,7 +1299,9 @@
                             usage: "جل مائي منظف غني بحمض الهيالورونيك ينظف البشرة بلطف من المكياج والشوائب ويزيد من ترطيبها مناسب لجميع أنواع البشرة وخاصة الجافة والعادية",
                             size: "200ml",
                             price: "12,000 د.ع",
-                            stock: 3,
+                            originalPrice: "14,500 د.ع",
+                            expiryDate: "2027-10",
+                            stock: 5,
                             image: "https://images.ctfassets.net/g92z96kt77im/52k8Oa8x3yCei4UqC2aM0g/780c7d5402633dfd59013c9e6bb07b89/hydro-boost-water-gel-cleanser.png"
                         }
                     ];
@@ -1255,7 +1337,6 @@
             } catch(e) { wishlist = []; }
 
             renderCircleCategories();
-            updateAdminUI();
             updateDeliveryStatusUI();
             updateCartBadge();
             startSmartPillCarousel();
@@ -1356,11 +1437,35 @@
             stockBadge.className = `absolute bottom-2 right-2 text-[9px] px-2 py-0.5 rounded-md shadow border ${info.bg} ${info.border} ${info.text}`;
             stockBadge.innerText = info.label;
 
+            // Discount Badge
+            const discountBadge = document.getElementById('modalProdDiscount');
+            const oldPriceEl = document.getElementById('modalProdOldPrice');
+            if (prod.originalPrice) {
+                const cur = parseFloat(prod.price.replace(/[^0-9.]/g, '')) || 0;
+                const orig = parseFloat(prod.originalPrice.replace(/[^0-9.]/g, '')) || 0;
+                if (orig > cur) {
+                    const discountPercent = Math.round(((orig - cur) / orig) * 100);
+                    discountBadge.innerText = `خصم ${discountPercent}%`;
+                    discountBadge.classList.remove('hidden');
+                    oldPriceEl.innerText = prod.originalPrice;
+                    oldPriceEl.classList.remove('hidden');
+                } else {
+                    discountBadge.classList.add('hidden');
+                    oldPriceEl.classList.add('hidden');
+                }
+            } else {
+                discountBadge.classList.add('hidden');
+                oldPriceEl.classList.add('hidden');
+            }
+
             document.getElementById('modalProdName').innerText = prod.name;
             document.getElementById('modalProdSize').innerText = prod.size;
             document.getElementById('modalProdPrice').innerText = prod.price;
             document.getElementById('modalProdUsage').innerText = prod.usage;
             document.getElementById('modalProdBarcode').innerText = prod.barcode ? `باركود: ${prod.barcode}` : '';
+            
+            const expEl = document.getElementById('modalExpiryBadge');
+            expEl.innerText = prod.expiryDate ? `تاريخ الصلاحية: ${prod.expiryDate}` : '';
 
             const favBtn = document.getElementById('modalFavBtn');
             const isFav = wishlist.includes(String(prod.id));
@@ -1427,7 +1532,7 @@
                                 <div class="flex items-center gap-2 mt-1 flex-wrap">
                                     <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${p.size}</span>
                                     <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
-                                    <span class="text-[8.5px] text-slate-400 truncate">• ${p.category}</span>
+                                    ${p.expiryDate ? `<span class="text-[8.5px] text-slate-400">📅 ${p.expiryDate}</span>` : ''}
                                     ${p.barcode ? `<span class="text-[8px] font-mono text-cyan-400/80 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">📷 ${p.barcode}</span>` : ''}
                                 </div>
                             </div>
@@ -1517,6 +1622,77 @@
             window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
         }
 
+        // CSV Export & Import Feature
+        function exportToCSV() {
+            playPopSound();
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "ID,الاسم,القسم,الباركود,الحجم,السعر,الكمية,الصلاحية\n";
+
+            productsData.forEach(p => {
+                const row = [
+                    p.id,
+                    `"${p.name.replace(/"/g, '""')}"`,
+                    `"${p.category}"`,
+                    p.barcode || '',
+                    `"${p.size}"`,
+                    `"${p.price}"`,
+                    p.stock,
+                    p.expiryDate || ''
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `raheeq_pharmacy_inventory_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('تم تصدير ملف Excel بنجاح 📥');
+        }
+
+        function importFromCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const rows = text.split('\n').filter(r => r.trim() !== '');
+                if (rows.length <= 1) return;
+
+                let importedCount = 0;
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i].split(',');
+                    if (cols.length >= 6) {
+                        const newProd = {
+                            id: cols[0].trim() || 'prod_' + Date.now() + '_' + i,
+                            name: cols[1].replace(/"/g, '').trim(),
+                            category: cols[2].replace(/"/g, '').trim() || 'العناية بالبشرة والوجه',
+                            barcode: cols[3].trim(),
+                            size: cols[4].replace(/"/g, '').trim(),
+                            price: cols[5].replace(/"/g, '').trim(),
+                            stock: parseInt(cols[6]) || 0,
+                            expiryDate: cols[7] ? cols[7].trim() : '',
+                            usage: 'مستحضر معتمد من صيدلية رحيق السلامة',
+                            image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80'
+                        };
+                        const existingIdx = productsData.findIndex(p => String(p.id) === String(newProd.id));
+                        if (existingIdx !== -1) {
+                            productsData[existingIdx] = newProd;
+                        } else {
+                            productsData.push(newProd);
+                        }
+                        importedCount++;
+                    }
+                }
+                saveProductsToCloud();
+                showToast(`تم استيراد ${importedCount} مادة بنجاح 📤`);
+            };
+            reader.readAsText(file);
+        }
+
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1598,12 +1774,10 @@
                 showToast('أنت مسجل حالياً كـ مشرف', 'ℹ️');
                 return;
             }
-            document.getElementById('adminPinInput').value = '';
             const modal = document.getElementById('adminPinModal');
             modal.classList.remove('hidden');
             modal.classList.add('modal-active');
             pushModalState('adminPinModal');
-            document.getElementById('adminPinInput').focus();
         }
 
         function closePinModal() {
@@ -1612,30 +1786,26 @@
             modal.classList.add('hidden');
         }
 
-        // تفريغ مربع البحث تلقائياً عند تسجيل الدخول لمنع بقاء أي رقم باركود
-        function verifyAdminPin() {
-            const pin = document.getElementById('adminPinInput').value.trim();
-            if (pin === 'google@199920012005') {
-                isAdmin = true;
-                localStorage.setItem('sidalihet_admin', 'true');
-                
-                const searchInput = document.getElementById('headerSearch');
-                if (searchInput) searchInput.value = '';
-                renderProducts();
+        // Firebase Auth Login Handler
+        function handleSecureLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('adminEmailInput').value.trim();
+            const pass = document.getElementById('adminPasswordInput').value;
 
+            auth.signInWithEmailAndPassword(email, pass)
+            .then(() => {
                 closePinModal();
-                updateAdminUI();
-                showToast('تم الدخول بنجاح 🚀', '🛡️');
-            } else {
-                showToast('رمز المرور غير صحيح', '❌');
-            }
+                showToast('تم تسجيل الدخول بنجاح 🚀', '🛡️');
+            })
+            .catch((error) => {
+                showToast('بيانات الدخول غير صحيحة', '❌');
+            });
         }
 
         function logoutAdmin() {
-            isAdmin = false;
-            localStorage.setItem('sidalihet_admin', 'false');
-            updateAdminUI();
-            showToast('تم قفل لوحة المشرف بنجاح', '🔒');
+            auth.signOut().then(() => {
+                showToast('تم تسجيل الخروج بنجاح', '🔒');
+            });
         }
 
         function updateDeliveryStatusUI() {
@@ -1693,13 +1863,9 @@
                     chosenClass: 'sortable-chosen',
                     onEnd: function () {
                         const newOrderIds = Array.from(grid.children).map(card => card.getAttribute('data-id'));
-                        
-                        localStorage.setItem('raheeq_custom_display_order', JSON.stringify(newOrderIds));
-                        
                         productsData.sort((a, b) => {
                             return newOrderIds.indexOf(String(a.id)) - newOrderIds.indexOf(String(b.id));
                         });
-                        
                         saveProductsToCloud();
                         showToast('تم حفظ الترتيب السحابي 📌');
                     }
@@ -1732,6 +1898,18 @@
                 const isFav = wishlist.includes(String(prod.id));
                 const badgeInfo = getStockBadgeStyle(prod.stock);
 
+                let discountBadge = '';
+                let oldPriceText = '';
+                if (prod.originalPrice) {
+                    const cur = parseFloat(prod.price.replace(/[^0-9.]/g, '')) || 0;
+                    const orig = parseFloat(prod.originalPrice.replace(/[^0-9.]/g, '')) || 0;
+                    if (orig > cur) {
+                        const discountPercent = Math.round(((orig - cur) / orig) * 100);
+                        discountBadge = `<span class="absolute top-2 right-2 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow">خصم ${discountPercent}%</span>`;
+                        oldPriceText = `<span class="text-[9px] text-slate-500 line-through mr-1">${prod.originalPrice}</span>`;
+                    }
+                }
+
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-2.5 w-full flex flex-col justify-between gap-2 shadow-sm relative" data-id="${prod.id}">
                         
@@ -1743,6 +1921,8 @@
                             <div onclick="openProductDetailModal('${prod.id}')" class="w-full h-32 sm:h-36 rounded-xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition p-2">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full block" loading="lazy">
                                 
+                                ${discountBadge}
+
                                 <span class="absolute bottom-1 right-1 text-[8px] px-1.5 py-0.5 rounded-md shadow border ${badgeInfo.bg} ${badgeInfo.border} ${badgeInfo.text}">
                                     ${badgeInfo.label}
                                 </span>
@@ -1759,7 +1939,10 @@
                                 </div>
 
                                 <div class="flex items-center justify-between pt-1 border-t border-slate-800/40">
-                                    <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
+                                    <div class="flex items-center">
+                                        <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
+                                        ${oldPriceText}
+                                    </div>
                                     <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${prod.size}</span>
                                 </div>
                             </div>
@@ -1822,7 +2005,9 @@
 
         function sortProducts(criteria) {
             let sorted = [...productsData];
-            if (criteria === 'price-low') {
+            if (criteria === 'offers') {
+                sorted = sorted.filter(p => p.originalPrice);
+            } else if (criteria === 'price-low') {
                 sorted.sort((a, b) => parseFloat(a.price.replace(/[^0-9.]/g, '')) - parseFloat(b.price.replace(/[^0-9.]/g, '')));
             } else if (criteria === 'price-high') {
                 sorted.sort((a, b) => parseFloat(b.price.replace(/[^0-9.]/g, '')) - parseFloat(a.price.replace(/[^0-9.]/g, '')));
@@ -2039,6 +2224,7 @@
                 customerAddress: address,
                 items: orderItems,
                 totalPrice: total.toLocaleString() + ' د.ع',
+                totalNum: total,
                 timestamp: Date.now(),
                 dateStr: `${new Date().toLocaleDateString('ar-IQ')} ${new Date().toLocaleTimeString('ar-IQ')}`,
                 status: 'pending'
@@ -2113,7 +2299,7 @@
                                 تم البيع (خصم من المخزن ✅)
                             </button>
                             <button onclick="cancelOrderWithoutDeduct('${order.keyId}')" class="bg-rose-950/70 hover:bg-rose-900 border border-rose-800 text-rose-300 text-[11px] font-bold px-3 py-1.5 rounded-xl active:scale-95 transition">
-                                راجع / طلب وهمي ❌
+                                راجع / ملغي ❌
                             </button>
                         </div>
                     `;
@@ -2121,16 +2307,16 @@
                     statusBadge = `<span class="bg-emerald-950 text-emerald-300 border border-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-lg">✅ تم البيع والتجهيز</span>`;
                     actionButtons = `
                         <div class="flex justify-between items-center pt-2 border-t border-slate-900">
-                            <span class="text-[9.5px] text-emerald-400 font-bold">تم خصم الكميات من المخزن بنجاح</span>
-                            <button onclick="deleteOrderRecord('${order.keyId}')" class="text-slate-500 hover:text-rose-400 text-xs font-bold p-1">حذف من السجل 🗑️</button>
+                            <span class="text-[9.5px] text-emerald-400 font-bold">تم خصم الكميات من المخزن</span>
+                            <button onclick="deleteOrderRecord('${order.keyId}')" class="text-slate-500 hover:text-rose-400 text-xs font-bold p-1">حذف 🗑️</button>
                         </div>
                     `;
                 } else {
                     statusBadge = `<span class="bg-rose-950 text-rose-300 border border-rose-800 text-[9px] font-bold px-2 py-0.5 rounded-lg">❌ ملغي / راجع</span>`;
                     actionButtons = `
                         <div class="flex justify-between items-center pt-2 border-t border-slate-900">
-                            <span class="text-[9.5px] text-slate-400">لم يتم خصم أي مادة من المخزن</span>
-                            <button onclick="deleteOrderRecord('${order.keyId}')" class="text-slate-500 hover:text-rose-400 text-xs font-bold p-1">حذف من السجل 🗑️</button>
+                            <span class="text-[9.5px] text-slate-400">لم يتم خصم أي مادة</span>
+                            <button onclick="deleteOrderRecord('${order.keyId}')" class="text-slate-500 hover:text-rose-400 text-xs font-bold p-1">حذف 🗑️</button>
                         </div>
                     `;
                 }
@@ -2182,14 +2368,11 @@
             const order = ordersData.find(o => o.keyId === orderKey);
             if (!order || order.status !== 'pending') return;
 
-            let deductionErrors = [];
             if (order.items && Array.isArray(order.items)) {
                 order.items.forEach(item => {
                     const prod = productsData.find(p => String(p.id) === String(item.id));
                     if (prod) {
                         prod.stock = Math.max(0, prod.stock - item.qty);
-                    } else {
-                        deductionErrors.push(item.name);
                     }
                 });
             }
@@ -2197,7 +2380,7 @@
             saveProductsToCloud();
             ordersRef.child(orderKey).update({ status: 'completed' });
             renderProducts();
-            showToast('تم تأكيد البيع وخصم المواد من المخزن بنجاح ✅', '📦');
+            showToast('تم تأكيد البيع وخصم المواد بنجاح ✅', '📦');
         }
 
         function cancelOrderWithoutDeduct(orderKey) {
@@ -2210,6 +2393,76 @@
             playPopSound();
             ordersRef.child(orderKey).remove();
             showToast('تم حذف الطلب من السجل', '🗑️');
+        }
+
+        // Analytics & Reports Logic
+        function openReportsModal() {
+            playPopSound();
+            const modal = document.getElementById('reportsModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            pushModalState('reportsModal');
+
+            let todaySales = 0;
+            let monthSales = 0;
+            let completedOrders = 0;
+            const now = new Date();
+            const todayStr = now.toLocaleDateString('ar-IQ');
+            const thisMonth = now.getMonth();
+            const thisYear = now.getFullYear();
+
+            const productSalesCount = {};
+
+            ordersData.forEach(order => {
+                if (order.status === 'completed') {
+                    completedOrders++;
+                    const oDate = new Date(order.timestamp);
+                    const amount = order.totalNum || (parseFloat(order.totalPrice.replace(/[^0-9.]/g, '')) || 0);
+
+                    if (oDate.toLocaleDateString('ar-IQ') === todayStr) {
+                        todaySales += amount;
+                    }
+                    if (oDate.getMonth() === thisMonth && oDate.getFullYear() === thisYear) {
+                        monthSales += amount;
+                    }
+
+                    if (order.items && Array.isArray(order.items)) {
+                        order.items.forEach(item => {
+                            productSalesCount[item.name] = (productSalesCount[item.name] || 0) + item.qty;
+                        });
+                    }
+                }
+            });
+
+            let totalInvValue = 0;
+            productsData.forEach(p => {
+                const pPrice = parseFloat(p.price.replace(/[^0-9.]/g, '')) || 0;
+                totalInvValue += (pPrice * (p.stock || 0));
+            });
+
+            document.getElementById('repTodaySales').innerText = todaySales.toLocaleString() + ' د.ع';
+            document.getElementById('repMonthSales').innerText = monthSales.toLocaleString() + ' د.ع';
+            document.getElementById('repCompletedOrders').innerText = completedOrders;
+            document.getElementById('repTotalInventoryValue').innerText = totalInvValue.toLocaleString() + ' د.ع';
+
+            const topSellingListEl = document.getElementById('repTopSellingList');
+            const sortedItems = Object.entries(productSalesCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            if (sortedItems.length > 0) {
+                topSellingListEl.innerHTML = sortedItems.map(([name, qty]) => `
+                    <div class="flex justify-between items-center py-1 border-b border-slate-900">
+                        <span class="truncate">• ${name}</span>
+                        <span class="font-bold text-amber-400">${qty} قطعة</span>
+                    </div>
+                `).join('');
+            } else {
+                topSellingListEl.innerHTML = `<div class="text-slate-500 text-[10px]">لا توجد مبيعات مكتملة بعد</div>`;
+            }
+        }
+
+        function closeReportsModal() {
+            const modal = document.getElementById('reportsModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
         }
 
         function updateAdminUI() {
@@ -2268,7 +2521,9 @@
             document.getElementById('prodUsage').value = '';
             document.getElementById('prodSize').value = '';
             document.getElementById('prodPrice').value = '';
+            document.getElementById('prodOriginalPrice').value = '';
             document.getElementById('prodStock').value = '';
+            document.getElementById('prodExpiry').value = '';
             document.getElementById('prodImage').value = '';
             document.getElementById('prodFileInput').value = '';
 
@@ -2290,7 +2545,9 @@
             document.getElementById('prodUsage').value = prod.usage;
             document.getElementById('prodSize').value = prod.size;
             document.getElementById('prodPrice').value = prod.price.replace(/[^0-9]/g, '');
+            document.getElementById('prodOriginalPrice').value = prod.originalPrice ? prod.originalPrice.replace(/[^0-9]/g, '') : '';
             document.getElementById('prodStock').value = prod.stock;
+            document.getElementById('prodExpiry').value = prod.expiryDate || '';
             document.getElementById('prodImage').value = prod.image;
             document.getElementById('prodFileInput').value = '';
 
@@ -2314,6 +2571,9 @@
             let rawPrice = document.getElementById('prodPrice').value.trim();
             let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : Number(rawPrice.replace(/[^0-9]/g, '')).toLocaleString() + ' د.ع';
 
+            let rawOrigPrice = document.getElementById('prodOriginalPrice').value.trim();
+            let formattedOrigPrice = rawOrigPrice ? (rawOrigPrice.includes('د.ع') ? rawOrigPrice : Number(rawOrigPrice.replace(/[^0-9]/g, '')).toLocaleString() + ' د.ع') : null;
+
             let imgVal = document.getElementById('prodImage').value.trim();
             if (!imgVal || (!imgVal.startsWith('http') && !imgVal.startsWith('data:image'))) {
                 imgVal = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
@@ -2328,7 +2588,9 @@
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
                     productsData[index].size = document.getElementById('prodSize').value.trim();
                     productsData[index].price = formattedPrice;
+                    productsData[index].originalPrice = formattedOrigPrice;
                     productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
+                    productsData[index].expiryDate = document.getElementById('prodExpiry').value;
                     productsData[index].image = imgVal;
                 }
             } else {
@@ -2340,7 +2602,9 @@
                     usage: document.getElementById('prodUsage').value.trim(),
                     size: document.getElementById('prodSize').value.trim(),
                     price: formattedPrice,
+                    originalPrice: formattedOrigPrice,
                     stock: parseInt(document.getElementById('prodStock').value) || 0,
+                    expiryDate: document.getElementById('prodExpiry').value,
                     image: imgVal
                 };
                 productsData.unshift(newProdData);
