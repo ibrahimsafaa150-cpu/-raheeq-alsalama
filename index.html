@@ -211,11 +211,8 @@
             </div>
         </div>
 
-        <!-- شريط أدوات المشرف (يشمل ميزة الماسح الذكي ٣ صور والإضافات الكاملة) -->
+        <!-- شريط أدوات المشرف (يظهر بسطر مستقل منظم عند الدخول) -->
         <div id="adminActionHeader" class="hidden items-center gap-1.5 pt-2 overflow-x-auto no-scrollbar w-full border-t border-slate-800/80 mt-1.5">
-            <button onclick="playPopSound(); openTripleAiScanModal()" class="bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 text-white font-black text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إدخال ذكي متأني بثلاث صور">
-                <span>🤖</span> <span>الماسح الذكي (٣ صور)</span>
-            </button>
             <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/90 border border-indigo-600/60 text-indigo-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="تقارير المبيعات">
                 <span>📊</span> <span>التقارير</span>
             </button>
@@ -229,7 +226,7 @@
             <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 border border-slate-700 shrink-0 shadow active:scale-95" title="الإعدادات">
                 <span>⚙️</span>
             </button>
-            <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج يدوياً">
+            <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج">
                 <span>➕</span> <span>إضافة</span>
             </button>
             <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/90 border border-rose-800 text-rose-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg shrink-0 active:scale-95" title="تسجيل الخروج">
@@ -410,61 +407,304 @@
         </button>
     </div>
 
-    <!-- Triple Image Intelligent Scanner Modal (نظام الثلاث صور المتأني والذكي 100%) -->
-    <div id="tripleAiScanModal" onclick="handleOutsideModalClick(event, 'tripleAiScanModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
-        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative border border-purple-500/40 space-y-3 max-h-[92vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+    <!-- Admin Reports & Analytics Modal -->
+    <div id="reportsModal" onclick="handleOutsideModalClick(event, 'reportsModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[88vh] flex flex-col border border-indigo-500/30">
+            <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
                 <h3 class="text-xs font-black text-white flex items-center gap-1.5">
-                    <span class="text-purple-400">🤖</span> الماسح الذكي المتأني (٣ صور)
+                    <span class="text-indigo-400">📊</span> تقرير المبيعات والأرباح
                 </h3>
-                <button onclick="playPopSound(); closeTripleAiScanModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+                <button onclick="playPopSound(); closeReportsModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
-            <p class="text-[10.5px] text-slate-300 leading-relaxed text-right">
-                ارفع الصور الثلاث، وسيقوم النظام بتمعن كامل وضبط أبعاد الصورة بخلفية بيضاء نقية واستخراج الأسعار والباركود والفوائد الصيدلانية السليمة تلقائياً.
-            </p>
-
-            <!-- 3 Image Inputs -->
-            <div class="space-y-2.5 text-xs text-right">
-                <div class="p-2.5 bg-slate-950 rounded-xl border border-slate-800">
-                    <label class="block text-[10px] font-bold text-amber-400 mb-1">١. صورة علبة المنتج (لضبط الأبعاد والمظهر):</label>
-                    <input type="file" id="imgBoxInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9.5px] file:font-black file:bg-amber-950 file:text-amber-300 cursor-pointer">
-                </div>
-
-                <div class="p-2.5 bg-slate-950 rounded-xl border border-slate-800">
-                    <label class="block text-[10px] font-bold text-teal-400 mb-1">٢. صورة السعر والكمية بالمخزن (أو اكتبهما بالأسفل):</label>
-                    <input type="file" id="imgPriceInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9.5px] file:font-black file:bg-teal-950 file:text-teal-300 cursor-pointer">
-                    <div class="grid grid-cols-2 gap-2 mt-2">
-                        <input type="text" id="manualQuickPrice" placeholder="السعر (مثال: 9000)" class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white">
-                        <input type="number" id="manualQuickStock" placeholder="الكمية (مثال: 6)" class="bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white">
+            <div class="space-y-3 overflow-y-auto no-scrollbar">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-950 p-3 rounded-xl border border-indigo-900/40 text-center">
+                        <span class="text-[9px] text-slate-400 block">إجمالي مبيعات اليوم</span>
+                        <span id="repTodaySales" class="text-sm font-black text-amber-400">0 د.ع</span>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-xl border border-indigo-900/40 text-center">
+                        <span class="text-[9px] text-slate-400 block">إجمالي مبيعات الشهر</span>
+                        <span id="repMonthSales" class="text-sm font-black text-emerald-400">0 د.ع</span>
                     </div>
                 </div>
 
-                <div class="p-2.5 bg-slate-950 rounded-xl border border-slate-800">
-                    <label class="block text-[10px] font-bold text-cyan-400 mb-1">٣. صورة الباركود (أو اكتبه يدوياً):</label>
-                    <input type="file" id="imgBarcodeInput" accept="image/*" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[9.5px] file:font-black file:bg-cyan-950 file:text-cyan-300 cursor-pointer">
-                    <input type="text" id="manualQuickBarcode" placeholder="الباركود (اختياري - يتم توليده إن ترك فارغاً)" class="mt-2 w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-white">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-center">
+                        <span class="text-[9px] text-slate-400 block">الطلبات المكتملة</span>
+                        <span id="repCompletedOrders" class="text-xs font-black text-cyan-400">0</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-center">
+                        <span class="text-[9px] text-slate-400 block">قيمة المخزون الكلية</span>
+                        <span id="repTotalInventoryValue" class="text-xs font-black text-white">0 د.ع</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5 text-right">
+                    <span class="text-[10px] font-bold text-indigo-300 block">المنتجات الأكثر مبيعاً ⭐</span>
+                    <div id="repTopSellingList" class="text-xs space-y-1 text-slate-300">
+                        <div class="text-slate-500 text-[10px]">لا توجد بيانات كافية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Orders & Sales Queue Modal -->
+    <div id="ordersQueueModal" onclick="handleOutsideModalClick(event, 'ordersQueueModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col border border-teal-500/30">
+            <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-teal-400">🔔</span> سجل الطلبيات الواردة وإدارة البيع
+                </h3>
+                <button onclick="playPopSound(); closeOrdersQueueModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 my-2 text-center text-xs">
+                <div class="bg-slate-950 p-2 rounded-xl border border-teal-800/40">
+                    <span class="text-[9px] text-teal-400 block">طلبيات جديدة بانتظار التأكيد</span>
+                    <span id="pendingCountEl" class="text-xs font-black text-white">0</span>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-xl border border-emerald-800/40">
+                    <span class="text-[9px] text-emerald-400 block">مبيعات مكتملة الخصم</span>
+                    <span id="completedCountEl" class="text-xs font-black text-emerald-400">0</span>
                 </div>
             </div>
 
-            <!-- Loader with 10s Countdown Analysis Indicator -->
-            <div id="tripleScanLoader" class="hidden text-center py-3 bg-purple-950/40 rounded-xl border border-purple-800/60 space-y-1">
-                <div class="text-sm font-black text-purple-300 flex items-center justify-center gap-1.5 animate-pulse">
-                    <span>🧠</span> <span>جاري القراءة والتمعن بالصور... (<span id="analysisTimer">10</span> ثانية)</span>
-                </div>
-                <p class="text-[9.5px] text-slate-400">تفريغ الاسم التجاري، ضبط خلفية الصورة، صياغة الاستخدام الصيدلاني وتوليد الباركود</p>
+            <div class="flex-grow overflow-y-auto space-y-3 pr-0.5 no-scrollbar my-2" id="ordersQueueList"></div>
+
+            <div class="border-t border-slate-800 pt-2 flex justify-between items-center text-[10px] text-slate-400">
+                <span>💡 تأكيد البيع يخصم المخزن تلقائياً، والراجع/الملغي لا يلمس المخزن</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcode Scanner Modal -->
+    <div id="barcodeModal" onclick="handleOutsideModalClick(event, 'barcodeModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[60] hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative flex flex-col gap-3 text-center border border-cyan-500/30">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-cyan-400">📷</span> قارئ باركود المنتجات
+                </h3>
+                <button onclick="stopBarcodeScanner()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+            
+            <p class="text-[11px] text-slate-300">وجّه الكاميرا نحو باركود العلبة ليتم إدراجه فوراً</p>
+            
+            <div class="w-full aspect-square bg-black rounded-2xl overflow-hidden relative border-2 border-cyan-500/50 shadow-inner flex items-center justify-center">
+                <div id="scannerVideoContainer" class="w-full h-full"></div>
             </div>
 
-            <div class="flex gap-2 pt-1 border-t border-slate-800">
-                <button type="button" onclick="playPopSound(); closeTripleAiScanModal()" class="flex-1 bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold">إلغاء</button>
-                <button type="button" id="startTripleAnalysisBtn" onclick="runTripleImageAnalysis()" class="flex-1 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 text-white py-2 rounded-xl text-xs font-black shadow active:scale-95 transition">
-                    بدء التحليل والحفظ السحابي 🚀
+            <button onclick="stopBarcodeScanner()" class="w-full bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-bold active:scale-95 transition">
+                إلغاء المسح
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div id="productDetailModal" onclick="handleOutsideModalClick(event, 'productDetailModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-sm shadow-2xl relative border-2 border-cyan-500/30 flex flex-col gap-3 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <span class="text-[10px] font-black text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-lg border border-cyan-800" id="modalProdCategory">القسم</span>
+                <button onclick="playPopSound(); closeProductDetailModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <div class="w-full aspect-square max-w-[280px] mx-auto rounded-2xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden shrink-0 p-3">
+                <img id="modalProdImage" src="" class="object-contain w-full h-full block" alt="صورة المنتج">
+                <span id="modalProdStock" class="absolute bottom-2 right-2 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow border"></span>
+                <span id="modalProdDiscount" class="hidden absolute top-2 right-2 bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow"></span>
+            </div>
+
+            <div class="space-y-1.5 text-right">
+                <div class="flex items-start justify-between gap-2">
+                    <h3 id="modalProdName" class="text-sm font-black text-white leading-snug"></h3>
+                    <span id="modalProdSize" class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-black px-2 py-0.5 rounded shrink-0"></span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-black text-amber-400" id="modalProdPrice"></span>
+                        <span class="text-xs text-slate-500 line-through font-bold hidden" id="modalProdOldPrice"></span>
+                    </div>
+                    <span id="modalProdBarcode" class="text-[9px] text-slate-400 font-mono"></span>
+                </div>
+                <div id="modalExpiryBadge" class="text-[9.5px] text-slate-400 font-semibold"></div>
+            </div>
+
+            <div class="bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-right space-y-1">
+                <span class="text-[9px] font-bold text-amber-400 block">الفوائد والاستخدام الكامل</span>
+                <p id="modalProdUsage" class="text-xs text-slate-200 leading-relaxed font-semibold"></p>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 flex gap-2">
+                <button id="modalFavBtn" class="bg-slate-800 border border-slate-700 text-rose-400 px-3.5 py-2.5 rounded-xl text-sm font-bold active:scale-95 transition">
+                    🤍
+                </button>
+                <button id="modalAddToCartBtn" class="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 hover:opacity-95 text-white font-black py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-lg active:scale-95">
+                    <span>🛒</span> <span>إضافة إلى الطلبية</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modals Container: Details, Cart, Inventory, Reports, Settings, Add/Edit -->
+    <!-- Admin Inventory & Shortages Modal -->
+    <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
+            <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span class="text-amber-400">📦</span> جرد المخزن ونواقص الصيدلية
+                </h3>
+                <button onclick="playPopSound(); closeInventoryModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 my-2 text-center">
+                <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+                    <span class="text-[9px] text-slate-400 block">إجمالي المواد</span>
+                    <span id="invTotalCount" class="text-xs font-black text-cyan-400">0</span>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-xl border border-amber-800/40">
+                    <span class="text-[9px] text-amber-400 block">منخفض (&le; 5)</span>
+                    <span id="invLowCount" class="text-xs font-black text-amber-400">0</span>
+                </div>
+                <div class="bg-slate-950 p-2 rounded-xl border border-rose-800/40">
+                    <span class="text-[9px] text-rose-400 block">حرج ونافد (&le; 2)</span>
+                    <span id="invOutCount" class="text-xs font-black text-rose-400">0</span>
+                </div>
+            </div>
+
+            <div class="my-1.5 flex gap-2">
+                <input type="text" id="invSearchInput" oninput="filterInventoryList(this.value)" placeholder="بحث بالاسم، القسم، أو الباركود..." class="w-full bg-slate-950 text-white placeholder-slate-500 text-xs rounded-xl px-3 py-2 border border-slate-800 focus:outline-none focus:border-cyan-400">
+                <button onclick="startBarcodeScanner('inventory')" class="bg-cyan-950 border border-cyan-800 text-cyan-300 px-3 py-2 rounded-xl text-xs font-bold active:scale-95 shrink-0 flex items-center gap-1" title="مسح باركود للجرد">
+                    <span>📷</span> <span>مسح</span>
+                </button>
+            </div>
+
+            <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
+
+            <div class="border-t border-slate-800 pt-2 flex flex-col gap-2">
+                <div class="flex gap-2">
+                    <button onclick="exportToCSV()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 border border-indigo-900/60 active:scale-95 transition">
+                        <span>📥</span> <span>تصدير Excel (CSV)</span>
+                    </button>
+                    <label class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 border border-amber-900/60 active:scale-95 transition cursor-pointer text-center">
+                        <span>📤</span> <span>استيراد CSV</span>
+                        <input type="file" accept=".csv" class="hidden" onchange="importFromCSV(event)">
+                    </label>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="copyShortagesToClipboard()" class="flex-1 bg-slate-800 text-slate-200 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 active:scale-95 transition border border-slate-700">
+                        <span>📋</span> <span>نسخ كشف النواقص</span>
+                    </button>
+                    <button onclick="sendShortagesToWhatsApp()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1 active:scale-95 transition shadow">
+                        <span>📲</span> <span>إرسال النواقص لمذخر</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Static Drawer Modals -->
+    <div id="servicesModal" onclick="handleOutsideModalClick(event, 'servicesModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">✨ خدماتنا المميزة</h3>
+                <button onclick="playPopSound(); closeStaticModal('servicesModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <div class="space-y-2 text-xs text-slate-300">
+                <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                    <p class="font-bold text-cyan-300">🧴 استشارات عناية وبشرة مخصصة</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">توجيه صيدلاني لاختيار الروتين الأنسب لنوع بشرتك وشعرك</p>
+                </div>
+                <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                    <p class="font-bold text-amber-400">📦 حجز وتجهيز فوري</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">تجهيز مستحضرات العناية والمستلزمات الطبية بسرعة ودقة</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mapModal" onclick="handleOutsideModalClick(event, 'mapModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative text-center space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">📍 موقع الصيدلية على الخريطة</h3>
+                <button onclick="playPopSound(); closeStaticModal('mapModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <p class="text-xs text-slate-300 font-bold">صيدلية رَحِيْقُ السَّلَامَة</p>
+            <p class="text-[10px] text-slate-400">اضغط على الزر أدناه للانتقال مباشرة إلى موقع الصيدلية الدقيق في خرائط Google</p>
+            <a href="https://maps.app.goo.gl/h2v2B7SLH3rAAEJDA?g_st=ac" target="_blank" class="block w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg active:scale-95 transition">
+                فتح الموقع في خرائط Google 🗺️
+            </a>
+        </div>
+    </div>
+
+    <div id="contactModal" onclick="handleOutsideModalClick(event, 'contactModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">🎧 تواصل معنا</h3>
+                <button onclick="playPopSound(); closeStaticModal('contactModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <div class="space-y-2 text-xs">
+                <a href="https://wa.me/9647726053522" target="_blank" class="flex items-center gap-2 bg-emerald-950/80 border border-emerald-800 p-2.5 rounded-xl text-emerald-300 font-bold">
+                    <span>💬</span> <span>محادثة واتساب مباشرة</span>
+                </a>
+                <a href="tel:07726053522" class="flex items-center gap-2 bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-slate-200 font-bold">
+                    <span>📞</span> <span>اتصال هاتفي مباشر</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="guideModal" onclick="handleOutsideModalClick(event, 'guideModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">📖 دليل الاستخدام والحجز</h3>
+                <button onclick="playPopSound(); closeStaticModal('guideModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+                1 تصفح الأقسام بالسحب يميناً ويساراً أو امسح باركود المنتج بالكاميرا 📷<br>
+                2 اضغط على أي منتج لمعاينة تفاصيله كاملة<br>
+                3 أضف المنتجات للمفضلة (❤️) أو لسلة الحجز<br>
+                4 اضغط على تأكيد الطلب لتجهيز مشترياتك وإرسالها فوراً للصيدلية عبر WhatsApp
+            </p>
+        </div>
+    </div>
+
+    <div id="privacyModal" onclick="handleOutsideModalClick(event, 'privacyModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">🛡️ سياسة الخصوصية</h3>
+                <button onclick="playPopSound(); closeStaticModal('privacyModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+                نلتزم في صيدلية رحيق السلامة بحماية خصوصية جميع العملاء، ولا تُستخدم بيانات الاسم أو الهاتف إلا لغرض تأكيد وتجهيز الطلبيات بدقة.
+            </p>
+        </div>
+    </div>
+
+    <div id="termsModal" onclick="handleOutsideModalClick(event, 'termsModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">🔄 الأحكام والشروط</h3>
+                <button onclick="playPopSound(); closeStaticModal('termsModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+                جميع المعروضات هي مستحضرات عناية وتجميل ومستلزمات طبية وتغذوية معتمدة ومصرحة، صرف الأدوية الوصفية يتم وفق اللوائح النقابية المباشرة داخل الصيدلية.
+            </p>
+        </div>
+    </div>
+
+    <div id="aboutModal" onclick="handleOutsideModalClick(event, 'aboutModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-sm shadow-2xl relative space-y-2.5">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <h3 class="text-xs font-black text-white">ℹ️ من نحن</h3>
+                <button onclick="playPopSound(); closeStaticModal('aboutModal')" class="text-slate-400 font-bold p-1">✕</button>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+                صيدلية رَحِيْقُ السَّلَامَة • وجهتكم الموثوقة للعناية، الجمال، والمستلزمات الطبية بأعلى معايير الجودة الصيدلانية.
+            </p>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
     <div id="cartModal" onclick="handleOutsideModalClick(event, 'cartModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -572,7 +812,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal (Manual) -->
+    <!-- Admin Add/Edit Modal with Discounts & Expiry Date -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -732,106 +972,6 @@
         let currentFilter = 'الكل';
         let isWishlistMode = false;
         let sortableInstance = null;
-
-        // Triple Image Scanner UI and Process Engine
-        function openTripleAiScanModal() {
-            document.getElementById('tripleAiScanModal').classList.remove('hidden');
-            document.getElementById('tripleAiScanModal').classList.add('modal-active');
-            pushModalState('tripleAiScanModal');
-        }
-
-        function closeTripleAiScanModal() {
-            document.getElementById('tripleAiScanModal').classList.remove('modal-active');
-            document.getElementById('tripleAiScanModal').classList.add('hidden');
-            document.getElementById('tripleScanLoader').classList.add('hidden');
-        }
-
-        function runTripleImageAnalysis() {
-            const boxFile = document.getElementById('imgBoxInput').files[0];
-            if (!boxFile) {
-                showToast('يرجى اختيار صورة علبة المنتج أولاً', '⚠️');
-                return;
-            }
-
-            const loader = document.getElementById('tripleScanLoader');
-            const timerEl = document.getElementById('analysisTimer');
-            const btn = document.getElementById('startTripleAnalysisBtn');
-            loader.classList.remove('hidden');
-            btn.disabled = true;
-
-            // Countdown 10 seconds for thorough analysis
-            let timeLeft = 10;
-            timerEl.innerText = timeLeft;
-            const interval = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                }
-            }, 1000);
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    // Generate Square High-Definition White-Background Canvas
-                    const canvas = document.createElement('canvas');
-                    const size = 1080;
-                    canvas.width = size;
-                    canvas.height = size;
-                    const ctx = canvas.getContext('2d');
-
-                    // Fill Crisp White Background
-                    ctx.fillStyle = "#FFFFFF";
-                    ctx.fillRect(0, 0, size, size);
-
-                    // Scale & Center the Product Box inside Square Canvas
-                    let scale = Math.min((size * 0.9) / img.width, (size * 0.9) / img.height);
-                    let nw = img.width * scale;
-                    let nh = img.height * scale;
-                    let nx = (size - nw) / 2;
-                    let ny = (size - nh) / 2;
-
-                    ctx.drawImage(img, nx, ny, nw, nh);
-                    const processedImgBase64 = canvas.toDataURL('image/jpeg', 0.90);
-
-                    setTimeout(() => {
-                        let parsedName = boxFile.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-                        if (!parsedName || parsedName.length < 3) {
-                            parsedName = "TAILAIMEI Vitamin C Serum";
-                        }
-
-                        let rawPrice = document.getElementById('manualQuickPrice').value.trim() || "9000";
-                        let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : Number(rawPrice.replace(/[^0-9]/g, '')).toLocaleString() + ' د.ع';
-                        let stockVal = parseInt(document.getElementById('manualQuickStock').value) || 6;
-                        let customBarcode = document.getElementById('manualQuickBarcode').value.trim() || String(Math.floor(6900000000000 + Math.random() * 90000000000));
-
-                        const newProductEntry = {
-                            id: 'prod_' + Date.now(),
-                            category: "العناية بالبشرة والوجه",
-                            name: parsedName,
-                            barcode: customBarcode,
-                            usage: "سيروم فيتامين C المركز لتفتيح وتوحيد لون البشرة، تقليل التصبغات والبقع وآثار الحبوب، ومضاد أكسدة يدعم نضارة وتجديد الخلايا.",
-                            size: "30ml",
-                            price: formattedPrice,
-                            originalPrice: "11,000 د.ع",
-                            stock: stockVal,
-                            expiryDate: "2028-06",
-                            image: processedImgBase64
-                        };
-
-                        productsData.unshift(newProductEntry);
-                        saveProductsToCloud();
-                        loader.classList.add('hidden');
-                        btn.disabled = false;
-                        closeTripleAiScanModal();
-                        showToast(`تم حفظ وتدقيق "${parsedName}" بنجاح 🤖✨`, '✅');
-                    }, 10000);
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(boxFile);
-        }
 
         // PWA Prompt
         let deferredPrompt = null;
@@ -1126,7 +1266,7 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal', 'tripleAiScanModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal'];
             
             allModals.forEach(id => {
                 const el = document.getElementById(id);
