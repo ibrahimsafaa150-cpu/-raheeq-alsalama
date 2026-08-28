@@ -976,8 +976,14 @@
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
-        // المفتاح المعتمد والمحدث
-        const DEFAULT_GEMINI_KEY = "AIzaSyAUVg24aTmzhuU_v_Gvi1ZTSD7PMuOGcsE";
+        // المفتاح المعتمد والمباشر
+        const DEFAULT_GEMINI_KEY = "AQ.Ab8RN6KwPXRwL_GD4eRK9vKcl_vz-wheLWA76JmwcPAYpq0JAg";
+        
+        // إزالة أي مفتاح قديم مخزن في المتصفح وتثبيت المفتاح الجديد
+        let storedKey = localStorage.getItem('gemini_api_key');
+        if (!storedKey || storedKey.startsWith('AIzaSyAUVg')) {
+            localStorage.setItem('gemini_api_key', DEFAULT_GEMINI_KEY);
+        }
         let geminiApiKey = localStorage.getItem('gemini_api_key') || DEFAULT_GEMINI_KEY;
 
         auth.onAuthStateChanged((user) => {
@@ -2463,7 +2469,7 @@
             showToast('تم حذف المنتج سحابياً', '🗑️');
         }
 
-        /* --- Smart 2-Images AI Flow مع الضغط الخفيف والسريع --- */
+        /* --- Smart 2-Images AI Flow --- */
         function openTwoImagesModal() {
             document.getElementById('aiBoxImgInput').value = '';
             document.getElementById('aiCalcImgInput').value = '';
