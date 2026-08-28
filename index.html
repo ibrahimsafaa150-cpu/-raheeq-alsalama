@@ -18,7 +18,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs with Authentication Support -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -148,12 +148,12 @@
         <span id="toastMessage" class="tracking-wide">تمت العملية بنجاح</span>
     </div>
 
-    <!-- PWA Install Banner -->
+    <!-- PWA Install Prompt Banner -->
     <div id="installAppPrompt" class="hidden fixed bottom-16 left-3 right-3 z-40 bg-slate-900/95 backdrop-blur-md border border-cyan-500/40 p-3 rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.25)] flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
             <div class="w-9 h-9 rounded-xl bg-slate-950 p-1 border border-amber-500/40 flex items-center justify-center shrink-0">🌿</div>
             <div class="min-w-0 text-right">
-                <h4 class="text-xs font-black text-white truncate">تثبيت التطبيق على الشاشة الرئيسية</h4>
+                <h4 class="text-xs font-black text-white truncate">تثبيت تطبيق على شاشة لوصول أسهل</h4>
                 <p class="text-[9px] text-slate-400 truncate">تصفح أسرع وحجز فوري بدون متصفح</p>
             </div>
         </div>
@@ -163,7 +163,7 @@
         </div>
     </div>
 
-    <!-- Animated Status Banner -->
+    <!-- Animated Delivery Status Banner -->
     <div id="deliveryStatusBanner" class="w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-2 text-center text-amber-300 flex justify-center items-center overflow-hidden">
         <div class="animate-smooth-banner flex items-center gap-1.5">
             <span>🌿</span>
@@ -171,15 +171,16 @@
         </div>
     </div>
 
-    <!-- Header -->
+    <!-- App Header (مرتب بسطرين لتجنب تداخل السلة واللوجو نهائياً) -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2 w-full">
+        <!-- السطر الأول: القائمة، الشعار والاسم، والسلة -->
         <div class="flex items-center justify-between gap-2 w-full">
             <div class="flex items-center gap-2 min-w-0">
                 <button onclick="playPopSound(); openDrawer()" class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white active:scale-90 transition shrink-0" title="القائمة الرئيسية">
                     <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
 
-                <!-- Secret Logo Trigger (5 Taps) -->
+                <!-- Secret Logo Trigger (5 Taps for Admin Panel) -->
                 <div id="secretLogoTrigger" class="logo-box rounded-xl bg-slate-950 p-1 border border-amber-500/40 shadow flex items-center justify-center shrink-0 cursor-pointer active:scale-95 transition" title="صيدلية رحيق السلامة">
                     <svg viewBox="0 0 100 100" class="w-full h-full pointer-events-none">
                         <path d="M50 8 C30 10 20 30 22 45 C35 25 45 15 50 8 Z" fill="#84cc16"/>
@@ -210,11 +211,8 @@
             </div>
         </div>
 
-        <!-- Admin Toolbar -->
+        <!-- شريط أدوات المشرف (يظهر بسطر مستقل منظم عند الدخول) -->
         <div id="adminActionHeader" class="hidden items-center gap-1.5 pt-2 overflow-x-auto no-scrollbar w-full border-t border-slate-800/80 mt-1.5">
-            <button onclick="playPopSound(); openSmartTextModal()" class="bg-gradient-to-r from-teal-600 via-cyan-600 to-indigo-600 text-white font-black text-[9.5px] px-3 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow animate-pulse" title="إدخال ذكي بالنسخ واللصق">
-                <span>⚡</span> <span>إدخال ذكي (نسخ نص)</span>
-            </button>
             <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/90 border border-indigo-600/60 text-indigo-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="تقارير المبيعات">
                 <span>📊</span> <span>التقارير</span>
             </button>
@@ -228,8 +226,8 @@
             <button onclick="playPopSound(); openSettingsModal()" class="bg-slate-800 text-amber-400 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 border border-slate-700 shrink-0 shadow active:scale-95" title="الإعدادات">
                 <span>⚙️</span>
             </button>
-            <button onclick="playPopSound(); openAddModal()" class="bg-teal-900 border border-teal-700 text-teal-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج يدوي">
-                <span>➕</span> <span>يدوي</span>
+            <button onclick="playPopSound(); openAddModal()" class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="إضافة منتج">
+                <span>➕</span> <span>إضافة</span>
             </button>
             <button onclick="playPopSound(); logoutAdmin()" class="bg-rose-950/90 border border-rose-800 text-rose-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg shrink-0 active:scale-95" title="تسجيل الخروج">
                 <span>🔒</span> <span>قفل</span>
@@ -248,7 +246,7 @@
         </div>
     </header>
 
-    <!-- Side Drawer -->
+    <!-- Side Drawer Menu -->
     <div id="drawerBackdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity"></div>
     <div id="sideDrawer" class="fixed top-0 right-0 h-full w-72 bg-[#090d1a] border-l border-slate-800 z-50 p-4 flex flex-col justify-between overflow-y-auto drawer-closed">
         <div class="space-y-4">
@@ -314,7 +312,7 @@
         </div>
     </div>
 
-    <!-- Category Filter Nav -->
+    <!-- Category Filter Bar -->
     <nav class="bg-slate-950/80 border-b border-slate-800/80 py-2.5 px-2">
         <div class="flex gap-2 overflow-x-auto no-scrollbar w-full scroll-smooth" id="circleCategories"></div>
     </nav>
@@ -341,7 +339,7 @@
             </p>
         </div>
 
-        <!-- Section Title & Sorting -->
+        <!-- Section Header -->
         <div class="flex items-center justify-between px-1 pt-1">
             <h3 id="currentSectionTitle" class="text-xs font-black text-white flex items-center gap-1.5">
                 <span class="text-amber-400">●</span> المنتجات ومستحضرات العناية
@@ -363,7 +361,7 @@
             <h4 class="text-xs font-bold text-white">لم يتم العثور على أي منتج مطابق</h4>
         </div>
 
-        <!-- Clinical Knowledge Box -->
+        <!-- Smart Clinical Knowledge Pill -->
         <div class="relative w-full rounded-2xl p-3.5 glass-panel border border-amber-500/30 overflow-hidden shadow-lg">
             <div class="flex items-start gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center shrink-0 text-base">💡</div>
@@ -379,7 +377,7 @@
             </div>
         </div>
 
-        <!-- Guarantee Badge -->
+        <!-- Quality Guarantee Badge -->
         <div class="bg-slate-950/80 rounded-2xl p-3 border border-slate-800 flex items-center justify-between text-[10px]">
             <div class="flex items-center gap-2">
                 <span class="text-teal-400 text-base">🛡️</span>
@@ -393,7 +391,7 @@
 
     </main>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation Bar -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#090d1a]/95 backdrop-blur-md border-t border-slate-800 z-40 py-2.5 px-6 flex justify-around items-center">
         <button onclick="playPopSound(); resetView()" class="flex flex-col items-center text-amber-400 text-[10px] font-bold active:scale-95 transition">
             <span class="text-lg">🏠</span>
@@ -409,37 +407,7 @@
         </button>
     </div>
 
-    <!-- Smart Text Paste Modal (الإدخال الذكي بالنسخ واللصق) -->
-    <div id="smartTextModal" onclick="handleOutsideModalClick(event, 'smartTextModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
-        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-4 w-full max-w-md border border-cyan-500/40 text-center space-y-3 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
-                    <span class="text-cyan-400">⚡</span> الإدخال الذكي السريع (نسخ ولصق)
-                </h3>
-                <button onclick="closeSmartTextModal()" class="text-slate-400 font-bold p-1">✕</button>
-            </div>
-
-            <p class="text-[10px] text-slate-400 leading-tight">1. ارفع صورة المنتج الحقيقية.<br>2. الصق النص المنسوخ من شاشة الحاسبة (الاسم، السعر، الكمية، التاريخ)، وسيقوم النظام بتوزيعها تلقائياً بدون أي أخطاء!</p>
-
-            <div class="space-y-2.5 text-right">
-                <div>
-                    <label class="block text-[10px] font-bold text-amber-400 mb-1">صورة المنتج الحقيقية:</label>
-                    <input type="file" id="smartImgInput" accept="image/*" class="w-full text-[10px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cyan-950 file:text-cyan-300 hover:file:bg-cyan-900 cursor-pointer">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold text-teal-400 mb-1">الصق النص هنا (مثال: ISIS uveblock 40ml 23000 1 2030-07-01):</label>
-                    <textarea id="smartTextInput" rows="3" placeholder="الصق النص المستخرج من الحاسبة هنا..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"></textarea>
-                </div>
-            </div>
-
-            <button onclick="processSmartTextPaste()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-2.5 rounded-xl text-xs font-black shadow-lg active:scale-95 transition flex items-center justify-center gap-1.5">
-                <span>🚀</span> <span>إضافة المنتج فوراً بالبيانات الملصقة</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Reports Modal -->
+    <!-- Admin Reports & Analytics Modal -->
     <div id="reportsModal" onclick="handleOutsideModalClick(event, 'reportsModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[88vh] flex flex-col border border-indigo-500/30">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -482,7 +450,7 @@
         </div>
     </div>
 
-    <!-- Orders Queue Modal -->
+    <!-- Admin Orders & Sales Queue Modal -->
     <div id="ordersQueueModal" onclick="handleOutsideModalClick(event, 'ordersQueueModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col border border-teal-500/30">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -504,6 +472,10 @@
             </div>
 
             <div class="flex-grow overflow-y-auto space-y-3 pr-0.5 no-scrollbar my-2" id="ordersQueueList"></div>
+
+            <div class="border-t border-slate-800 pt-2 flex justify-between items-center text-[10px] text-slate-400">
+                <span>💡 تأكيد البيع يخصم المخزن تلقائياً، والراجع/الملغي لا يلمس المخزن</span>
+            </div>
         </div>
     </div>
 
@@ -540,6 +512,7 @@
             <div class="w-full aspect-square max-w-[280px] mx-auto rounded-2xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden shrink-0 p-3">
                 <img id="modalProdImage" src="" class="object-contain w-full h-full block" alt="صورة المنتج">
                 <span id="modalProdStock" class="absolute bottom-2 right-2 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow border"></span>
+                <span id="modalProdDiscount" class="hidden absolute top-2 right-2 bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow"></span>
             </div>
 
             <div class="space-y-1.5 text-right">
@@ -550,6 +523,7 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <span class="text-sm font-black text-amber-400" id="modalProdPrice"></span>
+                        <span class="text-xs text-slate-500 line-through font-bold hidden" id="modalProdOldPrice"></span>
                     </div>
                     <span id="modalProdBarcode" class="text-[9px] text-slate-400 font-mono"></span>
                 </div>
@@ -572,7 +546,7 @@
         </div>
     </div>
 
-    <!-- Inventory Modal -->
+    <!-- Admin Inventory & Shortages Modal -->
     <div id="inventoryModal" onclick="handleOutsideModalClick(event, 'inventoryModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-lg shadow-2xl relative max-h-[88vh] flex flex-col">
             <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
@@ -788,7 +762,7 @@
         </div>
     </div>
 
-    <!-- Admin Authentication Modal -->
+    <!-- Admin Authentication Modal (Secure Auth) -->
     <div id="adminPinModal" onclick="handleOutsideModalClick(event, 'adminPinModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-xs shadow-2xl relative text-center space-y-3">
             <div class="text-2xl">🔐</div>
@@ -809,7 +783,7 @@
     <div id="settingsModal" onclick="handleOutsideModalClick(event, 'settingsModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
-                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>⚙️</span> إعدادات المشرف</h3>
+                <h3 class="text-xs font-black text-white flex items-center gap-1"><span>⚙️</span> إعدادات الطلبات والمستلم</h3>
                 <button onclick="playPopSound(); closeSettingsModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
             </div>
 
@@ -838,7 +812,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Manual Modal -->
+    <!-- Admin Add/Edit Modal with Discounts & Expiry Date -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -867,7 +841,7 @@
 
                 <div>
                     <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">اسم المنتج والماركة:</label>
-                    <input type="text" id="prodName" required placeholder="اسم المنتج..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <input type="text" id="prodName" required placeholder="مثال: ISISPHARMA UVEBLOCK SPF 50+" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div>
@@ -882,7 +856,7 @@
 
                 <div>
                     <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">الفوائد والاستخدام / نوع البشرة:</label>
-                    <input type="text" id="prodUsage" required placeholder="فوائد واستخدام المنتج..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
+                    <input type="text" id="prodUsage" required placeholder="مثال: واقي شمس فائق الحماية" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -1211,7 +1185,7 @@
         }
 
         window.addEventListener('popstate', function() {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal', 'smartTextModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal'];
             allModals.forEach(id => {
                 const el = document.getElementById(id);
                 if (el && !el.classList.contains('hidden')) {
@@ -1233,7 +1207,22 @@
                 if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
                     productsData = cloudData;
                 } else {
-                    productsData = [];
+                    productsData = [
+                        {
+                            id: "prod_1",
+                            category: "العناية بالبشرة والوجه",
+                            name: "ISISPHARMA UVEBLOCK SPF 50+",
+                            barcode: "3760269770134",
+                            usage: "واقي شمس سائل فائق الحماية للبشرة الحساسة",
+                            size: "40ml",
+                            price: "25,000 د.ع",
+                            originalPrice: "28,000 د.ع",
+                            expiryDate: "2029-03",
+                            stock: 1,
+                            image: "https://www.isispharma.com/wp-content/uploads/2021/04/Uveblock-SPF-50-Dry-Touch-40ml.png"
+                        }
+                    ];
+                    productsRef.set(productsData);
                 }
                 renderProducts();
             });
@@ -1336,6 +1325,26 @@
             const info = getStockBadgeStyle(prod.stock);
             stockBadge.className = `absolute bottom-2 right-2 text-[9px] px-2 py-0.5 rounded-md shadow border ${info.bg} ${info.border} ${info.text}`;
             stockBadge.innerText = info.label;
+
+            const discountBadge = document.getElementById('modalProdDiscount');
+            const oldPriceEl = document.getElementById('modalProdOldPrice');
+            if (prod.originalPrice) {
+                const cur = parseFloat(prod.price.replace(/[^0-9.]/g, '')) || 0;
+                const orig = parseFloat(prod.originalPrice.replace(/[^0-9.]/g, '')) || 0;
+                if (orig > cur) {
+                    const discountPercent = Math.round(((orig - cur) / orig) * 100);
+                    discountBadge.innerText = `خصم ${discountPercent}%`;
+                    discountBadge.classList.remove('hidden');
+                    oldPriceEl.innerText = prod.originalPrice;
+                    oldPriceEl.classList.remove('hidden');
+                } else {
+                    discountBadge.classList.add('hidden');
+                    oldPriceEl.classList.add('hidden');
+                }
+            } else {
+                discountBadge.classList.add('hidden');
+                oldPriceEl.classList.add('hidden');
+            }
 
             document.getElementById('modalProdName').innerText = prod.name;
             document.getElementById('modalProdSize').innerText = prod.size;
@@ -1559,7 +1568,7 @@
                     ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(img, 0, 0, width, height);
                     const fullHdBase64 = canvas.toDataURL('image/jpeg', 0.88);
-                    window.currentUploadedImg = fullHdBase64;
+                    document.getElementById('prodImage').value = fullHdBase64;
                     showToast('تمت معالجة الصورة بدقة 1080p', '🖼️');
                 };
                 img.src = e.target.result;
@@ -1720,6 +1729,18 @@
                 const isFav = wishlist.includes(String(prod.id));
                 const badgeInfo = getStockBadgeStyle(prod.stock);
 
+                let discountBadge = '';
+                let oldPriceText = '';
+                if (prod.originalPrice) {
+                    const cur = parseFloat(prod.price.replace(/[^0-9.]/g, '')) || 0;
+                    const orig = parseFloat(prod.originalPrice.replace(/[^0-9.]/g, '')) || 0;
+                    if (orig > cur) {
+                        const discountPercent = Math.round(((orig - cur) / orig) * 100);
+                        discountBadge = `<span class="absolute top-2 right-2 bg-rose-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow">خصم ${discountPercent}%</span>`;
+                        oldPriceText = `<span class="text-[9px] text-slate-500 line-through mr-1">${prod.originalPrice}</span>`;
+                    }
+                }
+
                 grid.innerHTML += `
                     <div class="glass-panel rounded-2xl p-2.5 w-full flex flex-col justify-between gap-2 shadow-sm relative" data-id="${prod.id}">
                         
@@ -1731,6 +1752,8 @@
                             <div onclick="openProductDetailModal('${prod.id}')" class="w-full h-32 sm:h-36 rounded-xl bg-white med-img-frame flex items-center justify-center relative overflow-hidden cursor-pointer active:scale-95 transition p-2">
                                 <img src="${prod.image}" alt="${prod.name}" class="object-contain w-full h-full block" loading="lazy">
                                 
+                                ${discountBadge}
+
                                 <span class="absolute bottom-1 right-1 text-[8px] px-1.5 py-0.5 rounded-md shadow border ${badgeInfo.bg} ${badgeInfo.border} ${badgeInfo.text}">
                                     ${badgeInfo.label}
                                 </span>
@@ -1749,6 +1772,7 @@
                                 <div class="flex items-center justify-between pt-1 border-t border-slate-800/40">
                                     <div class="flex items-center">
                                         <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
+                                        ${oldPriceText}
                                     </div>
                                     <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${prod.size}</span>
                                 </div>
@@ -2376,6 +2400,9 @@
             let rawPrice = document.getElementById('prodPrice').value.trim();
             let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : Number(rawPrice.replace(/[^0-9]/g, '')).toLocaleString() + ' د.ع';
 
+            let rawOrigPrice = document.getElementById('prodOriginalPrice').value.trim();
+            let formattedOrigPrice = rawOrigPrice ? (rawOrigPrice.includes('د.ع') ? rawOrigPrice : Number(rawOrigPrice.replace(/[^0-9]/g, '')).toLocaleString() + ' د.ع') : null;
+
             let imgVal = document.getElementById('prodImage').value.trim();
             if (!imgVal || (!imgVal.startsWith('http') && !imgVal.startsWith('data:image'))) {
                 imgVal = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
@@ -2390,7 +2417,7 @@
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
                     productsData[index].size = document.getElementById('prodSize').value.trim();
                     productsData[index].price = formattedPrice;
-                    productsData[index].originalPrice = null;
+                    productsData[index].originalPrice = formattedOrigPrice;
                     productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
                     productsData[index].expiryDate = document.getElementById('prodExpiry').value;
                     productsData[index].image = imgVal;
@@ -2404,7 +2431,7 @@
                     usage: document.getElementById('prodUsage').value.trim(),
                     size: document.getElementById('prodSize').value.trim(),
                     price: formattedPrice,
-                    originalPrice: null,
+                    originalPrice: formattedOrigPrice,
                     stock: parseInt(document.getElementById('prodStock').value) || 0,
                     expiryDate: document.getElementById('prodExpiry').value,
                     image: imgVal
@@ -2422,87 +2449,6 @@
             productsData = productsData.filter(p => String(p.id) !== String(id));
             saveProductsToCloud();
             showToast('تم حذف المنتج سحابياً', '🗑️');
-        }
-
-        /* --- Smart Text Paste & Parse Flow (100% Guaranteed) --- */
-        function openSmartTextModal() {
-            document.getElementById('smartImgInput').value = '';
-            document.getElementById('smartTextInput').value = '';
-            window.currentUploadedImg = '';
-            const modal = document.getElementById('smartTextModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('modal-active');
-            pushModalState('smartTextModal');
-        }
-
-        function closeSmartTextModal() {
-            const modal = document.getElementById('smartTextModal');
-            if (modal) {
-                modal.classList.remove('modal-active');
-                modal.classList.add('hidden');
-            }
-        }
-
-        function processSmartTextPaste() {
-            const text = document.getElementById('smartTextInput').value.trim();
-            const imgData = window.currentUploadedImg || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
-
-            if (!text) {
-                showToast('يرجى لصق النص المنسوخ من الحاسبة', '⚠️');
-                return;
-            }
-
-            // تحليل ذكي للنص الملصق بغض النظر عن تنسيقه
-            let numbers = text.match(/\d+/g) || [];
-            
-            // محاولة استخراج السعر (الرقم الأكبر غالباً بين 1000 و 300000)
-            let priceVal = 25000;
-            let stockVal = 1;
-            let expiryVal = "2030-07-01";
-
-            // فحص الأرقام المستخرجة
-            let possiblePrices = numbers.map(n => parseInt(n)).filter(n => n >= 1000 && n <= 300000);
-            if (possiblePrices.length > 0) {
-                priceVal = possiblePrices[0];
-            }
-
-            let possibleStocks = numbers.map(n => parseInt(n)).filter(n => n >= 1 && n <= 100 && n !== priceVal);
-            if (possibleStocks.length > 0) {
-                stockVal = possibleStocks[0];
-            }
-
-            // استخراج تاريخ الصلاحية إن وجد بصيغة تاريخ
-            let dateMatch = text.match(/20\d{2}[-/]\d{2}(?:[-/]\d{2})?/);
-            if (dateMatch) {
-                expiryVal = dateMatch[0].replace(/\//g, '-');
-            }
-
-            // استخراج الاسم (كل النص ما عدا الأرقام الواضحة أو السعر)
-            let nameVal = text.replace(/20\d{2}[-/]\d{2}([-/]\d{2})?/g, '').replace(/\b(16672|23000|25000|54320)\b/g, '').trim();
-            if (!nameVal || nameVal.length < 3) {
-                nameVal = "ISIS uveblock SPF 50+ INV";
-            }
-
-            const newProduct = {
-                id: 'prod_' + Date.now(),
-                category: 'العناية بالبشرة والوجه',
-                name: nameVal,
-                barcode: '3031500311607',
-                usage: 'مستحضر صيدلاني معتمد يعزز نضارة وحيوية البشرة ويمنحها حماية فائقة.',
-                size: text.includes('ml') ? '40ml' : 'حجم قياسي',
-                price: priceVal.toLocaleString() + ' د.ع',
-                originalPrice: null,
-                stock: stockVal,
-                expiryDate: expiryVal,
-                image: imgData
-            };
-
-            productsData.unshift(newProduct);
-            saveProductsToCloud();
-            renderProducts();
-
-            closeSmartTextModal();
-            showToast(`تمت إضافة "${newProduct.name}" بنجاح (${newProduct.price} • ${newProduct.stock} قطعة) 🚀`, '✅');
         }
 
         startSystem();
