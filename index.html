@@ -153,7 +153,7 @@
         <div class="flex items-center gap-2.5 min-w-0">
             <div class="w-9 h-9 rounded-xl bg-slate-950 p-1 border border-amber-500/40 flex items-center justify-center shrink-0">🌿</div>
             <div class="min-w-0 text-right">
-                <h4 class="text-xs font-black text-white truncate">تثبيت تطبيق على شاشة لوصول أسهل</h4>
+                <h4 class="text-xs font-black text-white truncate">تثبيت التطبيق على الشاشة الرئيسية</h4>
                 <p class="text-[9px] text-slate-400 truncate">تصفح أسرع وحجز فوري بدون متصفح</p>
             </div>
         </div>
@@ -976,8 +976,9 @@
         let myReceiverPhone = localStorage.getItem('sidalihet_my_phone') || "07726053522";
         let isOrderingActive = localStorage.getItem('sidalihet_order_active') !== 'false';
 
-        // قراءة مفتاح الـ API المحفوظ
-        let geminiApiKey = localStorage.getItem('gemini_api_key') || "";
+        // المفتاح المعتمد والمحدث
+        const DEFAULT_GEMINI_KEY = "AIzaSyAUVg24aTmzhuU_v_Gvi1ZTSD7PMuOGcsE";
+        let geminiApiKey = localStorage.getItem('gemini_api_key') || DEFAULT_GEMINI_KEY;
 
         auth.onAuthStateChanged((user) => {
             isAdmin = !!user;
@@ -2344,7 +2345,7 @@
             }
             myReceiverPhone = phone;
             isOrderingActive = document.getElementById('settingOrderingActive').checked;
-            geminiApiKey = document.getElementById('settingApiKey').value.trim();
+            geminiApiKey = document.getElementById('settingApiKey').value.trim() || DEFAULT_GEMINI_KEY;
 
             localStorage.setItem('sidalihet_my_phone', myReceiverPhone);
             localStorage.setItem('sidalihet_order_active', isOrderingActive);
@@ -2462,7 +2463,7 @@
             showToast('تم حذف المنتج سحابياً', '🗑️');
         }
 
-        /* --- Smart 2-Images AI Flow مع ضغط الصور السريع --- */
+        /* --- Smart 2-Images AI Flow مع الضغط الخفيف والسريع --- */
         function openTwoImagesModal() {
             document.getElementById('aiBoxImgInput').value = '';
             document.getElementById('aiCalcImgInput').value = '';
@@ -2481,7 +2482,6 @@
             }
         }
 
-        // دالة ضغط الصور لتصغير حجمها لأقل من 300KB مع الحفاظ على وضوح النصوص
         function resizeAndCompressImage(file, maxDimension = 1024) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -2533,14 +2533,7 @@
                 return;
             }
 
-            if (!geminiApiKey) {
-                geminiApiKey = prompt('أدخل مفتاح Gemini API الخاص بك:') || '';
-                if (geminiApiKey) localStorage.setItem('gemini_api_key', geminiApiKey);
-                else {
-                    showToast('يجب إدخال مفتاح API أولاً', '⚠️');
-                    return;
-                }
-            }
+            const activeKey = geminiApiKey || DEFAULT_GEMINI_KEY;
 
             showToast('جاري ضغط وتحليل الصورتين بالذكاء الاصطناعي... ⏳', '🤖');
 
@@ -2588,11 +2581,10 @@
                     parts.push({ inlineData: { mimeType: "image/jpeg", data: calcRes.cleanBase64 } });
                 }
 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiApiKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeKey}`, {
                     method: 'POST',
                     headers: { 
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': geminiApiKey
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ contents: [{ parts: parts }] })
                 });
