@@ -171,9 +171,8 @@
         </div>
     </div>
 
-    <!-- App Header (مرتب بسطرين لتجنب تداخل السلة واللوجو نهائياً) -->
+    <!-- App Header -->
     <header class="sticky top-0 z-40 bg-[#090d1a]/95 backdrop-blur-md border-b border-slate-800 shadow-md px-3 py-2 w-full">
-        <!-- السطر الأول: القائمة، الشعار والاسم، والسلة -->
         <div class="flex items-center justify-between gap-2 w-full">
             <div class="flex items-center gap-2 min-w-0">
                 <button onclick="playPopSound(); openDrawer()" class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-white active:scale-90 transition shrink-0" title="القائمة الرئيسية">
@@ -211,7 +210,7 @@
             </div>
         </div>
 
-        <!-- شريط أدوات المشرف (يظهر بسطر مستقل منظم عند الدخول) -->
+        <!-- شريط أدوات المشرف -->
         <div id="adminActionHeader" class="hidden items-center gap-1.5 pt-2 overflow-x-auto no-scrollbar w-full border-t border-slate-800/80 mt-1.5">
             <button onclick="playPopSound(); openReportsModal()" class="bg-indigo-950/90 border border-indigo-600/60 text-indigo-300 font-bold text-[9.5px] px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 shrink-0 active:scale-95 shadow" title="تقارير المبيعات">
                 <span>📊</span> <span>التقارير</span>
@@ -812,7 +811,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal with Discounts & Expiry Date -->
+    <!-- Admin Add/Edit Modal (Fixed & Optimized) -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -2416,6 +2415,7 @@
                     productsData[index].barcode = document.getElementById('prodBarcode').value.trim();
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
                     productsData[index].size = document.getElementById('prodSize').value.trim();
+                    productsData.index = productsData[index]; // fix guard
                     productsData[index].price = formattedPrice;
                     productsData[index].originalPrice = formattedOrigPrice;
                     productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
