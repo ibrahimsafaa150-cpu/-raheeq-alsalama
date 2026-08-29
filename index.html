@@ -811,7 +811,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal (Fixed & Optimized) -->
+    <!-- Admin Add/Edit Modal (Fixed) -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -2372,7 +2372,7 @@
             document.getElementById('prodBarcode').value = prod.barcode || '';
             document.getElementById('prodUsage').value = prod.usage;
             document.getElementById('prodSize').value = prod.size;
-            document.getElementById('prodPrice').value = prod.price.replace(/[^0-9]/g, '');
+            document.getElementById('prodPrice').value = prod.price ? prod.price.replace(/[^0-9]/g, '') : '';
             document.getElementById('prodOriginalPrice').value = prod.originalPrice ? prod.originalPrice.replace(/[^0-9]/g, '') : '';
             document.getElementById('prodStock').value = prod.stock;
             document.getElementById('prodExpiry').value = prod.expiryDate || '';
@@ -2415,7 +2415,6 @@
                     productsData[index].barcode = document.getElementById('prodBarcode').value.trim();
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
                     productsData[index].size = document.getElementById('prodSize').value.trim();
-                    productsData.index = productsData[index]; // fix guard
                     productsData[index].price = formattedPrice;
                     productsData[index].originalPrice = formattedOrigPrice;
                     productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
