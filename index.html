@@ -276,8 +276,9 @@
                     <span>📍</span> <span>موقع الصيدلية على الخريطة</span>
                 </button>
 
-                <button onclick="playPopSound(); closeDrawer(); triggerAppInstall()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
-                    <span>📲</span> <span>تثبيت التطبيق على الموبايل</span>
+                <!-- زر باركود وتثبيت التطبيق -->
+                <button onclick="playPopSound(); closeDrawer(); openQrShareModal()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
+                    <span>📷</span> <span>باركود وتثبيت التطبيق</span>
                 </button>
                 
                 <button onclick="playPopSound(); openStaticModal('contactModal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/60 text-slate-200 transition text-right">
@@ -404,6 +405,35 @@
             <span class="text-lg">🛒</span>
             <span>الطلبية</span>
         </button>
+    </div>
+
+    <!-- Barcode & App Share Modal (مودال الباركود ومشاركة التطبيق) -->
+    <div id="qrShareModal" onclick="handleOutsideModalClick(event, 'qrShareModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+        <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-5 w-full max-w-xs shadow-2xl relative text-center flex flex-col items-center gap-4 border border-cyan-500/30">
+            
+            <div class="w-full flex justify-between items-center border-b border-slate-800 pb-2.5">
+                <h3 class="text-xs font-black text-white flex items-center gap-1.5">
+                    <span>📷</span> باركود وتثبيت التطبيق
+                </h3>
+                <button onclick="playPopSound(); closeQrShareModal()" class="text-slate-400 hover:text-white font-bold p-1">✕</button>
+            </div>
+
+            <div class="p-3.5 bg-white rounded-2xl shadow-xl flex items-center justify-center border-2 border-cyan-400/40">
+                <img id="appQrImage" src="" alt="باركود التطبيق" class="w-48 h-48 rounded-lg object-contain">
+            </div>
+
+            <p class="text-[11px] text-slate-300 font-bold">امسح الكود بكاميرا أي هاتف لفتح التطبيق فوراً</p>
+
+            <div class="w-full flex flex-col gap-2 pt-1 border-t border-slate-800">
+                <button onclick="copyAppUrl()" class="w-full bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 active:scale-95 transition">
+                    <span>📋</span> <span>نسخ رابط الصيدلية</span>
+                </button>
+                <button onclick="triggerAppInstall(); closeQrShareModal();" class="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-black py-2 rounded-xl text-xs shadow flex items-center justify-center gap-1.5 active:scale-95 transition">
+                    <span>📲</span> <span>تثبيت مباشر على الهاتف</span>
+                </button>
+            </div>
+
+        </div>
     </div>
 
     <!-- Admin Reports & Analytics Modal -->
@@ -994,6 +1024,38 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
+        /* دوال الباركود ومشاركة التطبيق (QR Share) */
+        function openQrShareModal() {
+            playPopSound();
+            const currentUrl = window.location.href.split('#')[0];
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentUrl)}&color=060913&bgcolor=ffffff`;
+            
+            document.getElementById('appQrImage').src = qrApiUrl;
+
+            const modal = document.getElementById('qrShareModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            pushModalState('qrShareModal');
+        }
+
+        function closeQrShareModal() {
+            const modal = document.getElementById('qrShareModal');
+            if (modal) {
+                modal.classList.remove('modal-active');
+                modal.classList.add('hidden');
+            }
+        }
+
+        function copyAppUrl() {
+            playPopSound();
+            const currentUrl = window.location.href.split('#')[0];
+            navigator.clipboard.writeText(currentUrl).then(() => {
+                showToast('تم نسخ رابط الصيدلية بنجاح 📋', '✅');
+            }).catch(() => {
+                showToast('تعذر نسخ الرابط تلقائياً', '⚠️');
+            });
+        }
+
         let html5QrCode = null;
         let scannerTarget = 'search';
 
@@ -1184,7 +1246,7 @@
         }
 
         window.addEventListener('popstate', function() {
-            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal'];
+            const allModals = ['productDetailModal', 'inventoryModal', 'servicesModal', 'mapModal', 'contactModal', 'guideModal', 'privacyModal', 'termsModal', 'aboutModal', 'cartModal', 'customerModal', 'adminPinModal', 'settingsModal', 'adminModal', 'ordersQueueModal', 'reportsModal', 'qrShareModal'];
             allModals.forEach(id => {
                 const el = document.getElementById(id);
                 if (el && !el.classList.contains('hidden')) {
