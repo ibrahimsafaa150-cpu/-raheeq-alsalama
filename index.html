@@ -407,7 +407,7 @@
         </button>
     </div>
 
-    <!-- Barcode & App Share Modal (مودال الباركود ومشاركة التطبيق) -->
+    <!-- Barcode & App Share Modal -->
     <div id="qrShareModal" onclick="handleOutsideModalClick(event, 'qrShareModal')" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden items-center justify-center p-4">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-3xl p-5 w-full max-w-xs shadow-2xl relative text-center flex flex-col items-center gap-4 border border-cyan-500/30">
             
@@ -841,7 +841,7 @@
         </div>
     </div>
 
-    <!-- Admin Add/Edit Modal (Fully Cleared & Reset Fixed) -->
+    <!-- Admin Add/Edit Modal -->
     <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -986,7 +986,245 @@
             { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
-        let productsData = [];
+        /* قائمة المنتجات المستخرجة بدقة من صور الرفوف */
+        const initialProducts = [
+            {
+                id: "prod_driclor",
+                category: "العناية بالجسم والترطيب",
+                name: "Driclor Antiperspirant Roll-on",
+                barcode: "5011091100224",
+                usage: "مضاد تعرق طبي فائق الفعالية لعلاج فرط التعرق وحماية لعدة أيام",
+                size: "20ml",
+                price: "12,000 د.ع",
+                originalPrice: "14,000 د.ع",
+                expiryDate: "2027-10",
+                stock: 2,
+                image: "https://driclor.com/wp-content/uploads/2021/04/Driclor-Antiperspirant-Roll-on-20ml.jpg"
+            },
+            {
+                id: "prod_rolez",
+                category: "العناية بالجسم والترطيب",
+                name: "Rolez Deodorant Cream",
+                barcode: "",
+                usage: "كريم طبي مزيل لرائحة العرق ومفتح ومطري لمنطقة تحت الإبط",
+                size: "50g",
+                price: "5,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-06",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_beesline_rollon",
+                category: "العناية بالجسم والترطيب",
+                name: "Beesline Whitening Roll-On Deo (Super Dry)",
+                barcode: "5281018006245",
+                usage: "رول أون مفتح ومضاد للتعرق بمكونات طبيعية وتفتيح لطيف لمنطقة الإبطين",
+                size: "50ml + Free",
+                price: "14,000 د.ع",
+                originalPrice: "16,000 د.ع",
+                expiryDate: "2028-02",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_nivea_pearl_stick",
+                category: "العناية بالجسم والترطيب",
+                name: "Nivea Pearl & Beauty Deodorant Stick 72H",
+                barcode: "4005900130839",
+                usage: "ستيك مضاد للتعرق بخلاصة اللؤلؤ لنعومة وتوحيد لون منطقة تحت الإبطين",
+                size: "50ml",
+                price: "6,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-11",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_arm_hammer_ultramax",
+                category: "العناية الرجالية",
+                name: "Arm & Hammer Ultra Max Cool Blast Stick",
+                barcode: "033200197022",
+                usage: "ستيك قوي مضاد لرائحة العرق ببيكربونات الصوديوم وانتعاش كول بلاست",
+                size: "73g",
+                price: "6,500 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-08",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_cosmo_natural",
+                category: "العناية بالجسم والترطيب",
+                name: "Cosmo Natural Deodorant Stick",
+                barcode: "",
+                usage: "ستيك مزيل للرائحة بمكونات طبيعية وانتعاش يدوم طوال اليوم بدون ألومنيوم",
+                size: "100g",
+                price: "5,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-12",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_enchanteur_charming",
+                category: "العناية النسائية",
+                name: "Enchanteur Charming Roll-on (Age Defy)",
+                barcode: "8888202022013",
+                usage: "رول أون معطر ومضاد للتعرق بعبير الزهور الفرنسية الفاخرة",
+                size: "50ml",
+                price: "4,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2028-01",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_enchanteur_romantic",
+                category: "العناية النسائية",
+                name: "Enchanteur Romantic Roll-on (Pore Refine)",
+                barcode: "8888202022020",
+                usage: "رول أون لتضييق المسام وحماية من التعرق برائحة الورود الرومانسية",
+                size: "50ml",
+                price: "4,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2028-01",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_absolut_torr",
+                category: "العناية بالجسم والترطيب",
+                name: "Absolut Torr Extra Effective Dab-on",
+                barcode: "7319861001004",
+                usage: "محلول طبي سويدي فائق القوة للتحكم بفرط التعرق لعدة أيام متواصلة",
+                size: "35ml",
+                price: "18,000 د.ع",
+                originalPrice: "20,000 د.ع",
+                expiryDate: "2028-05",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_vaseline_active_spray",
+                category: "العناية الرجالية",
+                name: "Vaseline Men Active Dry 48H Deo Spray",
+                barcode: "8712561254885",
+                usage: "بخاخ رجالي سريع الجفاف بحماية 48 ساعة ضد البلل ورائحة العرق",
+                size: "150ml",
+                price: "5,500 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-09",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_rexona_72h_spray",
+                category: "العناية بالجسم والترطيب",
+                name: "Rexona Advanced Protection 72H Deo Spray",
+                barcode: "8710908865412",
+                usage: "بخاخ حماية متقدمة 72 ساعة بتقنية موشن سينس ضد العرق والروائح",
+                size: "150ml",
+                price: "6,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-10",
+                stock: 4,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_slazenger_spray",
+                category: "العناية الرجالية",
+                name: "Slazenger Body Spray & Deo",
+                barcode: "8690506482110",
+                usage: "بخاخ رياضي معطر للجسم يدوم طويلاً للرجال الرياضيين",
+                size: "150ml",
+                price: "4,500 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-08",
+                stock: 4,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_the_ordinary_caffeine",
+                category: "العناية بالبشرة والوجه",
+                name: "The Ordinary Caffeine Solution 5% + EGCG",
+                barcode: "769915190670",
+                usage: "سيروم الكافيين لتفتيح الهالات السوداء وتخفيف انتفاخات محيط العين",
+                size: "30ml",
+                price: "16,000 د.ع",
+                originalPrice: "18,000 د.ع",
+                expiryDate: "2027-11",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_dr_clinic_hyaluronic",
+                category: "العناية بالبشرة والوجه",
+                name: "Dr. Clinic Hyaluronic Acid + B5 Serum",
+                barcode: "8680935402123",
+                usage: "سيروم ترطيب عميق بحمض الهيالورونيك وفيتامين B5 لنضارة وامتلاء البشرة",
+                size: "30ml",
+                price: "14,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2028-02",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_run_anti_acne",
+                category: "العناية بالبشرة والوجه",
+                name: "RUN Anti-Acne Cream",
+                barcode: "",
+                usage: "كريم فعال لمعالجة حب الشباب وتجفيف البثور وتصفية شوائب البشرة",
+                size: "50g",
+                price: "8,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-09",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_revuele_sunprotect",
+                category: "العناية بالبشرة والوجه",
+                name: "Revuele Sunprotect SPF 50+ Moisturizer",
+                barcode: "5060565103442",
+                usage: "واقي شمس مرطب ومقاوم للتصبغات بعامل حماية فائق SPF 50+",
+                size: "50ml",
+                price: "11,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2028-04",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_dermedic_sunbrella",
+                category: "العناية بالبشرة والوجه",
+                name: "Dermedic Sunbrella SPF 50+ Sun Protection",
+                barcode: "5901643171338",
+                usage: "واقي شمس طبي متطور للبشرة الحساسة المعرضة للشمس والأشعة فوق البنفسجية",
+                size: "50g",
+                price: "24,000 د.ع",
+                originalPrice: "27,000 د.ع",
+                expiryDate: "2028-06",
+                stock: 1,
+                image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: "prod_tailaimei_vitc",
+                category: "العناية بالبشرة والوجه",
+                name: "TAILAIMEI Vitamin C Skin Active Serum",
+                barcode: "",
+                usage: "سيروم فيتامين C لتفتيح وتوحيد لون البشرة ومكافحة الأكسدة والبهتان",
+                size: "30ml",
+                price: "7,000 د.ع",
+                originalPrice: "",
+                expiryDate: "2027-12",
+                stock: 2,
+                image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        let productsData = [...initialProducts];
         let ordersData = [];
         let cart = [];
         let wishlist = [];
@@ -1024,7 +1262,6 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
-        /* دوال الباركود ومشاركة التطبيق (QR Share) */
         function openQrShareModal() {
             playPopSound();
             const currentUrl = window.location.href.split('#')[0];
@@ -1263,26 +1500,16 @@
         });
 
         async function startSystem() {
+            // 1. عرض فوري لجميع منتجات الرفوف الـ 18 بدون انتظار
+            renderProducts(productsData);
+
+            // 2. مزامنة قاعدة بيانات فايربيس
             productsRef.on('value', (snapshot) => {
                 const cloudData = snapshot.val();
-                if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
+                if (cloudData && Array.isArray(cloudData) && cloudData.length > 2) {
                     productsData = cloudData;
                 } else {
-                    productsData = [
-                        {
-                            id: "prod_1",
-                            category: "العناية بالبشرة والوجه",
-                            name: "ISISPHARMA UVEBLOCK SPF 50+",
-                            barcode: "3760269770134",
-                            usage: "واقي شمس سائل فائق الحماية للبشرة الحساسة",
-                            size: "40ml",
-                            price: "25,000 د.ع",
-                            originalPrice: "28,000 د.ع",
-                            expiryDate: "2029-03",
-                            stock: 1,
-                            image: "https://www.isispharma.com/wp-content/uploads/2021/04/Uveblock-SPF-50-Dry-Touch-40ml.png"
-                        }
-                    ];
+                    productsData = [...initialProducts];
                     productsRef.set(productsData);
                 }
                 renderProducts();
@@ -1290,11 +1517,7 @@
 
             ordersRef.on('value', (snapshot) => {
                 const ordersObj = snapshot.val();
-                if (ordersObj) {
-                    ordersData = Object.keys(ordersObj).map(key => ({ keyId: key, ...ordersObj[key] })).reverse();
-                } else {
-                    ordersData = [];
-                }
+                ordersData = ordersObj ? Object.keys(ordersObj).map(key => ({ keyId: key, ...ordersObj[key] })).reverse() : [];
                 updateOrdersBadge();
                 if (document.getElementById('ordersQueueModal').classList.contains('modal-active')) {
                     renderOrdersQueue();
