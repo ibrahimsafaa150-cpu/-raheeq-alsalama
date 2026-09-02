@@ -1501,9 +1501,17 @@
         ];
 
         async function startSystem() {
+            // مزامنة تلقائية فورية: إذا كانت السحابة تحوي أقل من 5 منتجات أو المنتج القديم فقط، يتم تحديث الفايربيس بقائمة الرفوف فوراً
+            productsRef.once('value').then((snapshot) => {
+                const cloudData = snapshot.val();
+                if (!cloudData || (Array.isArray(cloudData) && cloudData.length <= 2)) {
+                    productsRef.set(shelfScannedProducts);
+                }
+            });
+
             productsRef.on('value', (snapshot) => {
                 const cloudData = snapshot.val();
-                if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
+                if (cloudData && Array.isArray(cloudData) && cloudData.length > 2) {
                     productsData = cloudData;
                 } else {
                     productsData = shelfScannedProducts;
