@@ -614,8 +614,9 @@
                     <button onclick="exportToCSV()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 border border-indigo-900/60 active:scale-95 transition">
                         <span>📥</span> <span>تصدير Excel (CSV)</span>
                     </button>
-                    <label class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 border border-amber-900/60 active:scale-95 transition cursor-pointer text-center">
-                        <span>📤</span> <span>استيراد CSV</span>
+                    <!-- الزر الذكي لاستيراد وتحديث ملف كبسولة اليومي -->
+                    <label class="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1 shadow-md active:scale-95 transition cursor-pointer text-center">
+                        <span>⚡</span> <span>استيراد ملف كبسولة (CSV)</span>
                         <input type="file" accept=".csv" class="hidden" onchange="importFromCSV(event)">
                     </label>
                 </div>
@@ -985,6 +986,17 @@
             { name: "الأغذية الصحية", icon: "🥑" },
             { name: "المستلزمات الطبية", icon: "🩺" }
         ];
+
+        // صور افتراضية أنيقة لكل قسم عند الاستيراد الجماعي التلقائي
+        const categoryDefaultImages = {
+            "العناية بالبشرة والوجه": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
+            "العناية بالجسم والترطيب": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80",
+            "العناية بالشعر والفروة": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80",
+            "صحة الفم والأسنان": "https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&w=600&q=80",
+            "الفيتامينات والمكملات": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+            "المستلزمات الطبية": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
+        };
+        const fallbackGeneralImage = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80";
 
         let productsData = [];
         let ordersData = [];
@@ -1567,41 +1579,103 @@
             showToast('تم تصدير ملف Excel بنجاح 📥');
         }
 
+        /* دالة المزامنة والاستيراد الذكي لملفات كبسولة والـ CSV اليومية */
         function importFromCSV(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
-                const rows = text.split('\n').filter(r => r.trim() !== '');
-                if (rows.length <= 1) return;
-                let importedCount = 0;
+                const rows = text.split(/\r?\n/).filter(r => r.trim() !== '');
+                if (rows.length <= 1) {
+                    showToast('الملف فارغ أو غير متوافق', '⚠️');
+                    return;
+                }
+
+                const delimiter = rows[0].includes(';') ? ';' : ',';
+                const parseLine = (line) => {
+                    const pattern = new RegExp(`(?:^|${delimiter})("([^"]*(?:""[^"]*)*)"|([^"${delimiter}]*))`, 'g');
+                    let matches = [];
+                    let match;
+                    while ((match = pattern.exec(line)) !== null) {
+                        let val = match[2] !== undefined ? match[2].replace(/""/g, '"') : match[3];
+                        matches.push(val ? val.trim() : '');
+                    }
+                    return matches;
+                };
+
+                const headers = parseLine(rows[0]).map(h => h.toLowerCase());
+
+                const findCol = (terms) => headers.findIndex(h => terms.some(t => h.includes(t)));
+                let nameIdx = findCol(['اسم', 'name', 'item', 'المادة', 'الصنف', 'product']);
+                let barcodeIdx = findCol(['باركود', 'barcode', 'code', 'كود', 'upc']);
+                let priceIdx = findCol(['سعر', 'price', 'بيع', 'مفرد']);
+                let stockIdx = findCol(['كمية', 'qty', 'stock', 'رصيد', 'العدد', 'المتوفر']);
+                let sizeIdx = findCol(['سعة', 'حجم', 'size', 'عبوة']);
+                let catIdx = findCol(['قسم', 'category', 'نوع', 'تصنيف', 'مجموعة']);
+                let expIdx = findCol(['صلاحية', 'تاريخ', 'exp', 'expiry']);
+
+                if (nameIdx === -1 && headers.length >= 2) nameIdx = 1;
+                if (priceIdx === -1 && headers.length >= 6) priceIdx = 5;
+                if (stockIdx === -1 && headers.length >= 7) stockIdx = 6;
+
+                let updatedCount = 0;
+                let addedCount = 0;
+
                 for (let i = 1; i < rows.length; i++) {
-                    const cols = rows[i].split(',');
-                    if (cols.length >= 6) {
+                    const cols = parseLine(rows[i]);
+                    if (!cols || cols.length < 2) continue;
+
+                    const itemName = nameIdx !== -1 && cols[nameIdx] ? cols[nameIdx] : '';
+                    if (!itemName) continue;
+
+                    const barcodeVal = barcodeIdx !== -1 && cols[barcodeIdx] ? cols[barcodeIdx] : '';
+                    let rawPrice = priceIdx !== -1 && cols[priceIdx] ? cols[priceIdx] : '0';
+                    let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : (Number(rawPrice.replace(/[^0-9]/g, '')) || 0).toLocaleString() + ' د.ع';
+                    let stockNum = stockIdx !== -1 && cols[stockIdx] ? (parseInt(cols[stockIdx].replace(/[^0-9]/g, '')) || 0) : 0;
+                    let sizeVal = sizeIdx !== -1 && cols[sizeIdx] ? cols[sizeIdx] : 'قطعة';
+                    let categoryVal = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : 'العناية بالبشرة والوجه';
+                    let expiryVal = expIdx !== -1 && cols[expIdx] ? cols[expIdx] : '';
+
+                    let existingIdx = -1;
+                    if (barcodeVal) {
+                        existingIdx = productsData.findIndex(p => p.barcode && String(p.barcode).trim() === String(barcodeVal).trim());
+                    }
+                    if (existingIdx === -1) {
+                        existingIdx = productsData.findIndex(p => p.name.trim().toLowerCase() === itemName.trim().toLowerCase());
+                    }
+
+                    if (existingIdx !== -1) {
+                        productsData[existingIdx].stock = stockNum;
+                        if (rawPrice && rawPrice !== '0') productsData[existingIdx].price = formattedPrice;
+                        if (barcodeVal && !productsData[existingIdx].barcode) productsData[existingIdx].barcode = barcodeVal;
+                        if (expiryVal) productsData[existingIdx].expiryDate = expiryVal;
+                        updatedCount++;
+                    } else {
+                        const defaultImg = categoryDefaultImages[categoryVal] || fallbackGeneralImage;
                         const newProd = {
-                            id: cols[0].trim() || 'prod_' + Date.now() + '_' + i,
-                            name: cols[1].replace(/"/g, '').trim(),
-                            category: cols[2].replace(/"/g, '').trim() || 'العناية بالبشرة والوجه',
-                            barcode: cols[3].trim(),
-                            size: cols[4].replace(/"/g, '').trim(),
-                            price: cols[5].replace(/"/g, '').trim(),
-                            stock: parseInt(cols[6]) || 0,
-                            expiryDate: cols[7] ? cols[7].trim() : '',
-                            usage: 'مستحضر معتمد من صيدلية رحيق السلامة',
-                            image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80'
+                            id: 'prod_' + Date.now() + '_' + i,
+                            name: itemName,
+                            category: categoryVal,
+                            barcode: barcodeVal,
+                            size: sizeVal,
+                            price: formattedPrice,
+                            originalPrice: null,
+                            stock: stockNum,
+                            expiryDate: expiryVal,
+                            usage: 'مستحضر دوائي وتجميلي معتمد من صيدلية رحيق السلامة',
+                            image: defaultImg
                         };
-                        const existingIdx = productsData.findIndex(p => String(p.id) === String(newProd.id));
-                        if (existingIdx !== -1) {
-                            productsData[existingIdx] = newProd;
-                        } else {
-                            productsData.push(newProd);
-                        }
-                        importedCount++;
+                        productsData.push(newProd);
+                        addedCount++;
                     }
                 }
+
                 saveProductsToCloud();
-                showToast(`تم استيراد ${importedCount} مادة بنجاح 📤`);
+                renderInventoryListItems(productsData);
+                renderProducts();
+                event.target.value = '';
+                showToast(`تمت المزامنة: تحديث (${updatedCount}) وإضافة (${addedCount}) مادة ⚡`, '📦');
             };
             reader.readAsText(file);
         }
@@ -2466,7 +2540,7 @@
 
             let imgVal = document.getElementById('prodImage').value.trim();
             if (!imgVal || (!imgVal.startsWith('http') && !imgVal.startsWith('data:image'))) {
-                imgVal = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
+                imgVal = fallbackGeneralImage;
             }
 
             if (editId) {
