@@ -1564,9 +1564,9 @@
         function exportToCSV() {
             playPopSound();
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "ID,الاسم,القسم,الباركود,الحجم,السعر,الكمية,الصلاحية\n";
+            csvContent += "ID,الاسم,القسم,الباركود,الحجم,السعر,الكمية,الصلاحية,الوصف\n";
             productsData.forEach(p => {
-                const row = [p.id, `"${p.name.replace(/"/g, '""')}"`, `"${p.category}"`, p.barcode || '', `"${p.size}"`, `"${p.price}"`, p.stock, p.expiryDate || ''].join(",");
+                const row = [p.id, `"${p.name.replace(/"/g, '""')}"`, `"${p.category}"`, p.barcode || '', `"${p.size}"`, `"${p.price}"`, p.stock, p.expiryDate || '', `"${(p.usage || '').replace(/"/g, '""')}"`].join(",");
                 csvContent += row + "\n";
             });
             const encodedUri = encodeURI(csvContent);
@@ -1614,6 +1614,7 @@
                 let sizeIdx = findCol(['سعة', 'حجم', 'size', 'عبوة']);
                 let catIdx = findCol(['قسم', 'category', 'نوع', 'تصنيف', 'مجموعة']);
                 let expIdx = findCol(['صلاحية', 'تاريخ', 'exp', 'expiry']);
+                let usageIdx = findCol(['وصف', 'الوصف', 'استخدام', 'الاستخدام', 'فوائد', 'الفوائد', 'usage', 'desc', 'description']);
 
                 if (nameIdx === -1 && headers.length >= 2) nameIdx = 1;
                 if (priceIdx === -1 && headers.length >= 6) priceIdx = 5;
@@ -1636,6 +1637,7 @@
                     let sizeVal = sizeIdx !== -1 && cols[sizeIdx] ? cols[sizeIdx] : 'قطعة';
                     let categoryVal = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : 'العناية بالبشرة والوجه';
                     let expiryVal = expIdx !== -1 && cols[expIdx] ? cols[expIdx] : '';
+                    let usageVal = usageIdx !== -1 && cols[usageIdx] ? cols[usageIdx].trim() : '';
 
                     let existingIdx = -1;
                     if (barcodeVal) {
@@ -1650,6 +1652,7 @@
                         if (rawPrice && rawPrice !== '0') productsData[existingIdx].price = formattedPrice;
                         if (barcodeVal && !productsData[existingIdx].barcode) productsData[existingIdx].barcode = barcodeVal;
                         if (expiryVal) productsData[existingIdx].expiryDate = expiryVal;
+                        if (usageVal) productsData[existingIdx].usage = usageVal;
                         updatedCount++;
                     } else {
                         const defaultImg = categoryDefaultImages[categoryVal] || fallbackGeneralImage;
@@ -1663,7 +1666,7 @@
                             originalPrice: null,
                             stock: stockNum,
                             expiryDate: expiryVal,
-                            usage: 'مستحضر دوائي وتجميلي معتمد من صيدلية رحيق السلامة',
+                            usage: usageVal || 'مستحضر دوائي وتجميلي معتمد من صيدلية رحيق السلامة',
                             image: defaultImg
                         };
                         productsData.push(newProd);
