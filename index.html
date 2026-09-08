@@ -2626,8 +2626,14 @@
                     let expiryVal = expIdx !== -1 && cols[expIdx] ? cols[expIdx] : '';
                     let usageVal = usageIdx !== -1 && cols[usageIdx] ? cols[usageIdx].trim() : '';
 
-                    // تحويل تصنيفات الأدوية تلقائياً للقسم المخفي الخاص بالمشرف
-                    if (categoryVal.includes('أدوية') || categoryVal.includes('ادوية') || categoryVal.toLowerCase().includes('medicine')) {
+                    // توجيه تلقائي ذكي: أي مادة دوائية تذهب مباشرة لقسم الأدوية المخفي للمشرف
+                    const lowerName = itemName.toLowerCase();
+                    const lowerCat = categoryVal.toLowerCase();
+                    const isMedItem = lowerCat.includes('أدوية') || lowerCat.includes('ادوية') || lowerCat.includes('medicine') || lowerCat.includes('علاج') ||
+                                      lowerName.includes(' tab') || lowerName.includes(' cap') || lowerName.includes(' amp') || lowerName.includes(' vial') ||
+                                      lowerName.includes('حبوب') || lowerName.includes('كبسول') || lowerName.includes('حقن') || lowerName.includes('سلاين');
+
+                    if (isMedItem && !lowerCat.includes('بشرة') && !lowerCat.includes('شعر') && !lowerCat.includes('فم') && !lowerCat.includes('تجميل')) {
                         categoryVal = 'الأدوية والمستحضرات الطبية';
                     }
 
