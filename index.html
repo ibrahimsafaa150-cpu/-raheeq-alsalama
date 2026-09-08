@@ -608,12 +608,20 @@
                 </button>
             </div>
 
-            <!-- تبويبات فلترة المخزن وحل اللاق -->
-            <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-1" id="invFilterTabs">
-                <button onclick="filterInvTab('all', this)" class="inv-tab-chip bg-amber-500/20 text-amber-300 border border-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">الكل</button>
-                <button onclick="filterInvTab('cosmetics', this)" class="inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">كوزمتك وعناية ✨</button>
-                <button onclick="filterInvTab('medicines', this)" class="inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">الأدوية 💊</button>
-                <button onclick="filterInvTab('critical', this)" class="inv-tab-chip bg-rose-950/60 text-rose-300 border border-rose-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">نواقص حرجة (≤ 1 قطعة) 🚨</button>
+            <!-- تبويبات فلترة المخزن وحل اللاق (واضحة ومرتفعة مع منع الانكماش) -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 shrink-0 my-1 w-full border-y border-slate-800/80 bg-slate-950/50 px-1" id="invFilterTabs">
+                <button onclick="filterInvTab('all', this)" class="inv-tab-chip active-tab bg-amber-500/20 text-amber-300 border border-amber-400 text-xs font-black px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>📦</span> <span>الكل</span>
+                </button>
+                <button onclick="filterInvTab('cosmetics', this)" class="inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>✨</span> <span>كوزمتك وعناية</span>
+                </button>
+                <button onclick="filterInvTab('medicines', this)" class="inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>💊</span> <span>الأدوية</span>
+                </button>
+                <button onclick="filterInvTab('critical', this)" class="inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>🚨</span> <span>نواقص حرجة (≤ 1)</span>
+                </button>
             </div>
 
             <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
@@ -1000,6 +1008,7 @@
             { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
+        // صور افتراضية أنيقة لكل قسم عند الاستيراد الجماعي التلقائي
         const categoryDefaultImages = {
             "العناية بالبشرة والوجه": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
             "العناية بالجسم والترطيب": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80",
@@ -1049,6 +1058,7 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
+        /* دوال الباركود ومشاركة التطبيق (QR Share) */
         function openQrShareModal() {
             playPopSound();
             const currentUrl = window.location.href.split('#')[0];
@@ -1434,21 +1444,18 @@
             document.getElementById('modalProdName').innerText = prod.name;
             const specs = parseProductSpecs(prod.name, prod.size);
             const badgesContainer = document.getElementById('modalProdBadges');
-            let badgesHtml = '';
+            
+            // توحيد شكل الحجم ليكون رمادي/داكن مثل صورة 200ml تماماً بدون إضافات وبدون قطعة/أمبولة
+            const rawS = String(prod.size || '').trim();
+            const cleanSize = (rawS && rawS !== 'قطعة' && rawS !== 'أمبولة' && rawS !== 'Amp' && rawS !== 'Piece' && rawS !== 'nan')
+                ? rawS
+                : (specs.vol || specs.strength || specs.count || '');
 
-            if (specs.vol) {
-                badgesHtml += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-700/80 text-[10.5px] font-black px-2.5 py-1 rounded-xl shadow-sm">🧪 الحجم: ${specs.vol}</span>`;
+            if (cleanSize) {
+                badgesContainer.innerHTML = `<span dir="ltr" class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-black px-2.5 py-0.5 rounded shrink-0">${cleanSize}</span>`;
+            } else {
+                badgesContainer.innerHTML = '';
             }
-            if (specs.strength) {
-                badgesHtml += `<span class="bg-amber-950 text-amber-300 border border-amber-700/80 text-[10.5px] font-black px-2.5 py-1 rounded-xl shadow-sm">⚡ التركيز: ${specs.strength}</span>`;
-            }
-            if (specs.count) {
-                badgesHtml += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-700/80 text-[10.5px] font-black px-2.5 py-1 rounded-xl shadow-sm">📦 العبوة: ${specs.count}</span>`;
-            }
-            if (specs.form) {
-                badgesHtml += `<span class="bg-slate-900 text-slate-300 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-lg">${specs.form}</span>`;
-            }
-            badgesContainer.innerHTML = badgesHtml;
             document.getElementById('modalProdPrice').innerText = prod.price;
             document.getElementById('modalProdUsage').innerText = prod.usage;
             document.getElementById('modalProdBarcode').innerText = prod.barcode ? `باركود: ${prod.barcode}` : '';
@@ -1479,6 +1486,470 @@
             const modal = document.getElementById('productDetailModal');
             modal.classList.remove('modal-active');
             modal.classList.add('hidden');
+        }
+
+        let invItemsPerPage = 20;
+        let invDisplayedCount = 20;
+        let currentInvList = [];
+        let invCurrentType = 'all';
+        let invSearchQuery = '';
+
+        const TAB_ACTIVE_CLASS = 'inv-tab-chip active-tab bg-amber-500/20 text-amber-300 border border-amber-400 text-xs font-black px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition';
+        const TAB_INACTIVE_CLASS = 'inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition';
+
+        function openInventoryModal() {
+            invSearchQuery = '';
+            invCurrentType = 'all';
+            const searchInput = document.getElementById('invSearchInput');
+            if (searchInput) searchInput.value = '';
+            
+            // إعادة ضبط تبويبات الفلترة
+            document.querySelectorAll('.inv-tab-chip').forEach((chip, i) => {
+                chip.className = (i === 0) ? TAB_ACTIVE_CLASS : TAB_INACTIVE_CLASS;
+            });
+
+            updateInventoryStats();
+            applyInventoryFilter(true);
+
+            const modal = document.getElementById('inventoryModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            pushModalState('inventoryModal');
+        }
+
+        function updateInventoryStats() {
+            let total = productsData.length;
+            let low = 0;
+            let outOrCritical = 0;
+
+            productsData.forEach(p => {
+                if (p.stock <= 2) outOrCritical++;
+                else if (p.stock <= 5) low++;
+            });
+
+            document.getElementById('invTotalCount').innerText = total;
+            document.getElementById('invLowCount').innerText = low;
+            document.getElementById('invOutCount').innerText = outOrCritical;
+        }
+
+        function filterInvTab(type, btn) {
+            playPopSound();
+            invCurrentType = type;
+            document.querySelectorAll('.inv-tab-chip').forEach(b => {
+                b.className = TAB_INACTIVE_CLASS;
+            });
+            if (btn) {
+                btn.className = TAB_ACTIVE_CLASS;
+            }
+            applyInventoryFilter(true);
+        }
+
+        function filterInventoryList(query) {
+            invSearchQuery = query.trim().toLowerCase();
+            applyInventoryFilter(true);
+        }
+
+        function applyInventoryFilter(resetPagination = true) {
+            let filtered = [...productsData];
+
+            // 1. فلتر التبويب (كوزمتك / أدوية / حرج)
+            if (invCurrentType === 'cosmetics') {
+                filtered = filtered.filter(p => p.category !== 'الأدوية والمستحضرات الطبية' && p.category !== 'الأدوية');
+            } else if (invCurrentType === 'medicines') {
+                filtered = filtered.filter(p => p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
+            } else if (invCurrentType === 'critical') {
+                filtered = filtered.filter(p => p.stock <= 1);
+            }
+
+            // 2. فلتر البحث
+            if (invSearchQuery) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(invSearchQuery) || 
+                    p.category.toLowerCase().includes(invSearchQuery) || 
+                    (p.barcode && p.barcode.toLowerCase().includes(invSearchQuery))
+                );
+            }
+
+            currentInvList = filtered;
+            if (resetPagination) {
+                invDisplayedCount = invItemsPerPage;
+            }
+
+            renderInventoryListItems();
+        }
+
+        function renderInventoryListItems() {
+            const listEl = document.getElementById('inventoryItemsList');
+            listEl.innerHTML = '';
+
+            if (currentInvList.length === 0) {
+                listEl.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">لا توجد مواد مطابقة</div>';
+                return;
+            }
+
+            const batch = currentInvList.slice(0, invDisplayedCount);
+
+            batch.forEach(p => {
+                const isCrit = p.stock <= 1;
+                const isLow = p.stock > 1 && p.stock <= 5;
+                const info = getStockBadgeStyle(p.stock);
+                const isMed = (p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
+                const pSpecs = parseProductSpecs(p.name, p.size);
+
+                listEl.innerHTML += `
+                    <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
+                        <div class="flex items-start gap-3">
+                            <div class="w-14 h-14 rounded-xl bg-white med-img-frame flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
+                                <img src="${p.image}" class="max-w-full max-h-full object-contain">
+                            </div>
+                            <div class="flex-1 min-w-0 text-right">
+                                <div class="flex items-center gap-1.5">
+                                    ${isMed ? '<span class="text-[9px] bg-rose-950 text-rose-300 border border-rose-800 px-1.5 py-0.5 rounded font-bold">💊 دواء</span>' : ''}
+                                    <h5 class="text-xs font-black text-white leading-snug break-words">${p.name}</h5>
+                                </div>
+                                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                                    <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${pSpecs.displayBadge}</span>
+                                    <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
+                                    ${p.expiryDate ? `<span class="text-[8.5px] text-slate-400">📅 ${p.expiryDate}</span>` : ''}
+                                    ${p.barcode ? `<span class="text-[8px] font-mono text-cyan-400/80 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">📷 ${p.barcode}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-900">
+                            <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">${info.label}</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="quickUpdateStock('${p.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">-</button>
+                                <button onclick="quickUpdateStock('${p.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">+</button>
+                                <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-800 text-[10px] font-black px-2.5 py-1.5 rounded-lg active:scale-90">+10</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // زر العرض التدريجي داخل مودال المخزن لحل اللاق نهائياً
+            if (invDisplayedCount < currentInvList.length) {
+                const remaining = currentInvList.length - invDisplayedCount;
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.className = 'w-full bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800/60 text-xs font-bold py-2.5 rounded-xl shadow transition active:scale-95 flex items-center justify-center gap-1.5 my-2';
+                loadMoreBtn.onclick = () => {
+                    invDisplayedCount += invItemsPerPage;
+                    renderInventoryListItems();
+                };
+                loadMoreBtn.innerHTML = `<span>⚡</span> <span>عرض المزيد بالمخزن (متبقي ${remaining})</span>`;
+                listEl.appendChild(loadMoreBtn);
+            }
+        }
+
+        function closeInventoryModal() {
+            const modal = document.getElementById('inventoryModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        function quickUpdateStock(id, changeQty) {
+            playPopSound();
+            const prod = productsData.find(p => String(p.id) === String(id));
+            if (prod) {
+                prod.stock = Math.max(0, prod.stock + changeQty);
+                saveProductsToCloud();
+                updateInventoryStats();
+                applyInventoryFilter(false);
+                renderProducts(productsData, false);
+                showToast(`تم تحديث مخزون "${prod.name}" (${prod.stock} قطعة)`, '📦');
+            }
+        }
+
+        // كشف نواقص الأدوية فقط (المتبقي قطعة واحدة أو نافد)
+        function copyMedicineShortages() {
+            playPopSound();
+            const medShortages = productsData.filter(p => 
+                (p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية') && p.stock <= 1
+            );
+            if (medShortages.length === 0) {
+                showToast('لا توجد أدوية نافدة أو متبقي منها قطعة واحدة 💊', '✨');
+                return;
+            }
+            let text = `💊 *كشف نواقص الأدوية الحرجة (قطعة أو نافد) - صيدلية رَحِيْقُ السَّلَامَة:*\n━━━━━━━━━━━━━━━━━━━━\n`;
+            medShortages.forEach((p, i) => {
+                text += `${i + 1}. *${p.name}* (${p.size})\n   - المتبقي: ${p.stock === 0 ? '❌ نافد' : '⚠️ قطعة واحدة فقط'}\n   - الباركود: ${p.barcode || 'غير مسجل'}\n`;
+            });
+            text += `━━━━━━━━━━━━━━━━━━━━\n⏰ التاريخ: ${new Date().toLocaleDateString('ar-IQ')}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('تم نسخ نواقص الأدوية (≤ 1 قطعة) بنجاح 📋', '💊');
+            });
+        }
+
+        // كشف كافة النواقص
+        function getShortagesText() {
+            const shortages = productsData.filter(p => p.stock <= 5);
+            if (shortages.length === 0) return null;
+            let text = `📋 *كشف نواقص ومشتريات صيدلية رَحِيْقُ السَّلَامَة:*\n━━━━━━━━━━━━━━━━━━━━\n`;
+            shortages.forEach((p, i) => {
+                text += `${i + 1}. *${p.name}* (${p.size})\n   - المتبقي بالمخزن: ${p.stock} قطعة\n   - القسم: ${p.category}\n`;
+            });
+            text += `━━━━━━━━━━━━━━━━━━━━\n⏰ التاريخ: ${new Date().toLocaleDateString('ar-IQ')}`;
+            return text;
+        }
+
+        function copyShortagesToClipboard() {
+            playPopSound();
+            const text = getShortagesText();
+            if (!text) { showToast('لا توجد أي نواقص بالمخزن حالياً', '✨'); return; }
+            navigator.clipboard.writeText(text).then(() => { showToast('تم نسخ كشف النواقص العام بنجاح 📋'); });
+        }
+
+        function sendShortagesToWhatsApp() {
+            playPopSound();
+            const text = getShortagesText();
+            if (!text) { showToast('المخزن مكتمل ولا توجد نواقص', '✨'); return; }
+            let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
+            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
+        }
+
+        function exportToCSV() {
+            playPopSound();
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "ID,الاسم,القسم,الباركود,الحجم,السعر,الكمية,الصلاحية,الوصف\n";
+            productsData.forEach(p => {
+                const row = [p.id, `"${p.name.replace(/"/g, '""')}"`, `"${p.category}"`, p.barcode || '', `"${p.size}"`, `"${p.price}"`, p.stock, p.expiryDate || '', `"${(p.usage || '').replace(/"/g, '""')}"`].join(",");
+                csvContent += row + "\n";
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `raheeq_pharmacy_inventory_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('تم تصدير ملف Excel بنجاح 📥');
+        }
+
+        /* دالة المزامنة والاستيراد الذكي لملفات كبسولة والـ CSV اليومية */
+        function importFromCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const rows = text.split(/\r?\n/).filter(r => r.trim() !== '');
+                if (rows.length <= 1) {
+                    showToast('الملف فارغ أو غير متوافق', '⚠️');
+                    return;
+                }
+
+                const delimiter = rows[0].includes(';') ? ';' : ',';
+                const parseLine = (line) => {
+                    const pattern = new RegExp(`(?:^|${delimiter})("([^"]*(?:""[^"]*)*)"|([^"${delimiter}]*))`, 'g');
+                    let matches = [];
+                    let match;
+                    while ((match = pattern.exec(line)) !== null) {
+                        let val = match[2] !== undefined ? match[2].replace(/""/g, '"') : match[3];
+                        matches.push(val ? val.trim() : '');
+                    }
+                    return matches;
+                };
+
+                const headers = parseLine(rows[0]).map(h => h.toLowerCase());
+
+                const findCol = (terms) => headers.findIndex(h => terms.some(t => h.includes(t)));
+                let nameIdx = findCol(['اسم', 'name', 'item', 'المادة', 'الصنف', 'product']);
+                let barcodeIdx = findCol(['باركود', 'barcode', 'code', 'كود', 'upc']);
+                let priceIdx = findCol(['سعر', 'price', 'بيع', 'مفرد']);
+                let stockIdx = findCol(['كمية', 'qty', 'stock', 'رصيد', 'العدد', 'المتوفر']);
+                let sizeIdx = findCol(['سعة', 'حجم', 'size', 'عبوة']);
+                let catIdx = findCol(['قسم', 'category', 'نوع', 'تصنيف', 'مجموعة']);
+                let expIdx = findCol(['صلاحية', 'تاريخ', 'exp', 'expiry']);
+                let usageIdx = findCol(['وصف', 'الوصف', 'استخدام', 'الاستخدام', 'فوائد', 'الفوائد', 'usage', 'desc', 'description']);
+
+                if (nameIdx === -1 && headers.length >= 2) nameIdx = 1;
+                if (priceIdx === -1 && headers.length >= 6) priceIdx = 5;
+                if (stockIdx === -1 && headers.length >= 7) stockIdx = 6;
+
+                let updatedCount = 0;
+                let addedCount = 0;
+
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = parseLine(rows[i]);
+                    if (!cols || cols.length < 2) continue;
+
+                    const itemName = nameIdx !== -1 && cols[nameIdx] ? cols[nameIdx] : '';
+                    if (!itemName) continue;
+
+                    const barcodeVal = barcodeIdx !== -1 && cols[barcodeIdx] ? cols[barcodeIdx] : '';
+                    let rawPrice = priceIdx !== -1 && cols[priceIdx] ? cols[priceIdx] : '0';
+                    let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : (Number(rawPrice.replace(/[^0-9]/g, '')) || 0).toLocaleString() + ' د.ع';
+                    let stockNum = stockIdx !== -1 && cols[stockIdx] ? (parseInt(cols[stockIdx].replace(/[^0-9]/g, '')) || 0) : 0;
+                    let sizeVal = sizeIdx !== -1 && cols[sizeIdx] ? cols[sizeIdx].trim() : '';
+                    let categoryVal = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : 'العناية بالبشرة والوجه';
+                    let expiryVal = expIdx !== -1 && cols[expIdx] ? cols[expIdx] : '';
+                    let usageVal = usageIdx !== -1 && cols[usageIdx] ? cols[usageIdx].trim() : '';
+
+                    // توجيه تلقائي ذكي: أي مادة دوائية تذهب مباشرة لقسم الأدوية المخفي للمشرف
+                    const lowerName = itemName.toLowerCase();
+                    const lowerCat = categoryVal.toLowerCase();
+                    const isMedItem = lowerCat.includes('أدوية') || lowerCat.includes('ادوية') || lowerCat.includes('medicine') || lowerCat.includes('علاج') ||
+                                      lowerName.includes(' tab') || lowerName.includes(' cap') || lowerName.includes(' amp') || lowerName.includes(' vial') ||
+                                      lowerName.includes('حبوب') || lowerName.includes('كبسول') || lowerName.includes('حقن') || lowerName.includes('سلاين');
+
+                    if (isMedItem && !lowerCat.includes('بشرة') && !lowerCat.includes('شعر') && !lowerCat.includes('فم') && !lowerCat.includes('تجميل')) {
+                        categoryVal = 'الأدوية والمستحضرات الطبية';
+                    }
+
+                    let existingIdx = -1;
+                    if (barcodeVal) {
+                        existingIdx = productsData.findIndex(p => p.barcode && String(p.barcode).trim() === String(barcodeVal).trim());
+                    }
+                    if (existingIdx === -1) {
+                        existingIdx = productsData.findIndex(p => p.name.trim().toLowerCase() === itemName.trim().toLowerCase());
+                    }
+
+                    if (existingIdx !== -1) {
+                        productsData[existingIdx].stock = stockNum;
+                        if (rawPrice && rawPrice !== '0') productsData[existingIdx].price = formattedPrice;
+                        if (barcodeVal && !productsData[existingIdx].barcode) productsData[existingIdx].barcode = barcodeVal;
+                        if (expiryVal) productsData[existingIdx].expiryDate = expiryVal;
+                        if (usageVal) productsData[existingIdx].usage = usageVal;
+                        updatedCount++;
+                    } else {
+                        const defaultImg = categoryDefaultImages[categoryVal] || fallbackGeneralImage;
+                        const newProd = {
+                            id: 'prod_' + Date.now() + '_' + i,
+                            name: itemName,
+                            category: categoryVal,
+                            barcode: barcodeVal,
+                            size: sizeVal,
+                            price: formattedPrice,
+                            originalPrice: null,
+                            stock: stockNum,
+                            expiryDate: expiryVal,
+                            usage: usageVal || 'مستحضر دوائي وتجميلي معتمد من صيدلية رحيق السلامة',
+                            image: defaultImg
+                        };
+                        productsData.push(newProd);
+                        addedCount++;
+                    }
+                }
+
+                saveProductsToCloud();
+                renderInventoryListItems(productsData);
+                renderProducts();
+                event.target.value = '';
+                showToast(`تمت المزامنة: تحديث (${updatedCount}) وإضافة (${addedCount}) مادة ⚡`, '📦');
+            };
+            reader.readAsText(file);
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 1080;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                    } else {
+                        if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const fullHdBase64 = canvas.toDataURL('image/jpeg', 0.88);
+                    document.getElementById('prodImage').value = fullHdBase64;
+                    showToast('تمت معالجة الصورة بدقة 1080p', '🖼️');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function startSmartPillCarousel() {
+            setInterval(() => {
+                const textEl = document.getElementById('smartPillText');
+                const indexEl = document.getElementById('pillIndex');
+                textEl.style.opacity = '0';
+                setTimeout(() => {
+                    currentTipIndex = (currentTipIndex + 1) % clinicalTips.length;
+                    textEl.innerText = clinicalTips[currentTipIndex];
+                    indexEl.innerText = `${currentTipIndex + 1} / ${clinicalTips.length}`;
+                    textEl.style.opacity = '1';
+                }, 350);
+            }, 5500);
+        }
+
+        let tapCount = 0;
+        let tapTimer = null;
+        const logoBtn = document.getElementById('secretLogoTrigger');
+        if (logoBtn) {
+            logoBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                playPopSound();
+                tapCount++;
+                clearTimeout(tapTimer);
+                tapTimer = setTimeout(() => { tapCount = 0; }, 1800);
+                if (tapCount === 5) {
+                    tapCount = 0;
+                    triggerSecretAdmin();
+                }
+            });
+        }
+
+        function triggerSecretAdmin() {
+            if (isAdmin) {
+                showToast('أنت مسجل حالياً كـ مشرف', 'ℹ️');
+                return;
+            }
+            const modal = document.getElementById('adminPinModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-active');
+            pushModalState('adminPinModal');
+        }
+
+        function closePinModal() {
+            const modal = document.getElementById('adminPinModal');
+            modal.classList.remove('modal-active');
+            modal.classList.add('hidden');
+        }
+
+        function handleSecureLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('adminEmailInput').value.trim();
+            const pass = document.getElementById('adminPasswordInput').value;
+            auth.signInWithEmailAndPassword(email, pass)
+            .then(() => {
+                closePinModal();
+                showToast('تم تسجيل الدخول بنجاح 🚀', '🛡️');
+            })
+            .catch((error) => {
+                showToast('بيانات الدخول غير صحيحة', '❌');
+            });
+        }
+
+        function logoutAdmin() {
+            auth.signOut().then(() => {
+                showToast('تم تسجيل الخروج بنجاح', '🔒');
+            });
+        }
+
+        function updateDeliveryStatusUI() {
+            const bannerText = document.getElementById('deliveryBannerText');
+            const banner = document.getElementById('deliveryStatusBanner');
+            if (isOrderingActive) {
+                bannerText.innerText = "صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية";
+                banner.className = "w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-2 text-center text-amber-300 flex justify-center items-center overflow-hidden";
+            } else {
+                bannerText.innerText = "⚠️ خدمة حجز وتوصيل الطلبيات متوقفة مؤقتاً • المعاينة والاستشارة فقط";
+                banner.className = "w-full bg-rose-950/80 border-b border-rose-800 text-[10px] py-1.5 px-2 text-center text-rose-200 flex justify-center items-center overflow-hidden";
+            }
         }
 
         function renderCircleCategories() {
@@ -1558,25 +2029,16 @@
             const strength = strMatch ? strMatch[1].trim() : '';
             const count = countMatch ? countMatch[1].trim() : '';
 
-            // تصحيح التسميات التقنية القادمة من كبسولة مثل Amp و Piece
-            let form = String(rawSize || 'قطعة').trim();
-            if (form === 'Amp' || form === 'Piece' || !form || form === 'nan') {
-                if (nl.includes('cream') || n.includes('كريم')) form = 'كريم';
-                else if (nl.includes('gel') || n.includes('جل')) form = 'جل';
-                else if (nl.includes('syrup') || n.includes('شراب') || nl.includes('susp')) form = 'شراب';
-                else if (nl.includes('shampoo') || n.includes('شامبو')) form = 'شامبو';
-                else if (nl.includes('tab') || n.includes('حبوب')) form = 'حبوب';
-                else if (nl.includes('cap') || n.includes('كبسول')) form = 'كبسول';
-                else if (n.includes('سلاين') || n.includes('مغذي')) form = 'مغذي';
-                else if (nl.includes('drop') || n.includes('قطرة')) form = 'قطرة';
-                else if (nl.includes('spray') || n.includes('بخاخ')) form = 'بخاخ';
-                else if (nl.includes('wash') || n.includes('غسول')) form = 'غسول';
-                else if (n.includes('معجون')) form = 'معجون';
-                else form = (rawSize === 'Amp' ? 'أمبولة' : 'قطعة');
+            // إزالة التسميات المشوهة مثل قطعة وأمبولة نهائياً
+            let form = '';
+            const raw = String(rawSize || '').trim();
+            if (raw && raw !== 'Amp' && raw !== 'Piece' && raw !== 'قطعة' && raw !== 'أمبولة' && raw !== 'nan') {
+                form = raw;
             }
 
-            // أفضل شارة لعرضها بالكارت المختصر
-            const displayBadge = vol || strength || count || form;
+            // أفضل شارة لعرضها بالكارت المختصر بدون كلمات مشوهة
+            const cleanRaw = (raw && raw !== 'قطعة' && raw !== 'أمبولة' && raw !== 'Amp' && raw !== 'Piece' && raw !== 'nan') ? raw : '';
+            const displayBadge = cleanRaw || vol || strength || count || '';
 
             return { vol, strength, count, form, displayBadge };
         }
@@ -1631,7 +2093,7 @@
                                     <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
                                     ${oldPriceText}
                                 </div>
-                                <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${specs.displayBadge}</span>
+                                ${specs.displayBadge ? `<span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${specs.displayBadge}</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -2396,472 +2858,6 @@
             productsData = productsData.filter(p => String(p.id) !== String(id));
             saveProductsToCloud();
             showToast('تم حذف المنتج سحابياً', '🗑️');
-        }
-
-        let invItemsPerPage = 20;
-        let invDisplayedCount = 20;
-        let currentInvList = [];
-        let invCurrentType = 'all';
-        let invSearchQuery = '';
-
-        function openInventoryModal() {
-            invSearchQuery = '';
-            invCurrentType = 'all';
-            const searchInput = document.getElementById('invSearchInput');
-            if (searchInput) searchInput.value = '';
-            
-            // إعادة ضبط تبويبات الفلترة
-            document.querySelectorAll('.inv-tab-chip').forEach((chip, i) => {
-                if (i === 0) {
-                    chip.className = 'inv-tab-chip bg-amber-500/20 text-amber-300 border border-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
-                } else {
-                    chip.className = 'inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
-                }
-            });
-
-            updateInventoryStats();
-            applyInventoryFilter(true);
-
-            const modal = document.getElementById('inventoryModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('modal-active');
-            pushModalState('inventoryModal');
-        }
-
-        function updateInventoryStats() {
-            let total = productsData.length;
-            let low = 0;
-            let outOrCritical = 0;
-
-            productsData.forEach(p => {
-                if (p.stock <= 2) outOrCritical++;
-                else if (p.stock <= 5) low++;
-            });
-
-            document.getElementById('invTotalCount').innerText = total;
-            document.getElementById('invLowCount').innerText = low;
-            document.getElementById('invOutCount').innerText = outOrCritical;
-        }
-
-        function filterInvTab(type, btn) {
-            playPopSound();
-            invCurrentType = type;
-            document.querySelectorAll('.inv-tab-chip').forEach(b => {
-                b.className = 'inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
-            });
-            if (btn) {
-                btn.className = 'inv-tab-chip bg-amber-500/20 text-amber-300 border border-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
-            }
-            applyInventoryFilter(true);
-        }
-
-        function filterInventoryList(query) {
-            invSearchQuery = query.trim().toLowerCase();
-            applyInventoryFilter(true);
-        }
-
-        function applyInventoryFilter(resetPagination = true) {
-            let filtered = [...productsData];
-
-            // 1. فلتر التبويب (كوزمتك / أدوية / حرج)
-            if (invCurrentType === 'cosmetics') {
-                filtered = filtered.filter(p => p.category !== 'الأدوية والمستحضرات الطبية' && p.category !== 'الأدوية');
-            } else if (invCurrentType === 'medicines') {
-                filtered = filtered.filter(p => p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
-            } else if (invCurrentType === 'critical') {
-                filtered = filtered.filter(p => p.stock <= 1);
-            }
-
-            // 2. فلتر البحث
-            if (invSearchQuery) {
-                filtered = filtered.filter(p => 
-                    p.name.toLowerCase().includes(invSearchQuery) || 
-                    p.category.toLowerCase().includes(invSearchQuery) || 
-                    (p.barcode && p.barcode.toLowerCase().includes(invSearchQuery))
-                );
-            }
-
-            currentInvList = filtered;
-            if (resetPagination) {
-                invDisplayedCount = invItemsPerPage;
-            }
-
-            renderInventoryListItems();
-        }
-
-        function renderInventoryListItems() {
-            const listEl = document.getElementById('inventoryItemsList');
-            listEl.innerHTML = '';
-
-            if (currentInvList.length === 0) {
-                listEl.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">لا توجد مواد مطابقة</div>';
-                return;
-            }
-
-            const batch = currentInvList.slice(0, invDisplayedCount);
-
-            batch.forEach(p => {
-                const isCrit = p.stock <= 1;
-                const isLow = p.stock > 1 && p.stock <= 5;
-                const info = getStockBadgeStyle(p.stock);
-                const isMed = (p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
-                const pSpecs = parseProductSpecs(p.name, p.size);
-
-                listEl.innerHTML += `
-                    <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
-                        <div class="flex items-start gap-3">
-                            <div class="w-14 h-14 rounded-xl bg-white med-img-frame flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
-                                <img src="${p.image}" class="max-w-full max-h-full object-contain">
-                            </div>
-                            <div class="flex-1 min-w-0 text-right">
-                                <div class="flex items-center gap-1.5">
-                                    ${isMed ? '<span class="text-[9px] bg-rose-950 text-rose-300 border border-rose-800 px-1.5 py-0.5 rounded font-bold">💊 دواء</span>' : ''}
-                                    <h5 class="text-xs font-black text-white leading-snug break-words">${p.name}</h5>
-                                </div>
-                                <div class="flex items-center gap-2 mt-1 flex-wrap">
-                                    <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${pSpecs.displayBadge}</span>
-                                    <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
-                                    ${p.expiryDate ? `<span class="text-[8.5px] text-slate-400">📅 ${p.expiryDate}</span>` : ''}
-                                    ${p.barcode ? `<span class="text-[8px] font-mono text-cyan-400/80 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">📷 ${p.barcode}</span>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-slate-900">
-                            <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">${info.label}</span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="quickUpdateStock('${p.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">-</button>
-                                <button onclick="quickUpdateStock('${p.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">+</button>
-                                <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-800 text-[10px] font-black px-2.5 py-1.5 rounded-lg active:scale-90">+10</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // زر العرض التدريجي داخل مودال المخزن لحل اللاق نهائياً
-            if (invDisplayedCount < currentInvList.length) {
-                const remaining = currentInvList.length - invDisplayedCount;
-                const loadMoreBtn = document.createElement('button');
-                loadMoreBtn.className = 'w-full bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800/60 text-xs font-bold py-2.5 rounded-xl shadow transition active:scale-95 flex items-center justify-center gap-1.5 my-2';
-                loadMoreBtn.onclick = () => {
-                    invDisplayedCount += invItemsPerPage;
-                    renderInventoryListItems();
-                };
-                loadMoreBtn.innerHTML = `<span>⚡</span> <span>عرض المزيد بالمخزن (متبقي ${remaining})</span>`;
-                listEl.appendChild(loadMoreBtn);
-            }
-        }
-
-        function closeInventoryModal() {
-            const modal = document.getElementById('inventoryModal');
-            modal.classList.remove('modal-active');
-            modal.classList.add('hidden');
-        }
-
-        function quickUpdateStock(id, changeQty) {
-            playPopSound();
-            const prod = productsData.find(p => String(p.id) === String(id));
-            if (prod) {
-                prod.stock = Math.max(0, prod.stock + changeQty);
-                saveProductsToCloud();
-                updateInventoryStats();
-                applyInventoryFilter(false);
-                renderProducts(productsData, false);
-                showToast(`تم تحديث مخزون "${prod.name}" (${prod.stock} قطعة)`, '📦');
-            }
-        }
-
-        // كشف نواقص الأدوية فقط (المتبقي قطعة واحدة أو نافد)
-        function copyMedicineShortages() {
-            playPopSound();
-            const medShortages = productsData.filter(p => 
-                (p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية') && p.stock <= 1
-            );
-            if (medShortages.length === 0) {
-                showToast('لا توجد أدوية نافدة أو متبقي منها قطعة واحدة 💊', '✨');
-                return;
-            }
-            let text = `💊 *كشف نواقص الأدوية الحرجة (قطعة أو نافد) - صيدلية رَحِيْقُ السَّلَامَة:*\n━━━━━━━━━━━━━━━━━━━━\n`;
-            medShortages.forEach((p, i) => {
-                text += `${i + 1}. *${p.name}* (${p.size})\n   - المتبقي: ${p.stock === 0 ? '❌ نافد' : '⚠️ قطعة واحدة فقط'}\n   - الباركود: ${p.barcode || 'غير مسجل'}\n`;
-            });
-            text += `━━━━━━━━━━━━━━━━━━━━\n⏰ التاريخ: ${new Date().toLocaleDateString('ar-IQ')}`;
-
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('تم نسخ نواقص الأدوية (≤ 1 قطعة) بنجاح 📋', '💊');
-            });
-        }
-
-        // كشف كافة النواقص
-        function getShortagesText() {
-            const shortages = productsData.filter(p => p.stock <= 5);
-            if (shortages.length === 0) return null;
-            let text = `📋 *كشف نواقص ومشتريات صيدلية رَحِيْقُ السَّلَامَة:*\n━━━━━━━━━━━━━━━━━━━━\n`;
-            shortages.forEach((p, i) => {
-                text += `${i + 1}. *${p.name}* (${p.size})\n   - المتبقي بالمخزن: ${p.stock} قطعة\n   - القسم: ${p.category}\n`;
-            });
-            text += `━━━━━━━━━━━━━━━━━━━━\n⏰ التاريخ: ${new Date().toLocaleDateString('ar-IQ')}`;
-            return text;
-        }
-
-        function copyShortagesToClipboard() {
-            playPopSound();
-            const text = getShortagesText();
-            if (!text) { showToast('لا توجد أي نواقص بالمخزن حالياً', '✨'); return; }
-            navigator.clipboard.writeText(text).then(() => { showToast('تم نسخ كشف النواقص العام بنجاح 📋'); });
-        }
-
-        function sendShortagesToWhatsApp() {
-            playPopSound();
-            const text = getShortagesText();
-            if (!text) { showToast('المخزن مكتمل ولا توجد نواقص', '✨'); return; }
-            let targetPhone = myReceiverPhone.startsWith('0') ? '964' + myReceiverPhone.substring(1) : myReceiverPhone;
-            window.location.href = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`;
-        }
-
-        function exportToCSV() {
-            playPopSound();
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "ID,الاسم,القسم,الباركود,الحجم,السعر,الكمية,الصلاحية,الوصف\n";
-            productsData.forEach(p => {
-                const row = [p.id, `"${p.name.replace(/"/g, '""')}"`, `"${p.category}"`, p.barcode || '', `"${p.size}"`, `"${p.price}"`, p.stock, p.expiryDate || '', `"${(p.usage || '').replace(/"/g, '""')}"`].join(",");
-                csvContent += row + "\n";
-            });
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `raheeq_pharmacy_inventory_${Date.now()}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('تم تصدير ملف Excel بنجاح 📥');
-        }
-
-        /* دالة المزامنة والاستيراد الذكي لملفات كبسولة والـ CSV اليومية */
-        function importFromCSV(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const rows = text.split(/\r?\n/).filter(r => r.trim() !== '');
-                if (rows.length <= 1) {
-                    showToast('الملف فارغ أو غير متوافق', '⚠️');
-                    return;
-                }
-
-                const delimiter = rows[0].includes(';') ? ';' : ',';
-                const parseLine = (line) => {
-                    const pattern = new RegExp(`(?:^|${delimiter})("([^"]*(?:""[^"]*)*)"|([^"${delimiter}]*))`, 'g');
-                    let matches = [];
-                    let match;
-                    while ((match = pattern.exec(line)) !== null) {
-                        let val = match[2] !== undefined ? match[2].replace(/""/g, '"') : match[3];
-                        matches.push(val ? val.trim() : '');
-                    }
-                    return matches;
-                };
-
-                const headers = parseLine(rows[0]).map(h => h.toLowerCase());
-
-                const findCol = (terms) => headers.findIndex(h => terms.some(t => h.includes(t)));
-                let nameIdx = findCol(['اسم', 'name', 'item', 'المادة', 'الصنف', 'product']);
-                let barcodeIdx = findCol(['باركود', 'barcode', 'code', 'كود', 'upc']);
-                let priceIdx = findCol(['سعر', 'price', 'بيع', 'مفرد']);
-                let stockIdx = findCol(['كمية', 'qty', 'stock', 'رصيد', 'العدد', 'المتوفر']);
-                let sizeIdx = findCol(['سعة', 'حجم', 'size', 'عبوة']);
-                let catIdx = findCol(['قسم', 'category', 'نوع', 'تصنيف', 'مجموعة']);
-                let expIdx = findCol(['صلاحية', 'تاريخ', 'exp', 'expiry']);
-                let usageIdx = findCol(['وصف', 'الوصف', 'استخدام', 'الاستخدام', 'فوائد', 'الفوائد', 'usage', 'desc', 'description']);
-
-                if (nameIdx === -1 && headers.length >= 2) nameIdx = 1;
-                if (priceIdx === -1 && headers.length >= 6) priceIdx = 5;
-                if (stockIdx === -1 && headers.length >= 7) stockIdx = 6;
-
-                let updatedCount = 0;
-                let addedCount = 0;
-
-                for (let i = 1; i < rows.length; i++) {
-                    const cols = parseLine(rows[i]);
-                    if (!cols || cols.length < 2) continue;
-
-                    const itemName = nameIdx !== -1 && cols[nameIdx] ? cols[nameIdx] : '';
-                    if (!itemName) continue;
-
-                    const barcodeVal = barcodeIdx !== -1 && cols[barcodeIdx] ? cols[barcodeIdx] : '';
-                    let rawPrice = priceIdx !== -1 && cols[priceIdx] ? cols[priceIdx] : '0';
-                    let formattedPrice = rawPrice.includes('د.ع') ? rawPrice : (Number(rawPrice.replace(/[^0-9]/g, '')) || 0).toLocaleString() + ' د.ع';
-                    let stockNum = stockIdx !== -1 && cols[stockIdx] ? (parseInt(cols[stockIdx].replace(/[^0-9]/g, '')) || 0) : 0;
-                    let sizeVal = sizeIdx !== -1 && cols[sizeIdx] ? cols[sizeIdx] : 'قطعة';
-                    let categoryVal = catIdx !== -1 && cols[catIdx] ? cols[catIdx] : 'العناية بالبشرة والوجه';
-                    let expiryVal = expIdx !== -1 && cols[expIdx] ? cols[expIdx] : '';
-                    let usageVal = usageIdx !== -1 && cols[usageIdx] ? cols[usageIdx].trim() : '';
-
-                    // توجيه تلقائي ذكي: أي مادة دوائية تذهب مباشرة لقسم الأدوية المخفي للمشرف
-                    const lowerName = itemName.toLowerCase();
-                    const lowerCat = categoryVal.toLowerCase();
-                    const isMedItem = lowerCat.includes('أدوية') || lowerCat.includes('ادوية') || lowerCat.includes('medicine') || lowerCat.includes('علاج') ||
-                                      lowerName.includes(' tab') || lowerName.includes(' cap') || lowerName.includes(' amp') || lowerName.includes(' vial') ||
-                                      lowerName.includes('حبوب') || lowerName.includes('كبسول') || lowerName.includes('حقن') || lowerName.includes('سلاين');
-
-                    if (isMedItem && !lowerCat.includes('بشرة') && !lowerCat.includes('شعر') && !lowerCat.includes('فم') && !lowerCat.includes('تجميل')) {
-                        categoryVal = 'الأدوية والمستحضرات الطبية';
-                    }
-
-                    let existingIdx = -1;
-                    if (barcodeVal) {
-                        existingIdx = productsData.findIndex(p => p.barcode && String(p.barcode).trim() === String(barcodeVal).trim());
-                    }
-                    if (existingIdx === -1) {
-                        existingIdx = productsData.findIndex(p => p.name.trim().toLowerCase() === itemName.trim().toLowerCase());
-                    }
-
-                    if (existingIdx !== -1) {
-                        productsData[existingIdx].stock = stockNum;
-                        if (rawPrice && rawPrice !== '0') productsData[existingIdx].price = formattedPrice;
-                        if (barcodeVal && !productsData[existingIdx].barcode) productsData[existingIdx].barcode = barcodeVal;
-                        if (expiryVal) productsData[existingIdx].expiryDate = expiryVal;
-                        if (usageVal) productsData[existingIdx].usage = usageVal;
-                        updatedCount++;
-                    } else {
-                        const defaultImg = categoryDefaultImages[categoryVal] || fallbackGeneralImage;
-                        const newProd = {
-                            id: 'prod_' + Date.now() + '_' + i,
-                            name: itemName,
-                            category: categoryVal,
-                            barcode: barcodeVal,
-                            size: sizeVal,
-                            price: formattedPrice,
-                            originalPrice: null,
-                            stock: stockNum,
-                            expiryDate: expiryVal,
-                            usage: usageVal || 'مستحضر دوائي وتجميلي معتمد من صيدلية رحيق السلامة',
-                            image: defaultImg
-                        };
-                        productsData.push(newProd);
-                        addedCount++;
-                    }
-                }
-
-                saveProductsToCloud();
-                updateInventoryStats();
-                applyInventoryFilter(true);
-                renderProducts();
-                event.target.value = '';
-                showToast(`تمت المزامنة: تحديث (${updatedCount}) وإضافة (${addedCount}) مادة ⚡`, '📦');
-            };
-            reader.readAsText(file);
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 1080;
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > height) {
-                        if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
-                    } else {
-                        if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(img, 0, 0, width, height);
-                    const fullHdBase64 = canvas.toDataURL('image/jpeg', 0.88);
-                    document.getElementById('prodImage').value = fullHdBase64;
-                    showToast('تمت معالجة الصورة بدقة 1080p', '🖼️');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function startSmartPillCarousel() {
-            setInterval(() => {
-                const textEl = document.getElementById('smartPillText');
-                const indexEl = document.getElementById('pillIndex');
-                textEl.style.opacity = '0';
-                setTimeout(() => {
-                    currentTipIndex = (currentTipIndex + 1) % clinicalTips.length;
-                    textEl.innerText = clinicalTips[currentTipIndex];
-                    indexEl.innerText = `${currentTipIndex + 1} / ${clinicalTips.length}`;
-                    textEl.style.opacity = '1';
-                }, 350);
-            }, 5500);
-        }
-
-        let tapCount = 0;
-        let tapTimer = null;
-        const logoBtn = document.getElementById('secretLogoTrigger');
-        if (logoBtn) {
-            logoBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                playPopSound();
-                tapCount++;
-                clearTimeout(tapTimer);
-                tapTimer = setTimeout(() => { tapCount = 0; }, 1800);
-                if (tapCount === 5) {
-                    tapCount = 0;
-                    triggerSecretAdmin();
-                }
-            });
-        }
-
-        function triggerSecretAdmin() {
-            if (isAdmin) {
-                showToast('أنت مسجل حالياً كـ مشرف', 'ℹ️');
-                return;
-            }
-            const modal = document.getElementById('adminPinModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('modal-active');
-            pushModalState('adminPinModal');
-        }
-
-        function closePinModal() {
-            const modal = document.getElementById('adminPinModal');
-            modal.classList.remove('modal-active');
-            modal.classList.add('hidden');
-        }
-
-        function handleSecureLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('adminEmailInput').value.trim();
-            const pass = document.getElementById('adminPasswordInput').value;
-            auth.signInWithEmailAndPassword(email, pass)
-            .then(() => {
-                closePinModal();
-                showToast('تم تسجيل الدخول بنجاح 🚀', '🛡️');
-            })
-            .catch((error) => {
-                showToast('بيانات الدخول غير صحيحة', '❌');
-            });
-        }
-
-        function logoutAdmin() {
-            auth.signOut().then(() => {
-                showToast('تم تسجيل الخروج بنجاح', '🔒');
-            });
-        }
-
-        function updateDeliveryStatusUI() {
-            const bannerText = document.getElementById('deliveryBannerText');
-            const banner = document.getElementById('deliveryStatusBanner');
-            if (isOrderingActive) {
-                bannerText.innerText = "صيدلية رَحِيْقُ السَّلَامَة • منتجات أصلية معتمدة وخدمة تجهيز فورية";
-                banner.className = "w-full bg-slate-900 border-b border-amber-500/20 text-[10px] py-1.5 px-2 text-center text-amber-300 flex justify-center items-center overflow-hidden";
-            } else {
-                bannerText.innerText = "⚠️ خدمة حجز وتوصيل الطلبيات متوقفة مؤقتاً • المعاينة والاستشارة فقط";
-                banner.className = "w-full bg-rose-950/80 border-b border-rose-800 text-[10px] py-1.5 px-2 text-center text-rose-200 flex justify-center items-center overflow-hidden";
-            }
         }
 
         startSystem();
