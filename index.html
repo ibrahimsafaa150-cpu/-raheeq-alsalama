@@ -608,12 +608,20 @@
                 </button>
             </div>
 
-            <!-- تبويبات فلترة المخزن وحل اللاق -->
-            <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-1" id="invFilterTabs">
-                <button onclick="filterInvTab('all', this)" class="inv-tab-chip bg-amber-500/20 text-amber-300 border border-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">الكل</button>
-                <button onclick="filterInvTab('cosmetics', this)" class="inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">كوزمتك وعناية ✨</button>
-                <button onclick="filterInvTab('medicines', this)" class="inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">الأدوية 💊</button>
-                <button onclick="filterInvTab('critical', this)" class="inv-tab-chip bg-rose-950/60 text-rose-300 border border-rose-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0">نواقص حرجة (≤ 1 قطعة) 🚨</button>
+            <!-- تبويبات فلترة المخزن وحل اللاق (واضحة ومرتفعة مع منع الانكماش) -->
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-2 shrink-0 my-1 w-full border-y border-slate-800/80 bg-slate-950/50 px-1" id="invFilterTabs">
+                <button onclick="filterInvTab('all', this)" class="inv-tab-chip active-tab bg-amber-500/20 text-amber-300 border border-amber-400 text-xs font-black px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>📦</span> <span>الكل</span>
+                </button>
+                <button onclick="filterInvTab('cosmetics', this)" class="inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>✨</span> <span>كوزمتك وعناية</span>
+                </button>
+                <button onclick="filterInvTab('medicines', this)" class="inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>💊</span> <span>الأدوية</span>
+                </button>
+                <button onclick="filterInvTab('critical', this)" class="inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition">
+                    <span>🚨</span> <span>نواقص حرجة (≤ 1)</span>
+                </button>
             </div>
 
             <div class="flex-grow overflow-y-auto space-y-2.5 pr-0.5 no-scrollbar my-2" id="inventoryItemsList"></div>
@@ -1000,6 +1008,7 @@
             { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
+        // صور افتراضية أنيقة لكل قسم عند الاستيراد الجماعي التلقائي
         const categoryDefaultImages = {
             "العناية بالبشرة والوجه": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
             "العناية بالجسم والترطيب": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80",
@@ -1049,6 +1058,7 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
+        /* دوال الباركود ومشاركة التطبيق (QR Share) */
         function openQrShareModal() {
             playPopSound();
             const currentUrl = window.location.href.split('#')[0];
@@ -2404,6 +2414,9 @@
         let invCurrentType = 'all';
         let invSearchQuery = '';
 
+        const TAB_ACTIVE_CLASS = 'inv-tab-chip active-tab bg-amber-500/20 text-amber-300 border border-amber-400 text-xs font-black px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition';
+        const TAB_INACTIVE_CLASS = 'inv-tab-chip bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl shrink-0 shadow flex items-center gap-1.5 transition';
+
         function openInventoryModal() {
             invSearchQuery = '';
             invCurrentType = 'all';
@@ -2412,11 +2425,7 @@
             
             // إعادة ضبط تبويبات الفلترة
             document.querySelectorAll('.inv-tab-chip').forEach((chip, i) => {
-                if (i === 0) {
-                    chip.className = 'inv-tab-chip bg-amber-500/20 text-amber-300 border border-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
-                } else {
-                    chip.className = 'inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
-                }
+                chip.className = (i === 0) ? TAB_ACTIVE_CLASS : TAB_INACTIVE_CLASS;
             });
 
             updateInventoryStats();
@@ -2447,10 +2456,10 @@
             playPopSound();
             invCurrentType = type;
             document.querySelectorAll('.inv-tab-chip').forEach(b => {
-                b.className = 'inv-tab-chip bg-slate-900 text-slate-400 border border-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
+                b.className = TAB_INACTIVE_CLASS;
             });
             if (btn) {
-                btn.className = 'inv-tab-chip bg-amber-500/20 text-amber-300 border border-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0';
+                btn.className = TAB_ACTIVE_CLASS;
             }
             applyInventoryFilter(true);
         }
