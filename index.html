@@ -863,7 +863,7 @@
     </div>
 
     <!-- Admin Add/Edit Modal (Fully Cleared & Reset Fixed) -->
-    <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden items-center justify-center p-3">
+    <div id="adminModal" onclick="handleOutsideModalClick(event, 'adminModal')" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3">
         <div onclick="event.stopPropagation()" class="glass-panel rounded-2xl p-4 w-full max-w-md shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
                 <h3 id="adminModalTitle" class="text-xs font-black text-white flex items-center gap-1"><span>✨</span> إضافة منتج جديد</h3>
@@ -932,7 +932,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-300 mb-0.5">تاريخ الصلاحية:</label>
-                        <input type="month" id="prodExpiry" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-1.5 py-1.5 text-[11px] text-white focus:outline-none">
+                        <input type="text" id="prodExpiry" placeholder="YYYY-MM-DD" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-[11px] text-white focus:outline-none focus:border-cyan-400">
                     </div>
                 </div>
 
@@ -1602,14 +1602,14 @@
 
                 listEl.innerHTML += `
                     <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
-                        <div class="flex items-start gap-3">
+                        <div class="flex items-start gap-3 cursor-pointer" onclick="playPopSound(); openEditModal('${p.id}')" title="اضغط للتعديل">
                             <div class="w-14 h-14 rounded-xl bg-white med-img-frame flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
                                 <img src="${p.image}" class="max-w-full max-h-full object-contain">
                             </div>
                             <div class="flex-1 min-w-0 text-right">
                                 <div class="flex items-center gap-1.5">
                                     ${isMed ? '<span class="text-[9px] bg-rose-950 text-rose-300 border border-rose-800 px-1.5 py-0.5 rounded font-bold">💊 دواء</span>' : ''}
-                                    <h5 class="text-xs font-black text-white leading-snug break-words">${p.name}</h5>
+                                    <h5 class="text-xs font-black text-white leading-snug break-words hover:text-amber-300 transition">${p.name}</h5>
                                 </div>
                                 <div class="flex items-center gap-2 mt-1 flex-wrap">
                                     <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${pSpecs.displayBadge}</span>
@@ -1620,11 +1620,16 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-between pt-2 border-t border-slate-900">
-                            <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">${info.label}</span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="quickUpdateStock('${p.id}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">-</button>
-                                <button onclick="quickUpdateStock('${p.id}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">+</button>
-                                <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-800 text-[10px] font-black px-2.5 py-1.5 rounded-lg active:scale-90">+10</button>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] px-2.5 py-1 rounded-lg border text-center ${info.bg} ${info.border} ${info.text}">${info.label}</span>
+                                <button onclick="playPopSound(); openEditModal('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/60 text-[10px] font-black px-2.5 py-1 rounded-lg active:scale-90 transition flex items-center gap-1 shadow" title="تعديل تفاصيل المنتج">
+                                    <span>✏️</span> <span>تعديل</span>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="quickUpdateStock('${p.id}', -1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">-</button>
+                                <button onclick="quickUpdateStock('${p.id}', 1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-black border border-slate-700 active:scale-90 flex items-center justify-center">+</button>
+                                <button onclick="quickUpdateStock('${p.id}', 10)" class="bg-teal-950 hover:bg-teal-900 text-teal-300 border border-teal-800 text-[9.5px] font-black px-2 py-1 rounded-lg active:scale-90">+10</button>
                             </div>
                         </div>
                     </div>
@@ -2039,16 +2044,25 @@
             const strength = strMatch ? strMatch[1].trim() : '';
             const count = countMatch ? countMatch[1].trim() : '';
 
-            // إزالة التسميات المشوهة مثل قطعة وأمبولة نهائياً
-            let form = '';
-            const raw = String(rawSize || '').trim();
-            if (raw && raw !== 'Amp' && raw !== 'Piece' && raw !== 'قطعة' && raw !== 'أمبولة' && raw !== 'nan') {
-                form = raw;
+            // تصحيح التسميات التقنية القادمة من كبسولة مثل Amp و Piece
+            let form = String(rawSize || 'قطعة').trim();
+            if (form === 'Amp' || form === 'Piece' || !form || form === 'nan') {
+                if (nl.includes('cream') || n.includes('كريم')) form = 'كريم';
+                else if (nl.includes('gel') || n.includes('جل')) form = 'جل';
+                else if (nl.includes('syrup') || n.includes('شراب') || nl.includes('susp')) form = 'شراب';
+                else if (nl.includes('shampoo') || n.includes('شامبو')) form = 'شامبو';
+                else if (nl.includes('tab') || n.includes('حبوب')) form = 'حبوب';
+                else if (nl.includes('cap') || n.includes('كبسول')) form = 'كبسول';
+                else if (n.includes('سلاين') || n.includes('مغذي')) form = 'مغذي';
+                else if (nl.includes('drop') || n.includes('قطرة')) form = 'قطرة';
+                else if (nl.includes('spray') || n.includes('بخاخ')) form = 'بخاخ';
+                else if (nl.includes('wash') || n.includes('غسول')) form = 'غسول';
+                else if (n.includes('معجون')) form = 'معجون';
+                else form = (rawSize === 'Amp' ? 'أمبولة' : 'قطعة');
             }
 
-            // أفضل شارة لعرضها بالكارت المختصر بدون كلمات مشوهة
-            const cleanRaw = (raw && raw !== 'قطعة' && raw !== 'أمبولة' && raw !== 'Amp' && raw !== 'Piece' && raw !== 'nan') ? raw : '';
-            const displayBadge = cleanRaw || vol || strength || count || '';
+            // أفضل شارة لعرضها بالكارت المختصر
+            const displayBadge = vol || strength || count || form;
 
             return { vol, strength, count, form, displayBadge };
         }
@@ -2103,7 +2117,7 @@
                                     <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
                                     ${oldPriceText}
                                 </div>
-                                ${specs.displayBadge ? `<span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${specs.displayBadge}</span>` : ''}
+                                <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${specs.displayBadge}</span>
                             </div>
                         </div>
                     </div>
@@ -2791,7 +2805,11 @@
             document.getElementById('prodName').value = prod.name;
             document.getElementById('prodBarcode').value = prod.barcode || '';
             document.getElementById('prodUsage').value = prod.usage;
-            document.getElementById('prodSize').value = prod.size;
+            const rawModalSize = String(prod.size || '').trim();
+            const modalCleanSize = (rawModalSize && rawModalSize !== 'Amp' && rawModalSize !== 'Piece' && rawModalSize !== 'قطعة' && rawModalSize !== 'أمبولة' && rawModalSize !== 'nan')
+                ? rawModalSize
+                : (parseProductSpecs(prod.name, '').vol || parseProductSpecs(prod.name, '').strength || parseProductSpecs(prod.name, '').count || '');
+            document.getElementById('prodSize').value = modalCleanSize;
             document.getElementById('prodPrice').value = prod.price ? prod.price.replace(/[^0-9]/g, '') : '';
             document.getElementById('prodOriginalPrice').value = prod.originalPrice ? prod.originalPrice.replace(/[^0-9]/g, '') : '';
             document.getElementById('prodStock').value = prod.stock;
@@ -2830,15 +2848,28 @@
             if (editId) {
                 const index = productsData.findIndex(p => String(p.id) === String(editId));
                 if (index !== -1) {
+                    const newName = document.getElementById('prodName').value.trim();
+                    let newSize = document.getElementById('prodSize').value.trim();
+                    const newExp = document.getElementById('prodExpiry').value.trim();
+
+                    // حماية السعة: إذا أفرغ الحقل أو كان Amp/Piece يستخرج السعة تلقائياً من الاسم
+                    if (!newSize || newSize === 'Amp' || newSize === 'Piece' || newSize === 'قطعة' || newSize === 'أمبولة') {
+                        const detected = parseProductSpecs(newName, productsData[index].size);
+                        newSize = detected.vol || detected.strength || detected.count || (productsData[index].size !== 'Amp' && productsData[index].size !== 'Piece' && productsData[index].size !== 'قطعة' ? productsData[index].size : '');
+                    }
+
+                    // حماية تاريخ الصلاحية: إذا تُرك فارغاً يُبقي على التاريخ المسجل مسبقاً
+                    const finalExp = newExp || productsData[index].expiryDate || '';
+
                     productsData[index].category = document.getElementById('prodCategory').value;
-                    productsData[index].name = document.getElementById('prodName').value.trim();
+                    productsData[index].name = newName;
                     productsData[index].barcode = document.getElementById('prodBarcode').value.trim();
                     productsData[index].usage = document.getElementById('prodUsage').value.trim();
-                    productsData[index].size = document.getElementById('prodSize').value.trim();
+                    productsData[index].size = newSize;
                     productsData[index].price = formattedPrice;
                     productsData[index].originalPrice = formattedOrigPrice;
                     productsData[index].stock = parseInt(document.getElementById('prodStock').value) || 0;
-                    productsData[index].expiryDate = document.getElementById('prodExpiry').value;
+                    productsData[index].expiryDate = finalExp;
                     productsData[index].image = imgVal;
                 }
             } else {
@@ -2860,6 +2891,12 @@
 
             saveProductsToCloud();
             closeAdminModal();
+            renderProducts();
+            const invModal = document.getElementById('inventoryModal');
+            if (invModal && invModal.classList.contains('modal-active')) {
+                updateInventoryStats();
+                applyInventoryFilter(false);
+            }
             showToast('تم حفظ المنتج سحابياً بنجاح ☁️');
         }
 
