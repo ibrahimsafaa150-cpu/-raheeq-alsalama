@@ -1299,8 +1299,12 @@
         async function startSystem() {
             productsRef.on('value', (snapshot) => {
                 const cloudData = snapshot.val();
-                if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
-                    productsData = cloudData;
+                if (cloudData) {
+                    if (Array.isArray(cloudData)) {
+                        productsData = cloudData.filter(Boolean);
+                    } else if (typeof cloudData === 'object') {
+                        productsData = Object.values(cloudData).filter(Boolean);
+                    }
                 } else {
                     productsData = [
                         {
@@ -1786,15 +1790,18 @@
                     let expiryVal = expIdx !== -1 && cols[expIdx] ? cols[expIdx] : '';
                     let usageVal = usageIdx !== -1 && cols[usageIdx] ? cols[usageIdx].trim() : '';
 
-                    // توجيه تلقائي ذكي: أي مادة دوائية تذهب مباشرة لقسم الأدوية المخفي للمشرف
+                    // احترام تصنيف الملف وعدم تحويل منتجات العناية والأطفال إلى أدوية
                     const lowerName = itemName.toLowerCase();
                     const lowerCat = categoryVal.toLowerCase();
-                    const isMedItem = lowerCat.includes('أدوية') || lowerCat.includes('ادوية') || lowerCat.includes('medicine') || lowerCat.includes('علاج') ||
-                                      lowerName.includes(' tab') || lowerName.includes(' cap') || lowerName.includes(' amp') || lowerName.includes(' vial') ||
-                                      lowerName.includes('حبوب') || lowerName.includes('كبسول') || lowerName.includes('حقن') || lowerName.includes('سلاين');
-
-                    if (isMedItem && !lowerCat.includes('بشرة') && !lowerCat.includes('شعر') && !lowerCat.includes('فم') && !lowerCat.includes('تجميل')) {
-                        categoryVal = 'الأدوية والمستحضرات الطبية';
+                    const isExplicitCare = lowerCat.includes('بشرة') || lowerCat.includes('شعر') || lowerCat.includes('فم') || lowerCat.includes('تجميل') || lowerCat.includes('طفل') || lowerCat.includes('جسم') || lowerCat.includes('نسائية') || lowerCat.includes('فيتامين');
+                    
+                    if (!isExplicitCare) {
+                        const isMedItem = lowerCat.includes('أدوية') || lowerCat.includes('ادوية') || lowerCat.includes('medicine') || lowerCat.includes('علاج') ||
+                                          lowerName.includes(' tab') || lowerName.includes(' cap') || lowerName.includes(' amp') || lowerName.includes(' vial') ||
+                                          lowerName.includes('حبوب') || lowerName.includes('كبسول') || lowerName.includes('حقن') || lowerName.includes('سلاين');
+                        if (isMedItem) {
+                            categoryVal = 'الأدوية والمستحضرات الطبية';
+                        }
                     }
 
                     let existingIdx = -1;
@@ -1806,9 +1813,12 @@
                     }
 
                     if (existingIdx !== -1) {
+                        productsData[existingIdx].name = itemName;
+                        productsData[existingIdx].category = categoryVal;
+                        productsData[existingIdx].size = sizeVal;
                         productsData[existingIdx].stock = stockNum;
                         if (rawPrice && rawPrice !== '0') productsData[existingIdx].price = formattedPrice;
-                        if (barcodeVal && !productsData[existingIdx].barcode) productsData[existingIdx].barcode = barcodeVal;
+                        if (barcodeVal) productsData[existingIdx].barcode = barcodeVal;
                         if (expiryVal) productsData[existingIdx].expiryDate = expiryVal;
                         if (usageVal) productsData[existingIdx].usage = usageVal;
                         updatedCount++;
