@@ -544,12 +544,13 @@
                 <span id="modalProdDiscount" class="hidden absolute top-2 right-2 bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow"></span>
             </div>
 
-            <div class="space-y-1.5 text-right">
-                <div class="flex items-start justify-between gap-2">
-                    <h3 id="modalProdName" class="text-sm font-black text-white leading-snug"></h3>
-                    <span id="modalProdSize" class="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] font-black px-2 py-0.5 rounded shrink-0"></span>
-                </div>
-                <div class="flex items-center justify-between">
+            <div class="space-y-2 text-right">
+                <h3 id="modalProdName" class="text-sm font-black text-white leading-snug"></h3>
+                
+                <!-- شارات مخصصة للمواصفات: الحجم، التركيز، والعبوة -->
+                <div id="modalProdBadges" class="flex flex-wrap items-center gap-1.5 pt-0.5"></div>
+
+                <div class="flex items-center justify-between pt-1">
                     <div class="flex items-center gap-2">
                         <span class="text-sm font-black text-amber-400" id="modalProdPrice"></span>
                         <span class="text-xs text-slate-500 line-through font-bold hidden" id="modalProdOldPrice"></span>
@@ -999,14 +1000,14 @@
             { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
+        // صور افتراضية أنيقة لكل قسم عند الاستيراد الجماعي التلقائي
         const categoryDefaultImages = {
             "العناية بالبشرة والوجه": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
             "العناية بالجسم والترطيب": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80",
             "العناية بالشعر والفروة": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80",
             "صحة الفم والأسنان": "https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&w=600&q=80",
             "الفيتامينات والمكملات": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
-            "المستلزمات الطبية": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80",
-            "الأدوية والمستحضرات الطبية": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
+            "المستلزمات الطبية": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
         };
         const fallbackGeneralImage = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80";
 
@@ -1048,6 +1049,7 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
+        /* دوال الباركود ومشاركة التطبيق (QR Share) */
         function openQrShareModal() {
             playPopSound();
             const currentUrl = window.location.href.split('#')[0];
@@ -1251,7 +1253,7 @@
         function pushModalState(modalName) { history.pushState({ activeModal: modalName }, ""); }
 
         function handleOutsideModalClick(event, modalId) {
-            const modal = document.getElementById(modalId);
+            const modal = document.getElementById('modalId');
             if (event.target === modal) {
                 playPopSound();
                 if (modalId === 'barcodeModal') stopBarcodeScanner();
@@ -1431,7 +1433,23 @@
             }
 
             document.getElementById('modalProdName').innerText = prod.name;
-            document.getElementById('modalProdSize').innerText = prod.size;
+            const specs = parseProductSpecs(prod.name, prod.size);
+            const badgesContainer = document.getElementById('modalProdBadges');
+            let badgesHtml = '';
+
+            if (specs.vol) {
+                badgesHtml += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-700/80 text-[10.5px] font-black px-2.5 py-1 rounded-xl shadow-sm">🧪 الحجم: ${specs.vol}</span>`;
+            }
+            if (specs.strength) {
+                badgesHtml += `<span class="bg-amber-950 text-amber-300 border border-amber-700/80 text-[10.5px] font-black px-2.5 py-1 rounded-xl shadow-sm">⚡ التركيز: ${specs.strength}</span>`;
+            }
+            if (specs.count) {
+                badgesHtml += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-700/80 text-[10.5px] font-black px-2.5 py-1 rounded-xl shadow-sm">📦 العبوة: ${specs.count}</span>`;
+            }
+            if (specs.form) {
+                badgesHtml += `<span class="bg-slate-900 text-slate-300 border border-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-lg">${specs.form}</span>`;
+            }
+            badgesContainer.innerHTML = badgesHtml;
             document.getElementById('modalProdPrice').innerText = prod.price;
             document.getElementById('modalProdUsage').innerText = prod.usage;
             document.getElementById('modalProdBarcode').innerText = prod.barcode ? `باركود: ${prod.barcode}` : '';
@@ -1523,9 +1541,51 @@
             }
         }
 
+        // دالة ذكية لاستخراج الحجم والتركيز والعبوة تلقائياً من اسم المادة والتخلص من Amp/Piece
+        function parseProductSpecs(name, rawSize) {
+            const n = String(name || '').trim();
+            const nl = n.toLowerCase();
+
+            // 1. استخراج الحجم / السعة: 300 مل، 100ml، 500 مل، 50g، 150 غم...
+            const volMatch = n.match(/(\b\d+(?:\.\d+)?\s*(?:ml|l|مل|لتر|gm|g|غم|غرام|oz)\b)/i);
+            
+            // 2. استخراج التركيز الدوائي: 500mg، 40mg، 1g، 5000iu، 8mg، 1000mcg...
+            const strMatch = n.match(/(\b\d+(?:\.\d+)?\s*(?:mg|iu|mcg|مغ|ملغ|مجم)\b)/i);
+            
+            // 3. استخراج عدد الحبوب أو العبوة: 24 tab، 14 cap، 30 softgel، 28 قرص...
+            const countMatch = n.match(/(\b\d+\s*(?:tab|tabs|cap|caps|softgel|softgels|patch|patches|vial|amp|قطعة|شريط|قرص|كبسولة|فيالة|أمبولة)\b)/i);
+
+            const vol = volMatch ? volMatch[1].trim() : '';
+            const strength = strMatch ? strMatch[1].trim() : '';
+            const count = countMatch ? countMatch[1].trim() : '';
+
+            // تصحيح التسميات التقنية القادمة من كبسولة مثل Amp و Piece
+            let form = String(rawSize || 'قطعة').trim();
+            if (form === 'Amp' || form === 'Piece' || !form || form === 'nan') {
+                if (nl.includes('cream') || n.includes('كريم')) form = 'كريم';
+                else if (nl.includes('gel') || n.includes('جل')) form = 'جل';
+                else if (nl.includes('syrup') || n.includes('شراب') || nl.includes('susp')) form = 'شراب';
+                else if (nl.includes('shampoo') || n.includes('شامبو')) form = 'شامبو';
+                else if (nl.includes('tab') || n.includes('حبوب')) form = 'حبوب';
+                else if (nl.includes('cap') || n.includes('كبسول')) form = 'كبسول';
+                else if (n.includes('سلاين') || n.includes('مغذي')) form = 'مغذي';
+                else if (nl.includes('drop') || n.includes('قطرة')) form = 'قطرة';
+                else if (nl.includes('spray') || n.includes('بخاخ')) form = 'بخاخ';
+                else if (nl.includes('wash') || n.includes('غسول')) form = 'غسول';
+                else if (n.includes('معجون')) form = 'معجون';
+                else form = (rawSize === 'Amp' ? 'أمبولة' : 'قطعة');
+            }
+
+            // أفضل شارة لعرضها بالكارت المختصر
+            const displayBadge = vol || strength || count || form;
+
+            return { vol, strength, count, form, displayBadge };
+        }
+
         function createProductCardHTML(prod) {
             const isFav = wishlist.includes(String(prod.id));
             const badgeInfo = getStockBadgeStyle(prod.stock);
+            const specs = parseProductSpecs(prod.name, prod.size);
 
             let discountBadge = '';
             let oldPriceText = '';
@@ -1572,7 +1632,7 @@
                                     <span class="text-[11px] font-black text-amber-400">${prod.price}</span>
                                     ${oldPriceText}
                                 </div>
-                                <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${prod.size}</span>
+                                <span dir="ltr" class="text-[8.5px] text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60">${specs.displayBadge}</span>
                             </div>
                         </div>
                     </div>
@@ -1675,7 +1735,7 @@
                 }
             }
         }, { passive: true });
-        
+
         function filterByCategory(cat) {
             isWishlistMode = false;
             currentFilter = cat;
@@ -2435,6 +2495,7 @@
                 const isLow = p.stock > 1 && p.stock <= 5;
                 const info = getStockBadgeStyle(p.stock);
                 const isMed = (p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
+                const pSpecs = parseProductSpecs(p.name, p.size);
 
                 listEl.innerHTML += `
                     <div class="flex flex-col gap-2.5 bg-slate-950 p-3 rounded-2xl border ${isCrit ? 'border-rose-700/80 bg-rose-950/20' : isLow ? 'border-amber-700/60 bg-amber-950/15' : 'border-slate-800/90'} shadow-sm">
@@ -2448,7 +2509,7 @@
                                     <h5 class="text-xs font-black text-white leading-snug break-words">${p.name}</h5>
                                 </div>
                                 <div class="flex items-center gap-2 mt-1 flex-wrap">
-                                    <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${p.size}</span>
+                                    <span class="text-[9px] text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-800/60 font-bold">${pSpecs.displayBadge}</span>
                                     <span class="text-[9.5px] text-amber-400 font-bold">${p.price}</span>
                                     ${p.expiryDate ? `<span class="text-[8.5px] text-slate-400">📅 ${p.expiryDate}</span>` : ''}
                                     ${p.barcode ? `<span class="text-[8px] font-mono text-cyan-400/80 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">📷 ${p.barcode}</span>` : ''}
@@ -2797,3 +2858,4 @@
     </script>
 </body>
 </html>
+. 
