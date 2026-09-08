@@ -1000,14 +1000,14 @@
             { name: "المستلزمات الطبية", icon: "🩺" }
         ];
 
-        // صور افتراضية أنيقة لكل قسم عند الاستيراد الجماعي التلقائي
         const categoryDefaultImages = {
             "العناية بالبشرة والوجه": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
             "العناية بالجسم والترطيب": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80",
             "العناية بالشعر والفروة": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80",
             "صحة الفم والأسنان": "https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&w=600&q=80",
             "الفيتامينات والمكملات": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
-            "المستلزمات الطبية": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80"
+            "المستلزمات الطبية": "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80",
+            "الأدوية والمستحضرات الطبية": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80"
         };
         const fallbackGeneralImage = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80";
 
@@ -1049,7 +1049,6 @@
             localStorage.setItem('pwa_prompt_dismissed', 'true');
         }
 
-        /* دوال الباركود ومشاركة التطبيق (QR Share) */
         function openQrShareModal() {
             playPopSound();
             const currentUrl = window.location.href.split('#')[0];
@@ -1253,7 +1252,7 @@
         function pushModalState(modalName) { history.pushState({ activeModal: modalName }, ""); }
 
         function handleOutsideModalClick(event, modalId) {
-            const modal = document.getElementById('modalId');
+            const modal = document.getElementById(modalId);
             if (event.target === modal) {
                 playPopSound();
                 if (modalId === 'barcodeModal') stopBarcodeScanner();
@@ -1662,18 +1661,20 @@
                 displayedCount = itemsPerPage;
                 let displayList = list;
 
-                // حماية النقابة: إذا لم يكن المستخدم مشرفاً، يتم إخفاء قسم الأدوية تماماً من واجهة الزوار
-                if (!isAdmin) {
+                // حماية تامة وعزل للأدوية:
+                // في تبويب "الكل" وكل الأقسام العادية تظهر فقط منتجات العناية والكوزمتك حتى للمشرف
+                if (currentFilter === 'الأدوية 💊' && isAdmin) {
+                    displayList = productsData.filter(p => p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
+                } else {
+                    // استبعاد الأدوية تماماً من واجهة الكوزمتك وتبويب "الكل"
                     displayList = displayList.filter(p => p.category !== 'الأدوية والمستحضرات الطبية' && p.category !== 'الأدوية');
-                }
-
-                if (!isWishlistMode && currentFilter !== 'الكل' && list === productsData) {
-                    if (currentFilter === 'النواقص') {
-                        displayList = displayList.filter(p => p.stock <= 5);
-                    } else if (currentFilter === 'الأدوية 💊') {
-                        displayList = displayList.filter(p => p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
-                    } else {
-                        displayList = displayList.filter(p => p.category === currentFilter);
+                    
+                    if (!isWishlistMode && currentFilter !== 'الكل' && list === productsData) {
+                        if (currentFilter === 'النواقص') {
+                            displayList = displayList.filter(p => p.stock <= 5);
+                        } else {
+                            displayList = displayList.filter(p => p.category === currentFilter);
+                        }
                     }
                 }
                 currentActiveList = displayList || [];
@@ -1756,7 +1757,16 @@
                 renderProducts();
                 return;
             }
-            const filtered = productsData.filter(p => 
+            
+            let baseSearchPool = productsData;
+            // إذا كان المشرف في تبويب الأدوية يبحث في الأدوية فقط، عدا ذلك يبحث حصراً في الكوزمتك
+            if (currentFilter === 'الأدوية 💊' && isAdmin) {
+                baseSearchPool = productsData.filter(p => p.category === 'الأدوية والمستحضرات الطبية' || p.category === 'الأدوية');
+            } else {
+                baseSearchPool = productsData.filter(p => p.category !== 'الأدوية والمستحضرات الطبية' && p.category !== 'الأدوية');
+            }
+
+            const filtered = baseSearchPool.filter(p => 
                 p.name.toLowerCase().includes(q) || 
                 p.usage.toLowerCase().includes(q) || 
                 p.size.toLowerCase().includes(q) || 
@@ -2858,4 +2868,3 @@
     </script>
 </body>
 </html>
-. 
